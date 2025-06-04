@@ -133,13 +133,13 @@ const PublicView = () => {
     <div className="min-h-screen bg-gradient-to-br from-purple-900 via-slate-900 to-red-900 p-4">
       <div className="max-w-6xl mx-auto space-y-4">
         {/* Public Widget */}
-        <div className="w-[1000px] h-[250px] bg-gradient-to-r from-slate-900 via-purple-900/20 to-slate-900 border-2 border-purple-500/30 rounded-lg overflow-hidden mx-auto">
+        <div className="w-[800px] h-[130px] bg-gradient-to-r from-slate-900 via-purple-900/20 to-slate-900 border-2 border-purple-500/30 rounded-lg overflow-hidden mx-auto">
           <div className="h-full p-3">
             <div className="grid grid-cols-6 gap-2 h-full">
               {team.map((slot, index) => (
                 <div
                   key={slot.id}
-                  className="bg-slate-800/80 border border-purple-500/20 rounded-lg p-2 flex flex-col items-center justify-between relative overflow-hidden group hover:border-purple-400/40 transition-all duration-300"
+                  className="bg-slate-800/80 border border-purple-500/20 rounded-lg p-0.5 flex flex-col items-center justify-between relative overflow-hidden group hover:border-purple-400/40 transition-all duration-300"
                 >
                   {/* Slot number and level indicator */}
                   <div className="absolute top-1 left-1 flex flex-col items-start">
@@ -157,7 +157,7 @@ const PublicView = () => {
                           alt={slot.pokemon.name.english}
                           className="object-contain drop-shadow-lg cursor-pointer"
                           style={{ 
-                            maxHeight: '160px', 
+                            maxHeight: '140px', 
                             width: '80%',
                             maxWidth: '80%',
                             // Apply zoom only for static sprites (animated gifs are perfect as-is)
@@ -165,7 +165,7 @@ const PublicView = () => {
                             objectPosition: 'center'
                           }}
                           onClick={() => updateSlot(index, { animated: !slot.animated })}
-                          title={slot.animated ? 'Click to show static sprite' : 'Click to show animated sprite'}
+                          title={'Clica para cambiar el sprite'}
                           onError={(e) => {
                             // Fallback to non-animated if animated fails
                             if (slot.animated) {
@@ -186,8 +186,8 @@ const PublicView = () => {
                       </div>
 
                       {/* Pokemon info - larger fonts for better readability */}
-                      <div className="w-full text-center space-y-0.5 mt-1">
-                        <div className="text-md font-bold text-white truncate">
+                      <div className="w-full text-center mt-1">
+                        <div className="text-lg font-bold text-white truncate">
                           {slot.nickname || slot.pokemon.name.english}
                         </div>
                         {slot.ability && (
