@@ -5,7 +5,11 @@ import { Switch } from "@/components/ui/switch";
 import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { TeamPokemon, Pokemon, PokeballType } from "@/types/pokemon";
-import React from "react";
+import React, { useState } from "react";
+import abilitiesData from "@/data/abilities.json";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface SlotEditorProps {
   slot: TeamPokemon;
@@ -17,6 +21,14 @@ interface SlotEditorProps {
   showHeader?: boolean;
 }
 
+const abilityNames = abilitiesData.map((a: any) => a.name);
+
+// Helper to get ability description
+const getAbilityDescription = (name: string) => {
+  const found = abilitiesData.find((a: any) => a.name === name);
+  return found ? found.description : "";
+};
+
 const SlotEditor: React.FC<SlotEditorProps> = ({
   slot,
   allPokemon,
@@ -26,6 +38,14 @@ const SlotEditor: React.FC<SlotEditorProps> = ({
   slotIndex,
   showHeader = true,
 }) => {
+  const [abilityFilter, setAbilityFilter] = useState("");
+  const filteredAbilities = abilityNames.filter((name) =>
+    name.toLowerCase().includes(abilityFilter.toLowerCase())
+  );
+
+  // Get description for currently selected ability
+  const selectedAbilityDescription = slot.ability ? getAbilityDescription(slot.ability) : "";
+
   return (
     <>
       {showHeader && (
@@ -99,15 +119,67 @@ const SlotEditor: React.FC<SlotEditorProps> = ({
             />
           </div>
 
-          {/* Ability */}
+          {/* Ability (Select) */}
           <div className="space-y-1">
             <Label className="text-slate-300 text-xs">Ability</Label>
-            <Input
-              value={slot.ability}
-              onChange={(e) => onUpdate({ ability: e.target.value })}
-              placeholder="Enter ability name"
-              className="bg-slate-700 border-slate-600 h-8 text-xs"
-            />
+            <Select
+              value={slot.ability || "none"}
+              onValueChange={(value) => {
+                if (value === "none") {
+                  onUpdate({ ability: "" });
+                } else {
+                  onUpdate({ ability: value });
+                }
+              }}
+            >
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <SelectTrigger className="bg-slate-700 border-slate-600 h-8 text-xs">
+                      <SelectValue placeholder="Select an Ability" />
+                    </SelectTrigger>
+                  </TooltipTrigger>
+                  {selectedAbilityDescription && (
+                    <TooltipContent className="text-sm max-w-xs">
+                      {selectedAbilityDescription}
+                    </TooltipContent>
+                  )}
+                </Tooltip>
+              </TooltipProvider>
+              <SelectContent className="bg-slate-700 border-slate-600 max-h-60 text-xs">
+                <div className="px-2 py-1">
+                  <Input
+                    value={abilityFilter}
+                    onChange={e => setAbilityFilter(e.target.value)}
+                    placeholder="Filter abilities..."
+                    className="mb-1 bg-slate-800 border-slate-600 h-7 text-xs"
+                  />
+                </div>
+                <SelectItem value="none">No Ability</SelectItem>
+                {filteredAbilities.map((name) => {
+                  const desc = getAbilityDescription(name);
+                  return (
+                    <TooltipProvider key={name}>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <SelectItem
+                            value={name}
+                            className="text-xs"
+                          >
+                            {name}
+                          </SelectItem>
+                        </TooltipTrigger>
+                        {desc && (
+                          <TooltipContent className="text-sm max-w-xs">
+                            {desc}
+                          </TooltipContent>
+                        )}
+                      </Tooltip>
+                    </TooltipProvider>
+                  );
+                })}
+              </SelectContent>
+            </Select>
           </div>
 
           {/* Pokeball */}

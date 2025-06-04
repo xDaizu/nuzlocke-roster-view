@@ -75,10 +75,10 @@ const PublicView = () => {
 
   const addFixtures = () => {
     const fixtures = [
-      { name: 'Mareep', nickname: 'RazorMorel', ability: 'Lana estática' },
-      { name: 'Lotad', nickname: 'Calos' },
-      { name: 'Turtwig', nickname: 'Pablo' },
-      { name: 'Jigglypuff', nickname: 'Vancleemp', ability: 'Ojo compuesto' }
+      { name: 'Mareep', nickname: 'RazorMorel', ability: 'Arena Trap', level: 10 },
+      { name: 'Lotad', nickname: 'Calos', level: 8 },
+      { name: 'Turtwig', nickname: 'Pablo', level: 7 },
+      { name: 'Jigglypuff', nickname: 'Vancleemp', ability: 'Compound Eyes', level: 10 }
     ];
 
     const newTeam = Array.from({ length: 6 }, (_, index) => {
@@ -92,8 +92,8 @@ const PublicView = () => {
           id: `slot-${index}`,
           pokemon: pokemon || null,
           nickname: fixture.nickname,
-          level: 1,
-          ability: 'No Skill',
+          level: fixture.level || 1,
+          ability: fixture.ability,
           pokeball: 'pokeball' as const,
           animated: false,
           zoom: 1.5
@@ -141,9 +141,11 @@ const PublicView = () => {
                   key={slot.id}
                   className="bg-slate-800/80 border border-purple-500/20 rounded-lg p-2 flex flex-col items-center justify-between relative overflow-hidden group hover:border-purple-400/40 transition-all duration-300"
                 >
-                  {/* Slot number indicator */}
-                  <div className="absolute top-1 left-1 text-sm font-bold text-purple-300/60">
-                    {index + 1}
+                  {/* Slot number and level indicator */}
+                  <div className="absolute top-1 left-1 flex flex-col items-start">
+                    {slot.pokemon && (
+                      <span className="text-xs font-bold text-purple-200 bg-slate-900/80 rounded px-1 mt-0.5">Lv. {slot.level}</span>
+                    )}
                   </div>
 
                   {slot.pokemon ? (
@@ -183,11 +185,8 @@ const PublicView = () => {
 
                       {/* Pokemon info - larger fonts for better readability */}
                       <div className="w-full text-center space-y-0.5 mt-1">
-                        <div className="text-sm font-bold text-white truncate">
+                        <div className="text-md font-bold text-white truncate">
                           {slot.nickname || slot.pokemon.name.english}
-                        </div>
-                        <div className="text-sm text-purple-300 font-medium">
-                          Lv. {slot.level}
                         </div>
                         {slot.ability && (
                           <div className="text-sm text-red-300 truncate" title={slot.ability}>
@@ -309,7 +308,6 @@ const PublicView = () => {
                     <div className="text-white font-medium">
                       {currentSlot.nickname || currentSlot.pokemon.name.english}
                     </div>
-                    <div className="text-purple-300 text-sm">Level {currentSlot.level}</div>
                     {currentSlot.ability && (
                       <div className="text-red-300 text-sm">{currentSlot.ability}</div>
                     )}
