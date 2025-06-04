@@ -127,15 +127,15 @@ const PublicView = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-900 via-slate-900 to-red-900 p-4">
-      <div className="max-w-6xl mx-auto space-y-6">
+      <div className="max-w-6xl mx-auto space-y-4">
         {/* Public Widget */}
-        <div className="w-[1000px] h-[300px] bg-gradient-to-r from-slate-900 via-purple-900/20 to-slate-900 border-2 border-purple-500/30 rounded-lg overflow-hidden mx-auto">
-          <div className="h-full p-4">
-            <div className="grid grid-cols-6 gap-3 h-full">
+        <div className="w-[1000px] h-[250px] bg-gradient-to-r from-slate-900 via-purple-900/20 to-slate-900 border-2 border-purple-500/30 rounded-lg overflow-hidden mx-auto">
+          <div className="h-full p-3">
+            <div className="grid grid-cols-6 gap-2 h-full">
               {team.map((slot, index) => (
                 <div
                   key={slot.id}
-                  className="bg-slate-800/80 border border-purple-500/20 rounded-lg p-3 flex flex-col items-center justify-between relative overflow-hidden group hover:border-purple-400/40 transition-all duration-300"
+                  className="bg-slate-800/80 border border-purple-500/20 rounded-lg p-2 flex flex-col items-center justify-between relative overflow-hidden group hover:border-purple-400/40 transition-all duration-300"
                 >
                   {/* Slot number indicator */}
                   <div className="absolute top-1 left-1 text-xs font-bold text-purple-300/60">
@@ -144,13 +144,13 @@ const PublicView = () => {
 
                   {slot.pokemon ? (
                     <>
-                      {/* Pokemon sprite - main focal point */}
-                      <div className="relative flex-1 flex items-center justify-center">
+                      {/* Pokemon sprite - much larger and main focal point */}
+                      <div className="relative flex-1 flex items-center justify-center min-h-0">
                         <img
                           src={getPokemonSpriteUrl(slot.pokemon, slot.animated)}
                           alt={slot.pokemon.name.english}
                           className="max-w-full max-h-full object-contain drop-shadow-lg"
-                          style={{ maxHeight: '120px' }}
+                          style={{ maxHeight: '160px', maxWidth: '140px' }}
                           onError={(e) => {
                             // Fallback to non-animated if animated fails
                             if (slot.animated) {
@@ -165,14 +165,14 @@ const PublicView = () => {
                           <img
                             src={POKEBALL_DATA[slot.pokeball].image}
                             alt={POKEBALL_DATA[slot.pokeball].name}
-                            className="w-6 h-6 drop-shadow-md"
+                            className="w-5 h-5 drop-shadow-md"
                           />
                         </div>
                       </div>
 
-                      {/* Pokemon info */}
-                      <div className="w-full text-center space-y-1">
-                        <div className="text-sm font-bold text-white truncate">
+                      {/* Pokemon info - more compact */}
+                      <div className="w-full text-center space-y-0.5 mt-1">
+                        <div className="text-xs font-bold text-white truncate">
                           {slot.nickname || slot.pokemon.name.english}
                         </div>
                         <div className="text-xs text-purple-300 font-medium">
@@ -189,8 +189,8 @@ const PublicView = () => {
                     // Empty slot
                     <div className="flex-1 flex items-center justify-center text-slate-500">
                       <div className="text-center">
-                        <div className="w-16 h-16 bg-slate-700/50 rounded-full mb-2 mx-auto flex items-center justify-center">
-                          <span className="text-2xl">?</span>
+                        <div className="w-12 h-12 bg-slate-700/50 rounded-full mb-1 mx-auto flex items-center justify-center">
+                          <span className="text-xl">?</span>
                         </div>
                         <div className="text-xs">Empty Slot</div>
                       </div>
