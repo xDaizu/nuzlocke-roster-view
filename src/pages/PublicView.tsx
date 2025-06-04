@@ -223,7 +223,7 @@ const PublicView = () => {
                   onClick={addFixtures}
                   className="bg-purple-600 hover:bg-purple-700"
                 >
-                  Add Fixtures
+                  Cargar de Stream
                 </Button>
               </CardTitle>
             </CardHeader>
