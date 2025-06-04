@@ -75,10 +75,10 @@ const PublicView = () => {
 
   const addFixtures = () => {
     const fixtures = [
-      { name: 'Mareep', nickname: 'RazorMorel' },
+      { name: 'Mareep', nickname: 'RazorMorel', ability: 'Lana estática' },
       { name: 'Lotad', nickname: 'Calos' },
       { name: 'Turtwig', nickname: 'Pablo' },
-      { name: 'Jigglypuff', nickname: 'Vancleemp' }
+      { name: 'Jigglypuff', nickname: 'Vancleemp', ability: 'Ojo compuesto' }
     ];
 
     const newTeam = Array.from({ length: 6 }, (_, index) => {
