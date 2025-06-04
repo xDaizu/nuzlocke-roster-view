@@ -26,6 +26,7 @@ export interface TeamPokemon {
   ability: string;
   pokeball: PokeballType;
   animated: boolean;
+  zoom: number; // 1.0 = normal, 1.5 = 150% zoom (cropped from sides)
 }
 
 export type PokeballType = 'pokeball' | 'superball' | 'sanaball';

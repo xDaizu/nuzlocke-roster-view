@@ -18,7 +18,12 @@ export const loadTeam = (): TeamPokemon[] => {
     if (saved) {
       const team = JSON.parse(saved);
       console.log('Team loaded from localStorage:', team);
-      return team;
+      
+      // Migrate old teams to include zoom field
+      return team.map((slot: any) => ({
+        ...slot,
+        zoom: slot.zoom || 1.5 // Default zoom for existing teams
+      }));
     }
   } catch (error) {
     console.error('Failed to load team:', error);
@@ -32,6 +37,7 @@ export const loadTeam = (): TeamPokemon[] => {
     level: 1,
     ability: '',
     pokeball: 'pokeball' as const,
-    animated: false
+    animated: false,
+    zoom: 1.5
   }));
 };

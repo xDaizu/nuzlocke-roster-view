@@ -62,7 +62,8 @@ const AdminView = () => {
       level: 1,
       ability: '',
       pokeball: 'pokeball',
-      animated: false
+      animated: false,
+      zoom: 1.5
     });
     toast({
       title: "Slot Cleared",
@@ -128,6 +129,10 @@ const AdminView = () => {
                             src={getPokemonSpriteUrl(slot.pokemon, false)}
                             alt={slot.pokemon.name.english}
                             className="w-12 h-12 mx-auto mb-1"
+                            style={{
+                              transform: `scale(${slot.zoom || 1.5})`,
+                              objectPosition: 'center'
+                            }}
                             onError={(e) => {
                               const target = e.target as HTMLImageElement;
                               target.style.display = 'none';
@@ -264,6 +269,27 @@ const AdminView = () => {
                 <Label htmlFor="animated" className="text-slate-300">Use animated sprite</Label>
               </div>
 
+              {/* Zoom Control - only show for static sprites */}
+              {!currentSlot.animated && (
+                <div className="space-y-2">
+                  <Label className="text-slate-300">Sprite Zoom (Static only)</Label>
+                  <div className="flex items-center space-x-4">
+                    <Input
+                      type="number"
+                      min="0.5"
+                      max="3"
+                      step="0.1"
+                      value={currentSlot.zoom || 1.5}
+                      onChange={(e) => updateSlot(selectedSlot, { zoom: parseFloat(e.target.value) || 1.5 })}
+                      className="bg-slate-700 border-slate-600 w-20"
+                    />
+                    <span className="text-slate-400 text-sm">
+                      {currentSlot.zoom || 1.5}x zoom (crops from sides)
+                    </span>
+                  </div>
+                </div>
+              )}
+
               {/* Preview */}
               {currentSlot.pokemon && (
                 <div className="mt-4 p-4 bg-slate-700/50 rounded-lg">
@@ -273,6 +299,10 @@ const AdminView = () => {
                       src={getPokemonSpriteUrl(currentSlot.pokemon, currentSlot.animated)}
                       alt={currentSlot.pokemon.name.english}
                       className="w-16 h-16"
+                      style={{
+                        transform: currentSlot.animated ? 'none' : `scale(${currentSlot.zoom || 1.5})`,
+                        objectPosition: 'center'
+                      }}
                       onError={(e) => {
                         const target = e.target as HTMLImageElement;
                         if (currentSlot.animated) {

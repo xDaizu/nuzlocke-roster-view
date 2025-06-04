@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -19,7 +18,8 @@ const PublicView = () => {
       level: 1,
       ability: 'No Skill',
       pokeball: 'pokeball' as const,
-      animated: false
+      animated: false,
+      zoom: 1.5 // Default 1.5x zoom for better visibility
     }))
   );
   const [allPokemon, setAllPokemon] = useState<Pokemon[]>([]);
@@ -63,7 +63,8 @@ const PublicView = () => {
       level: 1,
       ability: 'No Skill',
       pokeball: 'pokeball',
-      animated: false
+      animated: false,
+      zoom: 1.5
     });
     toast({
       title: "Slot Cleared",
@@ -93,7 +94,8 @@ const PublicView = () => {
           level: 1,
           ability: 'No Skill',
           pokeball: 'pokeball' as const,
-          animated: false
+          animated: false,
+          zoom: 1.5
         };
       }
       
@@ -104,7 +106,8 @@ const PublicView = () => {
         level: 1,
         ability: 'No Skill',
         pokeball: 'pokeball' as const,
-        animated: false
+        animated: false,
+        zoom: 1.5
       };
     });
 
@@ -144,7 +147,7 @@ const PublicView = () => {
 
                   {slot.pokemon ? (
                     <>
-                      {/* Pokemon sprite - 80% width for better visibility */}
+                      {/* Pokemon sprite - with configurable zoom for static sprites */}
                       <div className="relative flex-1 flex items-center justify-center min-h-0 w-full">
                         <img
                           src={getPokemonSpriteUrl(slot.pokemon, slot.animated)}
@@ -153,7 +156,10 @@ const PublicView = () => {
                           style={{ 
                             maxHeight: '160px', 
                             width: '80%',
-                            maxWidth: '80%'
+                            maxWidth: '80%',
+                            // Apply zoom only for static sprites (animated gifs are perfect as-is)
+                            transform: slot.animated ? 'none' : `scale(${slot.zoom})`,
+                            objectPosition: 'center'
                           }}
                           onError={(e) => {
                             // Fallback to non-animated if animated fails
@@ -241,6 +247,10 @@ const PublicView = () => {
                             src={getPokemonSpriteUrl(slot.pokemon, false)}
                             alt={slot.pokemon.name.english}
                             className="w-12 h-12 mx-auto mb-1"
+                            style={{
+                              transform: `scale(${slot.zoom})`,
+                              objectPosition: 'center'
+                            }}
                             onError={(e) => {
                               const target = e.target as HTMLImageElement;
                               target.style.display = 'none';
@@ -377,6 +387,27 @@ const PublicView = () => {
                 <Label htmlFor="animated" className="text-slate-300">Use animated sprite</Label>
               </div>
 
+              {/* Zoom Control - only show for static sprites */}
+              {!currentSlot.animated && (
+                <div className="space-y-2">
+                  <Label className="text-slate-300">Sprite Zoom (Static only)</Label>
+                  <div className="flex items-center space-x-4">
+                    <Input
+                      type="number"
+                      min="0.5"
+                      max="3"
+                      step="0.1"
+                      value={currentSlot.zoom}
+                      onChange={(e) => updateSlot(selectedSlot, { zoom: parseFloat(e.target.value) || 1.5 })}
+                      className="bg-slate-700 border-slate-600 w-20"
+                    />
+                    <span className="text-slate-400 text-sm">
+                      {currentSlot.zoom}x zoom (crops from sides)
+                    </span>
+                  </div>
+                </div>
+              )}
+
               {/* Preview */}
               {currentSlot.pokemon && (
                 <div className="mt-4 p-4 bg-slate-700/50 rounded-lg">
@@ -386,6 +417,10 @@ const PublicView = () => {
                       src={getPokemonSpriteUrl(currentSlot.pokemon, currentSlot.animated)}
                       alt={currentSlot.pokemon.name.english}
                       className="w-16 h-16"
+                      style={{
+                        transform: currentSlot.animated ? 'none' : `scale(${currentSlot.zoom})`,
+                        objectPosition: 'center'
+                      }}
                       onError={(e) => {
                         const target = e.target as HTMLImageElement;
                         if (currentSlot.animated) {
