@@ -155,7 +155,7 @@ const PublicView = () => {
                         <img
                           src={getPokemonSpriteUrl(slot.pokemon, slot.animated)}
                           alt={slot.pokemon.name.english}
-                          className="object-contain drop-shadow-lg"
+                          className="object-contain drop-shadow-lg cursor-pointer"
                           style={{ 
                             maxHeight: '160px', 
                             width: '80%',
@@ -164,6 +164,8 @@ const PublicView = () => {
                             transform: slot.animated ? 'none' : `scale(${slot.zoom})`,
                             objectPosition: 'center'
                           }}
+                          onClick={() => updateSlot(index, { animated: !slot.animated })}
+                          title={slot.animated ? 'Click to show static sprite' : 'Click to show animated sprite'}
                           onError={(e) => {
                             // Fallback to non-animated if animated fails
                             if (slot.animated) {
