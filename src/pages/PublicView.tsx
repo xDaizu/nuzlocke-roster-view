@@ -9,6 +9,8 @@ import { TeamPokemon, Pokemon, PokeballType } from "@/types/pokemon";
 import { fetchPokemonData, getPokemonSpriteUrl, POKEBALL_DATA } from "@/utils/pokemonData";
 import { useToast } from "@/hooks/use-toast";
 import SlotEditor from "@/components/SlotEditor";
+import abilitiesData from "@/data/abilities.json";
+import TeamSlot from "@/components/TeamSlot";
 
 const PublicView = () => {
   const [team, setTeam] = useState<TeamPokemon[]>(() => 
@@ -137,78 +139,15 @@ const PublicView = () => {
           <div className="h-full p-3">
             <div className="grid grid-cols-6 gap-2 h-full">
               {team.map((slot, index) => (
-                <div
+                <TeamSlot
                   key={slot.id}
-                  className="bg-slate-800/80 border border-purple-500/20 rounded-lg p-0.5 flex flex-col items-center justify-between relative overflow-hidden group hover:border-purple-400/40 transition-all duration-300"
-                >
-                  {/* Slot number and level indicator */}
-                  <div className="absolute top-1 left-1 flex flex-col items-start">
-                    {slot.pokemon && (
-                      <span className="text-xs font-bold text-purple-200 bg-slate-900/80 rounded px-1 mt-0.5">Lv. {slot.level}</span>
-                    )}
-                  </div>
-
-                  {slot.pokemon ? (
-                    <>
-                      {/* Pokemon sprite - with configurable zoom for static sprites */}
-                      <div className="relative flex-1 flex items-center justify-center min-h-0 w-full">
-                        <img
-                          src={getPokemonSpriteUrl(slot.pokemon, slot.animated)}
-                          alt={slot.pokemon.name.english}
-                          className="object-contain drop-shadow-lg cursor-pointer"
-                          style={{ 
-                            maxHeight: '140px', 
-                            width: '80%',
-                            maxWidth: '80%',
-                            // Apply zoom only for static sprites (animated gifs are perfect as-is)
-                            transform: slot.animated ? 'none' : `scale(${slot.zoom})`,
-                            objectPosition: 'center'
-                          }}
-                          onClick={() => updateSlot(index, { animated: !slot.animated })}
-                          title={'Clica para cambiar el sprite'}
-                          onError={(e) => {
-                            // Fallback to non-animated if animated fails
-                            if (slot.animated) {
-                              const target = e.target as HTMLImageElement;
-                              target.src = getPokemonSpriteUrl(slot.pokemon!, false);
-                            }
-                          }}
-                        />
-                        
-                        {/* Pokeball indicator */}
-                        <div className="absolute -top-1 -right-1">
-                          <img
-                            src={POKEBALL_DATA[slot.pokeball].image}
-                            alt={POKEBALL_DATA[slot.pokeball].name}
-                            className="w-6 h-6 drop-shadow-md"
-                          />
-                        </div>
-                      </div>
-
-                      {/* Pokemon info - larger fonts for better readability */}
-                      <div className="w-full text-center mt-1">
-                        <div className="text-lg font-bold text-white truncate">
-                          {slot.nickname || slot.pokemon.name.english}
-                        </div>
-                        {slot.ability && (
-                          <div className="text-sm text-red-300 truncate" title={slot.ability}>
-                            {slot.ability}
-                          </div>
-                        )}
-                      </div>
-                    </>
-                  ) : (
-                    // Empty slot
-                    <div className="flex-1 flex items-center justify-center text-slate-500">
-                      <div className="text-center">
-                        <div className="w-16 h-16 bg-slate-700/50 rounded-full mb-1 mx-auto flex items-center justify-center">
-                          <span className="text-2xl">?</span>
-                        </div>
-                        <div className="text-sm">Empty Slot</div>
-                      </div>
-                    </div>
-                  )}
-                </div>
+                  slot={slot}
+                  index={index}
+                  updateSlot={updateSlot}
+                  getPokemonSpriteUrl={getPokemonSpriteUrl}
+                  pokeballData={POKEBALL_DATA}
+                  abilitiesData={abilitiesData}
+                />
               ))}
             </div>
           </div>
