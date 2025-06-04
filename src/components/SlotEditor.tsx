@@ -1,0 +1,172 @@
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
+import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { TeamPokemon, Pokemon, PokeballType } from "@/types/pokemon";
+import React from "react";
+
+interface SlotEditorProps {
+  slot: TeamPokemon;
+  allPokemon: Pokemon[];
+  pokeballData: Record<string, { image: string; name: string }>;
+  onUpdate: (updates: Partial<TeamPokemon>) => void;
+  onClear: () => void;
+  slotIndex?: number;
+  showHeader?: boolean;
+}
+
+const SlotEditor: React.FC<SlotEditorProps> = ({
+  slot,
+  allPokemon,
+  pokeballData,
+  onUpdate,
+  onClear,
+  slotIndex,
+  showHeader = true,
+}) => {
+  return (
+    <>
+      {showHeader && (
+        <CardHeader>
+          <CardTitle className="text-purple-300 flex justify-between items-center">
+            Edit Slot {slotIndex !== undefined ? slotIndex + 1 : ""}
+            <Button
+              variant="destructive"
+              size="sm"
+              onClick={onClear}
+              className="bg-red-600 hover:bg-red-700"
+            >
+              Clear Slot
+            </Button>
+          </CardTitle>
+        </CardHeader>
+      )}
+      <CardContent>
+        <form className="grid grid-cols-2 gap-x-4 gap-y-2 items-end">
+          {/* Pokemon Selection */}
+          <div className="space-y-1">
+            <Label className="text-slate-300 text-xs">Pokemon</Label>
+            <Select
+              value={slot.pokemon?.id.toString() || "none"}
+              onValueChange={(value) => {
+                if (value === "none") {
+                  onUpdate({ pokemon: null });
+                } else {
+                  const pokemon = allPokemon.find(p => p.id.toString() === value);
+                  if (pokemon) {
+                    onUpdate({ pokemon });
+                  }
+                }
+              }}
+            >
+              <SelectTrigger className="bg-slate-700 border-slate-600 h-8 text-xs">
+                <SelectValue placeholder="Select a Pokemon" />
+              </SelectTrigger>
+              <SelectContent className="bg-slate-700 border-slate-600 max-h-60 text-xs">
+                <SelectItem value="none">No Pokemon</SelectItem>
+                {allPokemon.map((pokemon) => (
+                  <SelectItem key={pokemon.id} value={pokemon.id.toString()} className="text-xs">
+                    #{pokemon.id.toString().padStart(3, '0')} {pokemon.name.english}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Nickname */}
+          <div className="space-y-1">
+            <Label className="text-slate-300 text-xs">Nickname</Label>
+            <Input
+              value={slot.nickname}
+              onChange={(e) => onUpdate({ nickname: e.target.value })}
+              placeholder={slot.pokemon?.name.english || "Enter nickname"}
+              className="bg-slate-700 border-slate-600 h-8 text-xs"
+            />
+          </div>
+
+          {/* Level */}
+          <div className="space-y-1">
+            <Label className="text-slate-300 text-xs">Level</Label>
+            <Input
+              type="number"
+              min="1"
+              max="100"
+              value={slot.level}
+              onChange={(e) => onUpdate({ level: parseInt(e.target.value) || 1 })}
+              className="bg-slate-700 border-slate-600 h-8 text-xs"
+            />
+          </div>
+
+          {/* Ability */}
+          <div className="space-y-1">
+            <Label className="text-slate-300 text-xs">Ability</Label>
+            <Input
+              value={slot.ability}
+              onChange={(e) => onUpdate({ ability: e.target.value })}
+              placeholder="Enter ability name"
+              className="bg-slate-700 border-slate-600 h-8 text-xs"
+            />
+          </div>
+
+          {/* Pokeball */}
+          <div className="space-y-1">
+            <Label className="text-slate-300 text-xs">Pokeball</Label>
+            <Select
+              value={slot.pokeball}
+              onValueChange={(value: PokeballType) => onUpdate({ pokeball: value })}
+            >
+              <SelectTrigger className="bg-slate-700 border-slate-600 h-8 text-xs">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent className="bg-slate-700 border-slate-600 text-xs">
+                {Object.entries(pokeballData).map(([key, data]) => (
+                  <SelectItem key={key} value={key} className="text-xs">
+                    <div className="flex items-center gap-2">
+                      <img src={data.image} alt={data.name} className="w-4 h-4" />
+                      {data.name}
+                    </div>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Animated Toggle */}
+          <div className="flex items-center space-x-2 mt-4">
+            <Switch
+              id="animated"
+              checked={slot.animated}
+              onCheckedChange={(checked) => onUpdate({ animated: checked })}
+            />
+            <Label htmlFor="animated" className="text-slate-300 text-xs">Use animated sprite</Label>
+          </div>
+
+          {/* Zoom Control - only show for static sprites */}
+          {!slot.animated && (
+            <div className="space-y-1 mt-4">
+              <Label className="text-slate-300 text-xs">Sprite Zoom (Static only)</Label>
+              <div className="flex items-center space-x-2">
+                <Input
+                  type="number"
+                  min="0.5"
+                  max="3"
+                  step="0.1"
+                  value={slot.zoom || 1.5}
+                  onChange={(e) => onUpdate({ zoom: parseFloat(e.target.value) || 1.5 })}
+                  className="bg-slate-700 border-slate-600 h-8 text-xs w-16"
+                />
+                <span className="text-slate-400 text-xs">
+                  {slot.zoom || 1.5}x zoom
+                </span>
+              </div>
+            </div>
+          )}
+        </form>
+      </CardContent>
+    </>
+  );
+};
+
+export default SlotEditor; 

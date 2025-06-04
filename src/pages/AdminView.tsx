@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -11,6 +10,7 @@ import { saveTeam, loadTeam } from "@/utils/teamStorage";
 import { fetchPokemonData, getPokemonSpriteUrl, POKEBALL_DATA } from "@/utils/pokemonData";
 import { useToast } from "@/hooks/use-toast";
 import { Link } from "react-router-dom";
+import SlotEditor from "@/components/SlotEditor";
 
 const AdminView = () => {
   const [team, setTeam] = useState<TeamPokemon[]>([]);
@@ -103,9 +103,9 @@ const AdminView = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Team Overview */}
-          <Card className="bg-slate-800/90 border-purple-500/30">
+          <Card className="bg-slate-800/90 border-purple-500/30 col-span-1">
             <CardHeader>
               <CardTitle className="text-purple-300">Current Team</CardTitle>
             </CardHeader>
@@ -156,178 +156,53 @@ const AdminView = () => {
           </Card>
 
           {/* Slot Editor */}
-          <Card className="bg-slate-800/90 border-purple-500/30">
-            <CardHeader>
-              <CardTitle className="text-purple-300 flex justify-between items-center">
-                Edit Slot {selectedSlot + 1}
-                <Button
-                  variant="destructive"
-                  size="sm"
-                  onClick={() => clearSlot(selectedSlot)}
-                  className="bg-red-600 hover:bg-red-700"
-                >
-                  Clear Slot
-                </Button>
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {/* Pokemon Selection */}
-              <div className="space-y-2">
-                <Label className="text-slate-300">Pokemon</Label>
-                <Select
-                  value={currentSlot.pokemon?.id.toString() || ""}
-                  onValueChange={(value) => {
-                    if (value === "") {
-                      updateSlot(selectedSlot, { pokemon: null });
-                    } else {
-                      const pokemon = allPokemon.find(p => p.id.toString() === value);
-                      if (pokemon) {
-                        updateSlot(selectedSlot, { pokemon });
+          <Card className="bg-slate-800/90 border-purple-500/30 col-span-1 lg:col-span-2">
+            <SlotEditor
+              slot={currentSlot}
+              allPokemon={allPokemon}
+              pokeballData={POKEBALL_DATA}
+              onUpdate={(updates) => updateSlot(selectedSlot, updates)}
+              onClear={() => clearSlot(selectedSlot)}
+              slotIndex={selectedSlot}
+              showHeader={true}
+            />
+            {/* Preview */}
+            {currentSlot.pokemon && (
+              <div className="mt-4 p-4 bg-slate-700/50 rounded-lg">
+                <Label className="text-slate-300 mb-2 block">Preview</Label>
+                <div className="flex items-center gap-4">
+                  <img
+                    src={getPokemonSpriteUrl(currentSlot.pokemon, currentSlot.animated)}
+                    alt={currentSlot.pokemon.name.english}
+                    className="w-16 h-16"
+                    style={{
+                      transform: currentSlot.animated ? 'none' : `scale(${currentSlot.zoom || 1.5})`,
+                      objectPosition: 'center'
+                    }}
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      if (currentSlot.animated) {
+                        target.src = getPokemonSpriteUrl(currentSlot.pokemon!, false);
                       }
-                    }
-                  }}
-                >
-                  <SelectTrigger className="bg-slate-700 border-slate-600">
-                    <SelectValue placeholder="Select a Pokemon" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-slate-700 border-slate-600 max-h-60">
-                    <SelectItem value="">No Pokemon</SelectItem>
-                    {allPokemon.map((pokemon) => (
-                      <SelectItem key={pokemon.id} value={pokemon.id.toString()}>
-                        #{pokemon.id.toString().padStart(3, '0')} {pokemon.name.english}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              {/* Nickname */}
-              <div className="space-y-2">
-                <Label className="text-slate-300">Nickname</Label>
-                <Input
-                  value={currentSlot.nickname}
-                  onChange={(e) => updateSlot(selectedSlot, { nickname: e.target.value })}
-                  placeholder={currentSlot.pokemon?.name.english || "Enter nickname"}
-                  className="bg-slate-700 border-slate-600"
-                />
-              </div>
-
-              {/* Level */}
-              <div className="space-y-2">
-                <Label className="text-slate-300">Level</Label>
-                <Input
-                  type="number"
-                  min="1"
-                  max="100"
-                  value={currentSlot.level}
-                  onChange={(e) => updateSlot(selectedSlot, { level: parseInt(e.target.value) || 1 })}
-                  className="bg-slate-700 border-slate-600"
-                />
-              </div>
-
-              {/* Ability */}
-              <div className="space-y-2">
-                <Label className="text-slate-300">Ability</Label>
-                <Input
-                  value={currentSlot.ability}
-                  onChange={(e) => updateSlot(selectedSlot, { ability: e.target.value })}
-                  placeholder="Enter ability name"
-                  className="bg-slate-700 border-slate-600"
-                />
-              </div>
-
-              {/* Pokeball */}
-              <div className="space-y-2">
-                <Label className="text-slate-300">Pokeball</Label>
-                <Select
-                  value={currentSlot.pokeball}
-                  onValueChange={(value: PokeballType) => updateSlot(selectedSlot, { pokeball: value })}
-                >
-                  <SelectTrigger className="bg-slate-700 border-slate-600">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent className="bg-slate-700 border-slate-600">
-                    {Object.entries(POKEBALL_DATA).map(([key, data]) => (
-                      <SelectItem key={key} value={key}>
-                        <div className="flex items-center gap-2">
-                          <img src={data.image} alt={data.name} className="w-5 h-5" />
-                          {data.name}
-                        </div>
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              {/* Animated Toggle */}
-              <div className="flex items-center space-x-2">
-                <Switch
-                  id="animated"
-                  checked={currentSlot.animated}
-                  onCheckedChange={(checked) => updateSlot(selectedSlot, { animated: checked })}
-                />
-                <Label htmlFor="animated" className="text-slate-300">Use animated sprite</Label>
-              </div>
-
-              {/* Zoom Control - only show for static sprites */}
-              {!currentSlot.animated && (
-                <div className="space-y-2">
-                  <Label className="text-slate-300">Sprite Zoom (Static only)</Label>
-                  <div className="flex items-center space-x-4">
-                    <Input
-                      type="number"
-                      min="0.5"
-                      max="3"
-                      step="0.1"
-                      value={currentSlot.zoom || 1.5}
-                      onChange={(e) => updateSlot(selectedSlot, { zoom: parseFloat(e.target.value) || 1.5 })}
-                      className="bg-slate-700 border-slate-600 w-20"
-                    />
-                    <span className="text-slate-400 text-sm">
-                      {currentSlot.zoom || 1.5}x zoom (crops from sides)
-                    </span>
-                  </div>
-                </div>
-              )}
-
-              {/* Preview */}
-              {currentSlot.pokemon && (
-                <div className="mt-4 p-4 bg-slate-700/50 rounded-lg">
-                  <Label className="text-slate-300 mb-2 block">Preview</Label>
-                  <div className="flex items-center gap-4">
-                    <img
-                      src={getPokemonSpriteUrl(currentSlot.pokemon, currentSlot.animated)}
-                      alt={currentSlot.pokemon.name.english}
-                      className="w-16 h-16"
-                      style={{
-                        transform: currentSlot.animated ? 'none' : `scale(${currentSlot.zoom || 1.5})`,
-                        objectPosition: 'center'
-                      }}
-                      onError={(e) => {
-                        const target = e.target as HTMLImageElement;
-                        if (currentSlot.animated) {
-                          target.src = getPokemonSpriteUrl(currentSlot.pokemon!, false);
-                        }
-                      }}
-                    />
-                    <div>
-                      <div className="text-white font-medium">
-                        {currentSlot.nickname || currentSlot.pokemon.name.english}
-                      </div>
-                      <div className="text-purple-300 text-sm">Level {currentSlot.level}</div>
-                      {currentSlot.ability && (
-                        <div className="text-red-300 text-sm">{currentSlot.ability}</div>
-                      )}
+                    }}
+                  />
+                  <div>
+                    <div className="text-white font-medium">
+                      {currentSlot.nickname || currentSlot.pokemon.name.english}
                     </div>
-                    <img
-                      src={POKEBALL_DATA[currentSlot.pokeball].image}
-                      alt={POKEBALL_DATA[currentSlot.pokeball].name}
-                      className="w-8 h-8"
-                    />
+                    <div className="text-purple-300 text-sm">Level {currentSlot.level}</div>
+                    {currentSlot.ability && (
+                      <div className="text-red-300 text-sm">{currentSlot.ability}</div>
+                    )}
                   </div>
+                  <img
+                    src={POKEBALL_DATA[currentSlot.pokeball].image}
+                    alt={POKEBALL_DATA[currentSlot.pokeball].name}
+                    className="w-8 h-8"
+                  />
                 </div>
-              )}
-            </CardContent>
+              </div>
+            )}
           </Card>
         </div>
       </div>
