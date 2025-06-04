@@ -138,19 +138,23 @@ const PublicView = () => {
                   className="bg-slate-800/80 border border-purple-500/20 rounded-lg p-2 flex flex-col items-center justify-between relative overflow-hidden group hover:border-purple-400/40 transition-all duration-300"
                 >
                   {/* Slot number indicator */}
-                  <div className="absolute top-1 left-1 text-xs font-bold text-purple-300/60">
+                  <div className="absolute top-1 left-1 text-sm font-bold text-purple-300/60">
                     {index + 1}
                   </div>
 
                   {slot.pokemon ? (
                     <>
-                      {/* Pokemon sprite - much larger and main focal point */}
-                      <div className="relative flex-1 flex items-center justify-center min-h-0">
+                      {/* Pokemon sprite - 80% width for better visibility */}
+                      <div className="relative flex-1 flex items-center justify-center min-h-0 w-full">
                         <img
                           src={getPokemonSpriteUrl(slot.pokemon, slot.animated)}
                           alt={slot.pokemon.name.english}
-                          className="max-w-full max-h-full object-contain drop-shadow-lg"
-                          style={{ maxHeight: '160px', maxWidth: '140px' }}
+                          className="object-contain drop-shadow-lg"
+                          style={{ 
+                            maxHeight: '160px', 
+                            width: '80%',
+                            maxWidth: '80%'
+                          }}
                           onError={(e) => {
                             // Fallback to non-animated if animated fails
                             if (slot.animated) {
@@ -165,21 +169,21 @@ const PublicView = () => {
                           <img
                             src={POKEBALL_DATA[slot.pokeball].image}
                             alt={POKEBALL_DATA[slot.pokeball].name}
-                            className="w-5 h-5 drop-shadow-md"
+                            className="w-6 h-6 drop-shadow-md"
                           />
                         </div>
                       </div>
 
-                      {/* Pokemon info - more compact */}
+                      {/* Pokemon info - larger fonts for better readability */}
                       <div className="w-full text-center space-y-0.5 mt-1">
-                        <div className="text-xs font-bold text-white truncate">
+                        <div className="text-sm font-bold text-white truncate">
                           {slot.nickname || slot.pokemon.name.english}
                         </div>
-                        <div className="text-xs text-purple-300 font-medium">
+                        <div className="text-sm text-purple-300 font-medium">
                           Lv. {slot.level}
                         </div>
                         {slot.ability && (
-                          <div className="text-xs text-red-300 truncate" title={slot.ability}>
+                          <div className="text-sm text-red-300 truncate" title={slot.ability}>
                             {slot.ability}
                           </div>
                         )}
@@ -189,10 +193,10 @@ const PublicView = () => {
                     // Empty slot
                     <div className="flex-1 flex items-center justify-center text-slate-500">
                       <div className="text-center">
-                        <div className="w-12 h-12 bg-slate-700/50 rounded-full mb-1 mx-auto flex items-center justify-center">
-                          <span className="text-xl">?</span>
+                        <div className="w-16 h-16 bg-slate-700/50 rounded-full mb-1 mx-auto flex items-center justify-center">
+                          <span className="text-2xl">?</span>
                         </div>
-                        <div className="text-xs">Empty Slot</div>
+                        <div className="text-sm">Empty Slot</div>
                       </div>
                     </div>
                   )}
