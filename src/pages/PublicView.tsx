@@ -279,9 +279,9 @@ const PublicView = () => {
               <div className="space-y-2">
                 <Label className="text-slate-300">Pokemon</Label>
                 <Select
-                  value={currentSlot.pokemon?.id.toString() || ""}
+                  value={currentSlot.pokemon?.id.toString() || "none"}
                   onValueChange={(value) => {
-                    if (value === "") {
+                    if (value === "none") {
                       updateSlot(selectedSlot, { pokemon: null });
                     } else {
                       const pokemon = allPokemon.find(p => p.id.toString() === value);
@@ -295,7 +295,7 @@ const PublicView = () => {
                     <SelectValue placeholder="Select a Pokemon" />
                   </SelectTrigger>
                   <SelectContent className="bg-slate-700 border-slate-600 max-h-60">
-                    <SelectItem value="">No Pokemon</SelectItem>
+                    <SelectItem value="none">No Pokemon</SelectItem>
                     {allPokemon.map((pokemon) => (
                       <SelectItem key={pokemon.id} value={pokemon.id.toString()}>
                         #{pokemon.id.toString().padStart(3, '0')} {pokemon.name.english}
