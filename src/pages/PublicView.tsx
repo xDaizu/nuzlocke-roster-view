@@ -14,6 +14,7 @@ import abilitiesData from "@/data/abilities_es.json";
 import placesData from "@/data/places_es.json";
 import { pokemonFixtures } from "@/data/fixtures";
 import { translations } from "@/data/translations";
+import { storageService } from "@/services/storageService";
 
 interface PanelConfig {
   boxPanel: number;
@@ -73,6 +74,25 @@ const PublicView = () => {
         const pokemonData = await fetchPokemonData();
         setAllPokemon(pokemonData);
         console.log('Loaded Pokemon data:', pokemonData.length, 'entries');
+        
+        // Check for saved data and load it automatically
+        try {
+          const savedSlots = storageService.loadTeam();
+          if (savedSlots && savedSlots.length > 0) {
+            console.log('Found saved data, loading automatically:', savedSlots.length, 'slots');
+            setAllSlots(savedSlots);
+            toast({
+              title: translations.messages.teamLoaded,
+              description: "Datos guardados cargados automáticamente",
+              variant: "default"
+            });
+          } else {
+            console.log('No saved data found, using default empty slots');
+          }
+        } catch (loadError) {
+          console.error('Error loading saved data:', loadError);
+          // Don't show error toast for failed auto-load, just continue with empty slots
+        }
       } catch (error) {
         console.error('Error initializing data:', error);
         toast({
