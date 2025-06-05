@@ -2,8 +2,8 @@ export const translations = {
   // Panel titles and navigation
   panels: {
     boxPanel: "Panel de Cajas",
-    slotEditor: "Editor de Slots",
-    placesPanel: "Lugares visitados",
+    slotEditor: "Editor",
+    placesPanel: "Lugares con captura",
     configPanel: "Configuración de Paneles"
   },
 
