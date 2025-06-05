@@ -1,4 +1,3 @@
-
 import { Pokemon, PokeballInfo, PokeballType } from "@/types/pokemon";
 
 export const POKEBALL_DATA: Record<PokeballType, PokeballInfo> = {
@@ -35,12 +34,11 @@ export const fetchPokemonData = async (): Promise<Pokemon[]> => {
   }
   
   try {
-    const response = await fetch('https://raw.githubusercontent.com/fanzeyi/pokemon.json/master/pokedex.json');
-    const data = await response.json();
+    const data = (await import("@/data/pokedex.json")).default;
     pokemonDataCache = data;
     return data;
   } catch (error) {
-    console.error('Failed to fetch Pokemon data:', error);
+    console.error('Failed to load Pokemon data:', error);
     return [];
   }
 };
