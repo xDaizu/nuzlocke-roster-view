@@ -9,6 +9,7 @@ interface PanelConfig {
   boxPanel: number;
   slotEditor: number;
   placesPanel: number;
+  weaknessPanel: number;
   configPanel: number;
 }
 
@@ -28,7 +29,7 @@ const PanelConfigPanel: React.FC<PanelConfigPanelProps> = ({ config, onConfigCha
   const getColumnText = (num: number) => 
     `${num} ${num > 1 ? translations.config.columnsPlural : translations.config.columnsSingular}`;
 
-  const totalColumns = config.boxPanel + config.slotEditor + config.placesPanel + config.configPanel;
+  const totalColumns = config.boxPanel + config.slotEditor + config.placesPanel + config.weaknessPanel + config.configPanel;
   const isValidConfig = totalColumns <= 6;
 
   return (
@@ -87,6 +88,26 @@ const PanelConfigPanel: React.FC<PanelConfigPanelProps> = ({ config, onConfigCha
             <Select 
               value={config.placesPanel.toString()} 
               onValueChange={(value) => updateConfig('placesPanel', parseInt(value))}
+            >
+              <SelectTrigger className="bg-slate-700 border-slate-600 text-white">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent className="bg-slate-700 border-slate-600">
+                {[1, 2, 3, 4, 5, 6].map(num => (
+                  <SelectItem key={num} value={num.toString()} className="text-white focus:bg-slate-600">
+                    {getColumnText(num)}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Weakness Panel Config */}
+          <div className="space-y-2">
+            <Label className="text-white text-sm">{translations.panels.weaknessPanel}</Label>
+            <Select 
+              value={config.weaknessPanel.toString()} 
+              onValueChange={(value) => updateConfig('weaknessPanel', parseInt(value))}
             >
               <SelectTrigger className="bg-slate-700 border-slate-600 text-white">
                 <SelectValue />

@@ -4,6 +4,7 @@ export const translations = {
     boxPanel: "Panel de Cajas",
     slotEditor: "Editor",
     placesPanel: "Lugares con captura",
+    weaknessPanel: "Análisis de Tipos",
     configPanel: "Configuración de Paneles"
   },
 

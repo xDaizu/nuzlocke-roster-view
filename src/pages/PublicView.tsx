@@ -7,6 +7,7 @@ import PublicBoxPanel from "@/components/PublicBoxPanel";
 import PublicSlotEditor from "@/components/PublicSlotEditor";
 import PlacesPanel from "@/components/PlacesPanel";
 import PanelConfigPanel from "@/components/PanelConfigPanel";
+import WeaknessPanel from "@/components/WeaknessPanel";
 import { Label } from "@/components/ui/label";
 import TeamSlot from "@/components/TeamSlot";
 import React from "react";
@@ -20,6 +21,7 @@ interface PanelConfig {
   boxPanel: number;
   slotEditor: number;
   placesPanel: number;
+  weaknessPanel: number;
   configPanel: number;
 }
 
@@ -59,6 +61,7 @@ const PublicView = () => {
     boxPanel: 2,
     slotEditor: 2,
     placesPanel: 2,
+    weaknessPanel: 2,
     configPanel: 2
   });
   const { toast } = useToast();
@@ -343,6 +346,12 @@ const PublicView = () => {
               <PlacesPanel
                 allSlots={allSlots}
                 placesData={placesData}
+              />
+            </div>
+            <div className={getColSpanClass(panelConfig.weaknessPanel)}>
+              <WeaknessPanel
+                allPokemon={allPokemon}
+                translations={translations}
               />
             </div>
             <div className={getColSpanClass(panelConfig.configPanel)}>

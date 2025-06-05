@@ -1,0 +1,87 @@
+{
+  "Normal": {
+    "weak_to": ["Fighting"],
+    "resistant_to": [],
+    "immune_to": ["Ghost"]
+  },
+  "Fire": {
+    "weak_to": ["Water", "Rock", "Ground"],
+    "resistant_to": ["Fire", "Grass", "Ice", "Bug", "Steel"],
+    "immune_to": []
+  },
+  "Water": {
+    "weak_to": ["Electric", "Grass"],
+    "resistant_to": ["Fire", "Water", "Ice", "Steel"],
+    "immune_to": []
+  },
+  "Electric": {
+    "weak_to": ["Ground"],
+    "resistant_to": ["Electric", "Flying", "Steel"],
+    "immune_to": []
+  },
+  "Grass": {
+    "weak_to": ["Fire", "Ice", "Poison", "Flying", "Bug"],
+    "resistant_to": ["Water", "Electric", "Grass", "Ground"],
+    "immune_to": []
+  },
+  "Ice": {
+    "weak_to": ["Fire", "Fighting", "Rock", "Steel"],
+    "resistant_to": ["Ice"],
+    "immune_to": []
+  },
+  "Fighting": {
+    "weak_to": ["Flying", "Psychic"],
+    "resistant_to": ["Bug", "Rock", "Dark"],
+    "immune_to": []
+  },
+  "Poison": {
+    "weak_to": ["Ground", "Psychic"],
+    "resistant_to": ["Grass", "Fighting", "Poison", "Bug"],
+    "immune_to": []
+  },
+  "Ground": {
+    "weak_to": ["Water", "Ice", "Grass"],
+    "resistant_to": ["Poison", "Rock"],
+    "immune_to": ["Electric"]
+  },
+  "Flying": {
+    "weak_to": ["Electric", "Ice", "Rock"],
+    "resistant_to": ["Grass", "Fighting", "Bug"],
+    "immune_to": ["Ground"]
+  },
+  "Psychic": {
+    "weak_to": ["Bug", "Ghost", "Dark"],
+    "resistant_to": ["Fighting", "Psychic"],
+    "immune_to": []
+  },
+  "Bug": {
+    "weak_to": ["Fire", "Flying", "Rock"],
+    "resistant_to": ["Grass", "Fighting", "Ground"],
+    "immune_to": []
+  },
+  "Rock": {
+    "weak_to": ["Water", "Grass", "Fighting", "Ground", "Steel"],
+    "resistant_to": ["Normal", "Fire", "Poison", "Flying"],
+    "immune_to": []
+  },
+  "Ghost": {
+    "weak_to": ["Ghost", "Dark"],
+    "resistant_to": ["Poison", "Bug"],
+    "immune_to": ["Normal", "Fighting"]
+  },
+  "Dragon": {
+    "weak_to": ["Ice", "Dragon"],
+    "resistant_to": ["Fire", "Water", "Electric", "Grass"],
+    "immune_to": []
+  },
+  "Dark": {
+    "weak_to": ["Fighting", "Bug"],
+    "resistant_to": ["Ghost", "Dark"],
+    "immune_to": ["Psychic"]
+  },
+  "Steel": {
+    "weak_to": ["Fire", "Fighting", "Ground"],
+    "resistant_to": ["Normal", "Grass", "Ice", "Flying", "Psychic", "Bug", "Rock", "Dragon", "Steel"],
+    "immune_to": ["Poison"]
+  }
+}
