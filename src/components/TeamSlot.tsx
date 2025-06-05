@@ -7,7 +7,7 @@ interface TeamSlotProps {
   updateSlot: (index: number, updates: Partial<any>) => void;
   getPokemonSpriteUrl: (pokemon: any, animated: boolean) => string;
   pokeballData: Record<string, { image: string; name: string }>;
-  abilitiesData: Array<{ name: string; description: string }>;
+  abilitiesData: Array<{ slug: string; name: string; description: string }>;
 }
 
 const TeamSlot: React.FC<TeamSlotProps> = ({
@@ -18,9 +18,8 @@ const TeamSlot: React.FC<TeamSlotProps> = ({
   pokeballData,
   abilitiesData,
 }) => {
-  const getAbilityDescription = (name: string) => {
-    const found = abilitiesData.find((a) => a.name === name);
-    return found ? found.description : "";
+  const getAbilityData = (slug: string) => {
+    return abilitiesData.find((a) => a.slug === slug);
   };
 
   return (
@@ -92,9 +91,10 @@ const TeamSlot: React.FC<TeamSlotProps> = ({
             )}
           </div>
         </TooltipTrigger>
-        {slot.ability && (
+        {slot.ability && getAbilityData(slot.ability) && (
           <TooltipContent className="text-sm max-w-xs">
-            {getAbilityDescription(slot.ability)}
+            <div className="font-bold mb-1">{getAbilityData(slot.ability)?.name}</div>
+            <div>{getAbilityData(slot.ability)?.description}</div>
           </TooltipContent>
         )}
       </Tooltip>

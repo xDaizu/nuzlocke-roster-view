@@ -6,7 +6,7 @@ import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { TeamPokemon, Pokemon, PokeballType } from "@/types/pokemon";
 import React, { useState } from "react";
-import abilitiesData from "@/data/abilities.json";
+import abilitiesData from "@/data/abilities_es.json";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
@@ -22,10 +22,13 @@ interface SlotEditorProps {
 }
 
 const abilityNames = abilitiesData.map((a: any) => a.name);
+const abilitySlugMap = Object.fromEntries(abilitiesData.map((a: any) => [a.slug, a]));
+const abilityNameMap = Object.fromEntries(abilitiesData.map((a: any) => [a.name, a]));
 
 // Helper to get ability description
-const getAbilityDescription = (name: string) => {
-  const found = abilitiesData.find((a: any) => a.name === name);
+const getAbilityDescription = (slugOrName: string) => {
+  // Try slug first, then name
+  const found = abilitySlugMap[slugOrName] || abilityNameMap[slugOrName];
   return found ? found.description : "";
 };
 
@@ -39,11 +42,12 @@ const SlotEditor: React.FC<SlotEditorProps> = ({
   showHeader = true,
 }) => {
   const [abilityFilter, setAbilityFilter] = useState("");
-  const filteredAbilities = abilityNames.filter((name) =>
-    name.toLowerCase().includes(abilityFilter.toLowerCase())
+  // Filter by name
+  const filteredAbilities = abilitiesData.filter((a: any) =>
+    a.name.toLowerCase().includes(abilityFilter.toLowerCase())
   );
 
-  // Get description for currently selected ability
+  // Get description for currently selected ability (by slug)
   const selectedAbilityDescription = slot.ability ? getAbilityDescription(slot.ability) : "";
 
   return (
@@ -128,7 +132,7 @@ const SlotEditor: React.FC<SlotEditorProps> = ({
                 if (value === "none") {
                   onUpdate({ ability: "" });
                 } else {
-                  onUpdate({ ability: value });
+                  onUpdate({ ability: value }); // value is the slug
                 }
               }}
             >
@@ -151,33 +155,30 @@ const SlotEditor: React.FC<SlotEditorProps> = ({
                   <Input
                     value={abilityFilter}
                     onChange={e => setAbilityFilter(e.target.value)}
-                    placeholder="Filter abilities..."
+                    placeholder="Filtrar habilidades..."
                     className="mb-1 bg-slate-800 border-slate-600 h-7 text-xs"
                   />
                 </div>
-                <SelectItem value="none">No Ability</SelectItem>
-                {filteredAbilities.map((name) => {
-                  const desc = getAbilityDescription(name);
-                  return (
-                    <TooltipProvider key={name}>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <SelectItem
-                            value={name}
-                            className="text-xs"
-                          >
-                            {name}
-                          </SelectItem>
-                        </TooltipTrigger>
-                        {desc && (
-                          <TooltipContent className="text-sm max-w-xs">
-                            {desc}
-                          </TooltipContent>
-                        )}
-                      </Tooltip>
-                    </TooltipProvider>
-                  );
-                })}
+                <SelectItem value="none">Sin habilidad</SelectItem>
+                {filteredAbilities.map((ability: any) => (
+                  <TooltipProvider key={ability.slug}>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <SelectItem
+                          value={ability.slug}
+                          className="text-xs"
+                        >
+                          {ability.name}
+                        </SelectItem>
+                      </TooltipTrigger>
+                      {ability.description && (
+                        <TooltipContent className="text-sm max-w-xs">
+                          {ability.description}
+                        </TooltipContent>
+                      )}
+                    </Tooltip>
+                  </TooltipProvider>
+                ))}
               </SelectContent>
             </Select>
           </div>

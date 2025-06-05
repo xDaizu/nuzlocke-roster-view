@@ -9,7 +9,7 @@ import { TeamPokemon, Pokemon, PokeballType } from "@/types/pokemon";
 import { fetchPokemonData, getPokemonSpriteUrl, POKEBALL_DATA } from "@/utils/pokemonData";
 import { useToast } from "@/hooks/use-toast";
 import SlotEditor from "@/components/SlotEditor";
-import abilitiesData from "@/data/abilities.json";
+import abilitiesData from "@/data/abilities_es.json";
 import TeamSlot from "@/components/TeamSlot";
 import { storageService } from "@/services/storageService";
 import { Save, Download, Upload, ArchiveRestore } from "lucide-react";
@@ -67,7 +67,7 @@ const PublicView = () => {
       pokemon: null,
       nickname: '',
       level: 1,
-      ability: 'No Skill',
+      ability: '',
       pokeball: 'pokeball',
       animated: false,
       zoom: 1.5
@@ -80,10 +80,10 @@ const PublicView = () => {
 
   const addFixtures = () => {
     const fixtures = [
-      { name: 'Mareep', nickname: 'RazorMorel', ability: 'Arena Trap', level: 10 },
+      { name: 'Mareep', nickname: 'RazorMorel', ability: 'arena-trap', level: 10 },
       { name: 'Lotad', nickname: 'Calos', level: 8 },
       { name: 'Turtwig', nickname: 'Pablo', level: 7 },
-      { name: 'Jigglypuff', nickname: 'Vancleemp', ability: 'Compound Eyes', level: 10 }
+      { name: 'Jigglypuff', nickname: 'Vancleemp', ability: 'compound-eyes', level: 10 }
     ];
 
     const newTeam = Array.from({ length: 6 }, (_, index) => {
@@ -98,7 +98,7 @@ const PublicView = () => {
           pokemon: pokemon || null,
           nickname: fixture.nickname,
           level: fixture.level || 1,
-          ability: fixture.ability,
+          ability: fixture.ability || '',
           pokeball: 'pokeball' as const,
           animated: false,
           zoom: 1.5
