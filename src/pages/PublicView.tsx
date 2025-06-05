@@ -13,6 +13,7 @@ import React from "react";
 import abilitiesData from "@/data/abilities_es.json";
 import placesData from "@/data/places_es.json";
 import { pokemonFixtures } from "@/data/fixtures";
+import { translations } from "@/data/translations";
 
 interface PanelConfig {
   boxPanel: number;
@@ -75,8 +76,8 @@ const PublicView = () => {
       } catch (error) {
         console.error('Error initializing data:', error);
         toast({
-          title: "Error",
-          description: "Failed to load Pokemon data",
+          title: translations.messages.error,
+          description: translations.messages.pokemonDataError,
           variant: "destructive"
         });
       } finally {
@@ -117,8 +118,8 @@ const PublicView = () => {
       box: 'team',
     });
     toast({
-      title: "Slot Cleared",
-      description: `Slot ${slotIndex + 1} has been cleared`
+      title: translations.messages.slotCleared,
+      description: `Slot ${slotIndex + 1} ${translations.messages.slotClearedDesc}`
     });
   };
 
@@ -174,7 +175,7 @@ const PublicView = () => {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-purple-900 via-slate-900 to-red-900 flex items-center justify-center">
-        <div className="text-white text-xl">Loading Pokemon data...</div>
+        <div className="text-white text-xl">{translations.messages.loading}</div>
       </div>
     );
   }

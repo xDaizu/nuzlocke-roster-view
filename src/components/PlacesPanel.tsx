@@ -2,6 +2,7 @@ import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { TeamPokemon } from "@/types/pokemon";
 import { MapPin } from "lucide-react";
+import { translations } from "@/data/translations";
 
 interface PlacesPanelProps {
   allSlots: TeamPokemon[];
@@ -18,7 +19,7 @@ const PlacesPanel: React.FC<PlacesPanelProps> = ({ allSlots, placesData }) => {
 
   // Get place names from placesData
   const getPlaceName = (placeId: string) => {
-    if (placeId === 'unknown') return 'Desconocido';
+    if (placeId === 'unknown') return translations.placeholders.unknown;
     const place = placesData.find(p => p.id === placeId);
     return place ? place.nombre : placeId;
   };
@@ -28,7 +29,7 @@ const PlacesPanel: React.FC<PlacesPanelProps> = ({ allSlots, placesData }) => {
       <CardHeader>
         <CardTitle className="text-purple-300 flex items-center gap-2">
           <MapPin className="w-5 h-5" />
-          Lugares visitados
+          {translations.panels.placesPanel}
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -53,7 +54,7 @@ const PlacesPanel: React.FC<PlacesPanelProps> = ({ allSlots, placesData }) => {
                   <div className="space-y-1">
                     {pokemonFromPlace.map((slot, index) => (
                       <div key={`${slot.id}-${index}`} className="text-xs text-slate-300">
-                        {slot.nickname || 'Sin nombre'} ({slot.pokemon?.name.english || 'Desconocido'})
+                        {slot.nickname || translations.placeholders.noName} ({slot.pokemon?.name.english || translations.placeholders.unknown})
                       </div>
                     ))}
                   </div>
@@ -64,8 +65,8 @@ const PlacesPanel: React.FC<PlacesPanelProps> = ({ allSlots, placesData }) => {
         ) : (
           <div className="text-center text-slate-400 py-8">
             <MapPin className="w-12 h-12 mx-auto mb-3 opacity-50" />
-            <p>No hay lugares registrados</p>
-            <p className="text-xs mt-1">Asigna lugares a tus Pokémon para verlos aquí</p>
+            <p>{translations.messages.noPlaces}</p>
+            <p className="text-xs mt-1">{translations.messages.assignPlaces}</p>
           </div>
         )}
       </CardContent>

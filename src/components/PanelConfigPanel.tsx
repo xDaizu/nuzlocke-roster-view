@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Settings } from "lucide-react";
+import { translations } from "@/data/translations";
 
 interface PanelConfig {
   boxPanel: number;
@@ -24,6 +25,9 @@ const PanelConfigPanel: React.FC<PanelConfigPanelProps> = ({ config, onConfigCha
     });
   };
 
+  const getColumnText = (num: number) => 
+    `${num} ${num > 1 ? translations.config.columnsPlural : translations.config.columnsSingular}`;
+
   const totalColumns = config.boxPanel + config.slotEditor + config.placesPanel + config.configPanel;
   const isValidConfig = totalColumns <= 6;
 
@@ -32,14 +36,14 @@ const PanelConfigPanel: React.FC<PanelConfigPanelProps> = ({ config, onConfigCha
       <CardHeader>
         <CardTitle className="text-purple-300 flex items-center gap-2">
           <Settings className="w-5 h-5" />
-          Configuración de Paneles
+          {translations.panels.configPanel}
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="grid grid-cols-1 gap-3">
           {/* Box Panel Config */}
           <div className="space-y-2">
-            <Label className="text-white text-sm">Panel de Cajas</Label>
+            <Label className="text-white text-sm">{translations.panels.boxPanel}</Label>
             <Select 
               value={config.boxPanel.toString()} 
               onValueChange={(value) => updateConfig('boxPanel', parseInt(value))}
@@ -50,7 +54,7 @@ const PanelConfigPanel: React.FC<PanelConfigPanelProps> = ({ config, onConfigCha
               <SelectContent className="bg-slate-700 border-slate-600">
                 {[1, 2, 3, 4, 5, 6].map(num => (
                   <SelectItem key={num} value={num.toString()} className="text-white focus:bg-slate-600">
-                    {num} columna{num > 1 ? 's' : ''}
+                    {getColumnText(num)}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -59,7 +63,7 @@ const PanelConfigPanel: React.FC<PanelConfigPanelProps> = ({ config, onConfigCha
 
           {/* Slot Editor Config */}
           <div className="space-y-2">
-            <Label className="text-white text-sm">Editor de Slots</Label>
+            <Label className="text-white text-sm">{translations.panels.slotEditor}</Label>
             <Select 
               value={config.slotEditor.toString()} 
               onValueChange={(value) => updateConfig('slotEditor', parseInt(value))}
@@ -70,7 +74,7 @@ const PanelConfigPanel: React.FC<PanelConfigPanelProps> = ({ config, onConfigCha
               <SelectContent className="bg-slate-700 border-slate-600">
                 {[1, 2, 3, 4, 5, 6].map(num => (
                   <SelectItem key={num} value={num.toString()} className="text-white focus:bg-slate-600">
-                    {num} columna{num > 1 ? 's' : ''}
+                    {getColumnText(num)}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -79,7 +83,7 @@ const PanelConfigPanel: React.FC<PanelConfigPanelProps> = ({ config, onConfigCha
 
           {/* Places Panel Config */}
           <div className="space-y-2">
-            <Label className="text-white text-sm">Panel de Lugares</Label>
+            <Label className="text-white text-sm">{translations.panels.placesPanel}</Label>
             <Select 
               value={config.placesPanel.toString()} 
               onValueChange={(value) => updateConfig('placesPanel', parseInt(value))}
@@ -90,7 +94,7 @@ const PanelConfigPanel: React.FC<PanelConfigPanelProps> = ({ config, onConfigCha
               <SelectContent className="bg-slate-700 border-slate-600">
                 {[1, 2, 3, 4, 5, 6].map(num => (
                   <SelectItem key={num} value={num.toString()} className="text-white focus:bg-slate-600">
-                    {num} columna{num > 1 ? 's' : ''}
+                    {getColumnText(num)}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -99,7 +103,7 @@ const PanelConfigPanel: React.FC<PanelConfigPanelProps> = ({ config, onConfigCha
 
           {/* Config Panel Config */}
           <div className="space-y-2">
-            <Label className="text-white text-sm">Panel de Configuración</Label>
+            <Label className="text-white text-sm">{translations.panels.configPanel}</Label>
             <Select 
               value={config.configPanel.toString()} 
               onValueChange={(value) => updateConfig('configPanel', parseInt(value))}
@@ -110,7 +114,7 @@ const PanelConfigPanel: React.FC<PanelConfigPanelProps> = ({ config, onConfigCha
               <SelectContent className="bg-slate-700 border-slate-600">
                 {[1, 2, 3, 4, 5, 6].map(num => (
                   <SelectItem key={num} value={num.toString()} className="text-white focus:bg-slate-600">
-                    {num} columna{num > 1 ? 's' : ''}
+                    {getColumnText(num)}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -121,14 +125,14 @@ const PanelConfigPanel: React.FC<PanelConfigPanelProps> = ({ config, onConfigCha
         {/* Total Columns Indicator */}
         <div className="mt-4 p-3 rounded-lg bg-slate-700/50 border border-purple-500/20">
           <div className="flex justify-between items-center">
-            <span className="text-white text-sm">Total de columnas:</span>
+            <span className="text-white text-sm">{translations.config.totalColumns}</span>
             <span className={`text-sm font-medium ${isValidConfig ? 'text-green-400' : 'text-red-400'}`}>
               {totalColumns}/6
             </span>
           </div>
           {!isValidConfig && (
             <p className="text-red-400 text-xs mt-1">
-              ⚠️ El total excede 6 columnas
+              {translations.config.exceedsColumns}
             </p>
           )}
         </div>

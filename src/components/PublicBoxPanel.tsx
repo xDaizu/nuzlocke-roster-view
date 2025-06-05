@@ -7,6 +7,7 @@ import { storageService } from "@/services/storageService";
 import { Save, ArchiveRestore, Package } from "lucide-react";
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 import { useToast } from "@/hooks/use-toast";
+import { translations } from "@/data/translations";
 
 interface PublicBoxPanelProps {
   team: TeamPokemon[];
@@ -35,14 +36,14 @@ const PublicBoxPanel: React.FC<PublicBoxPanelProps> = ({
     try {
       storageService.saveTeam(team);
       toast({
-        title: "Team Saved",
-        description: "Your team has been saved to localStorage.",
+        title: translations.messages.teamSaved,
+        description: translations.messages.teamSavedDesc,
         variant: "default"
       });
     } catch (error) {
       toast({
-        title: "Error",
-        description: "Failed to save team.",
+        title: translations.messages.error,
+        description: translations.messages.saveError,
         variant: "destructive"
       });
     }
@@ -54,21 +55,21 @@ const PublicBoxPanel: React.FC<PublicBoxPanelProps> = ({
       if (loadedTeam && loadedTeam.length === 6) {
         setTeam(loadedTeam);
         toast({
-          title: "Team Loaded",
-          description: "Your team has been loaded from localStorage.",
+          title: translations.messages.teamLoaded,
+          description: translations.messages.teamLoadedDesc,
           variant: "default"
         });
       } else {
         toast({
-          title: "No Saved Team",
-          description: "No valid team found in localStorage.",
+          title: translations.messages.noSavedTeam,
+          description: translations.messages.noSavedTeamDesc,
           variant: "destructive"
         });
       }
     } catch (error) {
       toast({
-        title: "Error",
-        description: "Failed to load team.",
+        title: translations.messages.error,
+        description: translations.messages.loadError,
         variant: "destructive"
       });
     }
@@ -80,7 +81,7 @@ const PublicBoxPanel: React.FC<PublicBoxPanelProps> = ({
         <CardTitle className="text-purple-300 flex justify-between items-center">
           <div className="flex items-center gap-2">
             <Package className="w-5 h-5" />
-            Panel de Cajas
+            {translations.panels.boxPanel}
           </div>
           <div className="flex gap-2">
             <Tooltip>
@@ -94,7 +95,7 @@ const PublicBoxPanel: React.FC<PublicBoxPanelProps> = ({
                   <Save className="w-5 h-5" />
                 </Button>
               </TooltipTrigger>
-              <TooltipContent>Guardar Backup</TooltipContent>
+              <TooltipContent>{translations.buttons.save}</TooltipContent>
             </Tooltip>
             <Tooltip>
               <TooltipTrigger asChild>
@@ -107,14 +108,14 @@ const PublicBoxPanel: React.FC<PublicBoxPanelProps> = ({
                   <ArchiveRestore className="w-5 h-5" />
                 </Button>
               </TooltipTrigger>
-              <TooltipContent>Restaurar Backup</TooltipContent>
+              <TooltipContent>{translations.buttons.load}</TooltipContent>
             </Tooltip>
           </div>
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         <PokemonBox
-          title="Equipo"
+          title={translations.boxes.team}
           slots={team}
           maxSlots={6}
           onSlotClick={(index) => onSlotClick('team', index)}
@@ -123,7 +124,7 @@ const PublicBoxPanel: React.FC<PublicBoxPanelProps> = ({
         />
         
         <PokemonBox
-          title="En el PC"
+          title={translations.boxes.other}
           slots={otherBox}
           maxSlots={12}
           onSlotClick={(index) => onSlotClick('other', index)}
@@ -132,7 +133,7 @@ const PublicBoxPanel: React.FC<PublicBoxPanelProps> = ({
         />
         
         <PokemonBox
-          title="El sielo"
+          title={translations.boxes.graveyard}
           slots={graveyardBox}
           maxSlots={12}
           onSlotClick={(index) => onSlotClick('graveyard', index)}
@@ -145,7 +146,7 @@ const PublicBoxPanel: React.FC<PublicBoxPanelProps> = ({
           onClick={onAddFixtures}
           className="bg-purple-600 hover:bg-purple-700"
         >
-          Default
+          {translations.buttons.default}
         </Button>
       </CardFooter>
     </Card>
