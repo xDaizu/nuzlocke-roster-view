@@ -1,15 +1,14 @@
-
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { TeamPokemon } from "@/types/pokemon";
 import PokemonBox from "@/components/PokemonBox";
 import { storageService } from "@/services/storageService";
-import { Save, ArchiveRestore } from "lucide-react";
+import { Save, ArchiveRestore, Package } from "lucide-react";
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 import { useToast } from "@/hooks/use-toast";
 
-interface PublicAdminPanelProps {
+interface PublicBoxPanelProps {
   team: TeamPokemon[];
   otherBox: TeamPokemon[];
   graveyardBox: TeamPokemon[];
@@ -20,7 +19,7 @@ interface PublicAdminPanelProps {
   setTeam: (team: TeamPokemon[]) => void;
 }
 
-const PublicAdminPanel: React.FC<PublicAdminPanelProps> = ({
+const PublicBoxPanel: React.FC<PublicBoxPanelProps> = ({
   team,
   otherBox,
   graveyardBox,
@@ -79,7 +78,10 @@ const PublicAdminPanel: React.FC<PublicAdminPanelProps> = ({
     <Card className="bg-slate-800/90 border-purple-500/30 col-span-1">
       <CardHeader>
         <CardTitle className="text-purple-300 flex justify-between items-center">
-          Admin Panel
+          <div className="flex items-center gap-2">
+            <Package className="w-5 h-5" />
+            Panel de Cajas
+          </div>
           <div className="flex gap-2">
             <Tooltip>
               <TooltipTrigger asChild>
@@ -112,7 +114,7 @@ const PublicAdminPanel: React.FC<PublicAdminPanelProps> = ({
       </CardHeader>
       <CardContent className="space-y-4">
         <PokemonBox
-          title="Team Box"
+          title="Equipo"
           slots={team}
           maxSlots={6}
           onSlotClick={(index) => onSlotClick('team', index)}
@@ -121,7 +123,7 @@ const PublicAdminPanel: React.FC<PublicAdminPanelProps> = ({
         />
         
         <PokemonBox
-          title="Other Box"
+          title="En el PC"
           slots={otherBox}
           maxSlots={12}
           onSlotClick={(index) => onSlotClick('other', index)}
@@ -130,7 +132,7 @@ const PublicAdminPanel: React.FC<PublicAdminPanelProps> = ({
         />
         
         <PokemonBox
-          title="Graveyard Box"
+          title="El sielo"
           slots={graveyardBox}
           maxSlots={12}
           onSlotClick={(index) => onSlotClick('graveyard', index)}
@@ -150,4 +152,4 @@ const PublicAdminPanel: React.FC<PublicAdminPanelProps> = ({
   );
 };
 
-export default PublicAdminPanel;
+export default PublicBoxPanel; 
