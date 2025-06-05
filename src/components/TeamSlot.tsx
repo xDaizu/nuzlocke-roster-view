@@ -77,11 +77,6 @@ const TeamSlot: React.FC<TeamSlotProps> = ({
                   <div className="text-md font-bold text-white truncate">
                     {slot.nickname || slot.pokemon.name.english}
                   </div>
-                  {slot.ability && (
-                    <div className="text-xs text-red-300 truncate cursor-help">
-                      {slot.ability}
-                    </div>
-                  )}
                 </div>
               </>
             ) : (
