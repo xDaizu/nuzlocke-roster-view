@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -11,6 +12,7 @@ import { fetchPokemonData, getPokemonSpriteUrl, POKEBALL_DATA } from "@/utils/po
 import { useToast } from "@/hooks/use-toast";
 import { Link } from "react-router-dom";
 import SlotEditor from "@/components/SlotEditor";
+import placesData from "@/data/places_es.json";
 
 const AdminView = () => {
   const [team, setTeam] = useState<TeamPokemon[]>([]);
@@ -165,6 +167,7 @@ const AdminView = () => {
               onClear={() => clearSlot(selectedSlot)}
               slotIndex={selectedSlot}
               showHeader={true}
+              placesData={placesData}
             />
             {/* Preview */}
             {currentSlot.pokemon && (
