@@ -18,6 +18,7 @@ interface PublicBoxPanelProps {
   onSlotClick: (box: 'team' | 'other' | 'graveyard', index: number) => void;
   onAddFixtures: () => void;
   setTeam: (team: TeamPokemon[]) => void;
+  columnSpan?: number;
 }
 
 const PublicBoxPanel: React.FC<PublicBoxPanelProps> = ({
@@ -126,7 +127,6 @@ const PublicBoxPanel: React.FC<PublicBoxPanelProps> = ({
         <PokemonBox
           title={translations.boxes.other}
           slots={otherBox}
-          maxSlots={12}
           onSlotClick={(index) => onSlotClick('other', index)}
           selectedSlot={selectedBox === 'other' ? selectedSlot : undefined}
           boxType="other"
@@ -135,7 +135,6 @@ const PublicBoxPanel: React.FC<PublicBoxPanelProps> = ({
         <PokemonBox
           title={translations.boxes.graveyard}
           slots={graveyardBox}
-          maxSlots={12}
           onSlotClick={(index) => onSlotClick('graveyard', index)}
           selectedSlot={selectedBox === 'graveyard' ? selectedSlot : undefined}
           boxType="graveyard"
