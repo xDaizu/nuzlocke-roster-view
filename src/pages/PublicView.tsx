@@ -292,6 +292,7 @@ const PublicView = () => {
                     setSelectedBox('team');
                   }}
                   selectedSlot={selectedBox === 'team' ? selectedSlot : undefined}
+                  boxType="team"
                 />
                 
                 <PokemonBox
@@ -303,6 +304,7 @@ const PublicView = () => {
                     setSelectedBox('other');
                   }}
                   selectedSlot={selectedBox === 'other' ? selectedSlot : undefined}
+                  boxType="other"
                 />
                 
                 <PokemonBox
@@ -314,6 +316,7 @@ const PublicView = () => {
                     setSelectedBox('graveyard');
                   }}
                   selectedSlot={selectedBox === 'graveyard' ? selectedSlot : undefined}
+                  boxType="graveyard"
                 />
               </CardContent>
               <CardFooter>
