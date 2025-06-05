@@ -44,6 +44,7 @@
     {"id": "sandgem-town", "nombre": "Pueblo Arena"},
     {"id": "valley-windworks", "nombre": "Valle Eólico"},
     {"id": "eterna-forest", "nombre": "Bosque Vetusto"},
+    {"id": "oreburgh-gate", "nombre": "Puerta Pirita"},
     {"id": "oreburgh-mine", "nombre": "Mina Pirita"},
     {"id": "fuego-ironworks", "nombre": "Forja Fuego"},
     {"id": "mt-coronet", "nombre": "Monte Corona"},
