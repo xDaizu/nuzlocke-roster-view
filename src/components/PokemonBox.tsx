@@ -6,12 +6,13 @@ import { getPokemonSpriteUrl } from "@/utils/pokemonData";
 interface PokemonBoxProps {
   title: string;
   slots: TeamPokemon[];
-  maxSlots: number;
+  maxSlots?: number; // Optional for dynamic boxes
   onSlotClick?: (index: number) => void;
   selectedSlot?: number;
   onDragDrop?: (fromIndex: number, toIndex: number) => void;
   onDragDropExternal?: (fromBox: 'team' | 'other' | 'graveyard', fromIndex: number, toIndex: number) => void;
   boxType: 'team' | 'other' | 'graveyard';
+  columnSpan?: number; // Column span of the panel containing this box
 }
 
 const PokemonBox: React.FC<PokemonBoxProps> = ({
@@ -23,10 +24,36 @@ const PokemonBox: React.FC<PokemonBoxProps> = ({
   onDragDrop,
   onDragDropExternal,
   boxType,
+  columnSpan = 2,
 }) => {
+  // Dynamic sizing logic
+  const isDynamicBox = boxType === 'other' || boxType === 'graveyard';
+  const isTeamBox = boxType === 'team';
+  
+  let targetSlotCount: number;
+  if (isTeamBox) {
+    // Team box is always 6 slots
+    targetSlotCount = maxSlots || 6;
+  } else if (isDynamicBox) {
+    // Dynamic boxes: show pokemon + minimal empty slots for interaction, max 200
+    const pokemonCount = slots.filter(slot => slot.pokemon).length;
+    
+    if (pokemonCount === 0) {
+      // If no Pokemon, show 0 slots
+      targetSlotCount = 0;
+    } else {
+      // Find the next multiple of "slots per row" and fill to that
+      const slotsPerRow = columnSpan * 2;
+      const nextMultiple = Math.ceil(pokemonCount / slotsPerRow) * slotsPerRow;
+      targetSlotCount = Math.min(nextMultiple, 200);
+    }
+  } else {
+    targetSlotCount = maxSlots || 12;
+  }
+
   // Fill empty slots
   const filledSlots = [...slots];
-  while (filledSlots.length < maxSlots) {
+  while (filledSlots.length < targetSlotCount) {
     filledSlots.push({
       id: `empty-${boxType}-${filledSlots.length}`,
       pokemon: null,
@@ -75,12 +102,37 @@ const PokemonBox: React.FC<PokemonBoxProps> = ({
     }
   };
 
+  // Grid layout logic based on panel column span
+  const getGridCols = () => {
+    if (isTeamBox) return 'grid-cols-3'; // Team always 3 columns (2 rows of 3)
+    
+    // For dynamic boxes, slots per row = columnSpan * 2
+    const slotsPerRow = columnSpan * 2;
+    
+    // Map to Tailwind grid classes
+    const gridClasses: Record<number, string> = {
+      2: 'grid-cols-2',
+      4: 'grid-cols-4', 
+      6: 'grid-cols-6',
+      8: 'grid-cols-8',
+      10: 'grid-cols-10',
+      12: 'grid-cols-12'
+    };
+    
+    return gridClasses[slotsPerRow] || 'grid-cols-4'; // Default fallback
+  };
+
   return (
     <div className="bg-slate-700/50 rounded-lg p-3">
       <h3 className="text-purple-300 font-medium mb-3 text-sm">{title}</h3>
-      <div className={`grid gap-2 ${maxSlots === 6 ? 'grid-cols-3' : 'grid-cols-4'}`}>
-        {filledSlots.map((slot, index) => (
-          <button
+      {targetSlotCount === 0 ? (
+        <div className="text-center text-slate-400 py-4 text-xs">
+          Vacío
+        </div>
+      ) : (
+        <div className={`grid gap-2 ${getGridCols()}`}>
+          {filledSlots.map((slot, index) => (
+            <button
             key={slot.id}
             onClick={() => onSlotClick?.(index)}
             draggable={slot.pokemon !== null}
@@ -118,8 +170,9 @@ const PokemonBox: React.FC<PokemonBoxProps> = ({
               </div>
             )}
           </button>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
