@@ -27,6 +27,7 @@ export interface TeamPokemon {
   animated: boolean;
   zoom: number; // 1.0 = normal, 1.5 = 150% zoom (cropped from sides)
   place?: string; // Optional, can be empty or 'unknown'
+  box: 'team' | 'other' | 'graveyard';
 }
 
 export type PokeballType = 'pokeball' | 'superball' | 'sanaball';

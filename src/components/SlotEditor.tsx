@@ -20,6 +20,7 @@ interface SlotEditorProps {
   slotIndex?: number;
   showHeader?: boolean;
   placesData: Array<{ id: string; nombre: string }>;
+  showBoxSelect?: boolean;
 }
 
 const abilityNames = abilitiesData.map((a: any) => a.name);
@@ -42,6 +43,7 @@ const SlotEditor: React.FC<SlotEditorProps> = ({
   slotIndex,
   showHeader = true,
   placesData,
+  showBoxSelect = true,
 }) => {
   const [abilityFilter, setAbilityFilter] = useState("");
   const [placeFilter, setPlaceFilter] = useState("");
@@ -189,27 +191,47 @@ const SlotEditor: React.FC<SlotEditorProps> = ({
             </Select>
           </div>
 
-          {/* Pokeball */}
-          <div className="space-y-1">
-            <Label className="text-slate-300 text-xs">Pokeball</Label>
-            <Select
-              value={slot.pokeball}
-              onValueChange={(value: PokeballType) => onUpdate({ pokeball: value })}
-            >
-              <SelectTrigger className="bg-slate-700 border-slate-600 h-8 text-xs">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent className="bg-slate-700 border-slate-600 text-xs">
-                {Object.entries(pokeballData).map(([key, data]) => (
-                  <SelectItem key={key} value={key} className="text-xs">
-                    <div className="flex items-center gap-2">
-                      <img src={data.image} alt={data.name} className="w-4 h-4" />
-                      {data.name}
-                    </div>
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+          {/* Pokeball and Box (Select) in a row */}
+          <div className="flex flex-col sm:flex-row gap-2">
+            <div className="space-y-1 w-full sm:w-1/2">
+              <Label className="text-slate-300 text-xs">Pokeball</Label>
+              <Select
+                value={slot.pokeball}
+                onValueChange={(value: PokeballType) => onUpdate({ pokeball: value })}
+              >
+                <SelectTrigger className="bg-slate-700 border-slate-600 h-8 text-xs">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent className="bg-slate-700 border-slate-600 text-xs">
+                  {Object.entries(pokeballData).map(([key, data]) => (
+                    <SelectItem key={key} value={key} className="text-xs">
+                      <div className="flex items-center gap-2">
+                        <img src={data.image} alt={data.name} className="w-4 h-4" />
+                        {data.name}
+                      </div>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            {showBoxSelect && (
+              <div className="space-y-1 w-full sm:w-1/2">
+                <Label className="text-slate-300 text-xs">Box</Label>
+                <Select
+                  value={slot.box}
+                  onValueChange={(value) => onUpdate({ box: value as 'team' | 'other' | 'graveyard' })}
+                >
+                  <SelectTrigger className="bg-slate-700 border-slate-600 h-8 text-xs">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent className="bg-slate-700 border-slate-600 max-h-60 text-xs">
+                    <SelectItem value="team">Team</SelectItem>
+                    <SelectItem value="other">Other Box</SelectItem>
+                    <SelectItem value="graveyard">Graveyard</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
           </div>
 
           {/* Place (Select) */}
