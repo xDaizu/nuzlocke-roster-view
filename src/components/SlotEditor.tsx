@@ -19,6 +19,7 @@ interface SlotEditorProps {
   onClear: () => void;
   slotIndex?: number;
   showHeader?: boolean;
+  placesData: Array<{ id: string; nombre: string }>;
 }
 
 const abilityNames = abilitiesData.map((a: any) => a.name);
@@ -40,11 +41,16 @@ const SlotEditor: React.FC<SlotEditorProps> = ({
   onClear,
   slotIndex,
   showHeader = true,
+  placesData,
 }) => {
   const [abilityFilter, setAbilityFilter] = useState("");
+  const [placeFilter, setPlaceFilter] = useState("");
   // Filter by name
   const filteredAbilities = abilitiesData.filter((a: any) =>
     a.name.toLowerCase().includes(abilityFilter.toLowerCase())
+  );
+  const filteredPlaces = placesData.filter((p) =>
+    p.nombre.toLowerCase().includes(placeFilter.toLowerCase())
   );
 
   // Get description for currently selected ability (by slug)
@@ -200,6 +206,38 @@ const SlotEditor: React.FC<SlotEditorProps> = ({
                       <img src={data.image} alt={data.name} className="w-4 h-4" />
                       {data.name}
                     </div>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Place (Select) */}
+          <div className="space-y-1">
+            <Label className="text-slate-300 text-xs">Lugar</Label>
+            <Select
+              value={slot.place ? slot.place : "none"}
+              onValueChange={(value) => {
+                onUpdate({ place: value === "none" ? "" : value });
+              }}
+            >
+              <SelectTrigger className="bg-slate-700 border-slate-600 h-8 text-xs">
+                <SelectValue placeholder="Sin lugar" />
+              </SelectTrigger>
+              <SelectContent className="bg-slate-700 border-slate-600 max-h-60 text-xs">
+                <div className="px-2 py-1">
+                  <Input
+                    value={placeFilter}
+                    onChange={e => setPlaceFilter(e.target.value)}
+                    placeholder="Filtrar lugares..."
+                    className="mb-1 bg-slate-800 border-slate-600 h-7 text-xs"
+                  />
+                </div>
+                <SelectItem value="none">Sin lugar</SelectItem>
+                <SelectItem value="unknown">Desconocido</SelectItem>
+                {filteredPlaces.map((place) => (
+                  <SelectItem key={place.id} value={place.id} className="text-xs">
+                    {place.nombre}
                   </SelectItem>
                 ))}
               </SelectContent>

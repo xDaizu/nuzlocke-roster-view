@@ -1,5 +1,6 @@
 import React from "react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { MapPin } from "lucide-react";
 
 interface TeamSlotProps {
   slot: any;
@@ -8,6 +9,7 @@ interface TeamSlotProps {
   getPokemonSpriteUrl: (pokemon: any, animated: boolean) => string;
   pokeballData: Record<string, { image: string; name: string }>;
   abilitiesData: Array<{ slug: string; name: string; description: string }>;
+  placesData: Array<{ id: string; nombre: string }>;
 }
 
 const TeamSlot: React.FC<TeamSlotProps> = ({
@@ -17,6 +19,7 @@ const TeamSlot: React.FC<TeamSlotProps> = ({
   getPokemonSpriteUrl,
   pokeballData,
   abilitiesData,
+  placesData,
 }) => {
   const getAbilityData = (slug: string) => {
     return abilitiesData.find((a) => a.slug === slug);
@@ -76,6 +79,7 @@ const TeamSlot: React.FC<TeamSlotProps> = ({
                   <div className="text-md font-bold text-white truncate">
                     {slot.nickname || slot.pokemon.name.english}
                   </div>
+                 
                 </div>
               </>
             ) : (
@@ -91,12 +95,18 @@ const TeamSlot: React.FC<TeamSlotProps> = ({
             )}
           </div>
         </TooltipTrigger>
-        {slot.ability && getAbilityData(slot.ability) && (
           <TooltipContent className="text-sm max-w-xs">
             <div className="font-bold mb-1">{getAbilityData(slot.ability)?.name}</div>
             <div>{getAbilityData(slot.ability)?.description}</div>
+            {slot.place && (
+                    <div className="flex items-center justify-center gap-1 text-xs text-purple-800 mt-0.5">
+                      <MapPin className="w-3 h-3 inline-block" />
+                      {slot.place === 'unknown'
+                        ? 'Desconocido'
+                        : (placesData.find((p) => p.id === slot.place)?.nombre || slot.place)}
+                    </div>
+                  )}
           </TooltipContent>
-        )}
       </Tooltip>
     </TooltipProvider>
   );

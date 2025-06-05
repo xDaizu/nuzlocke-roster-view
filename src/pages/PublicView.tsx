@@ -10,6 +10,7 @@ import { fetchPokemonData, getPokemonSpriteUrl, POKEBALL_DATA } from "@/utils/po
 import { useToast } from "@/hooks/use-toast";
 import SlotEditor from "@/components/SlotEditor";
 import abilitiesData from "@/data/abilities_es.json";
+import placesData from "@/data/places_es.json";
 import TeamSlot from "@/components/TeamSlot";
 import { storageService } from "@/services/storageService";
 import { Save, Download, Upload, ArchiveRestore } from "lucide-react";
@@ -25,7 +26,8 @@ const PublicView = () => {
       ability: 'No Skill',
       pokeball: 'pokeball' as const,
       animated: false,
-      zoom: 1.5 // Default 1.5x zoom for better visibility
+      zoom: 1.5, // Default 1.5x zoom for better visibility
+      place: '',
     }))
   );
   const [allPokemon, setAllPokemon] = useState<Pokemon[]>([]);
@@ -70,7 +72,8 @@ const PublicView = () => {
       ability: '',
       pokeball: 'pokeball',
       animated: false,
-      zoom: 1.5
+      zoom: 1.5,
+      place: '',
     });
     toast({
       title: "Slot Cleared",
@@ -80,10 +83,10 @@ const PublicView = () => {
 
   const addFixtures = () => {
     const fixtures = [
-      { name: 'Mareep', nickname: 'RazorMorel', ability: 'arena-trap', level: 10 },
-      { name: 'Lotad', nickname: 'Calos', level: 8 },
-      { name: 'Turtwig', nickname: 'Pablo', level: 7 },
-      { name: 'Jigglypuff', nickname: 'Vancleemp', ability: 'compound-eyes', level: 10 }
+      { name: 'Mareep', nickname: 'RazorMorel', ability: 'arena-trap', level: 10, place: '' },
+      { name: 'Lotad', nickname: 'Calos', level: 8, place: '' },
+      { name: 'Turtwig', nickname: 'Pablo', level: 7, place: '' },
+      { name: 'Jigglypuff', nickname: 'Vancleemp', ability: 'compound-eyes', level: 10, place: '' }
     ];
 
     const newTeam = Array.from({ length: 6 }, (_, index) => {
@@ -101,7 +104,8 @@ const PublicView = () => {
           ability: fixture.ability || '',
           pokeball: 'pokeball' as const,
           animated: false,
-          zoom: 1.5
+          zoom: 1.5,
+          place: fixture.place || '',
         };
       }
       
@@ -113,7 +117,8 @@ const PublicView = () => {
         ability: 'No Skill',
         pokeball: 'pokeball' as const,
         animated: false,
-        zoom: 1.5
+        zoom: 1.5,
+        place: '',
       };
     });
 
@@ -194,6 +199,7 @@ const PublicView = () => {
                   getPokemonSpriteUrl={getPokemonSpriteUrl}
                   pokeballData={POKEBALL_DATA}
                   abilitiesData={abilitiesData}
+                  placesData={placesData}
                 />
               ))}
             </div>
@@ -305,6 +311,7 @@ const PublicView = () => {
                 onClear={() => clearSlot(selectedSlot)}
                 slotIndex={selectedSlot}
                 showHeader={true}
+                placesData={placesData}
               />
               {/* Preview */}
               {currentSlot.pokemon && (

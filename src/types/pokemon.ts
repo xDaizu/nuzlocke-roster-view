@@ -1,4 +1,3 @@
-
 export interface Pokemon {
   id: number;
   name: {
@@ -27,6 +26,7 @@ export interface TeamPokemon {
   pokeball: PokeballType;
   animated: boolean;
   zoom: number; // 1.0 = normal, 1.5 = 150% zoom (cropped from sides)
+  place?: string; // Optional, can be empty or 'unknown'
 }
 
 export type PokeballType = 'pokeball' | 'superball' | 'sanaball';
