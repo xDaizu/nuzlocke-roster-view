@@ -12,6 +12,7 @@ import SlotEditor from "@/components/SlotEditor";
 import abilitiesData from "@/data/abilities_es.json";
 import placesData from "@/data/places_es.json";
 import TeamSlot from "@/components/TeamSlot";
+import PokemonBox from "@/components/PokemonBox";
 import { storageService } from "@/services/storageService";
 import { Save, Download, Upload, ArchiveRestore } from "lucide-react";
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
@@ -30,8 +31,11 @@ const PublicView = () => {
       place: '',
     }))
   );
+  const [otherBox, setOtherBox] = useState<TeamPokemon[]>([]);
+  const [graveyardBox, setGraveyardBox] = useState<TeamPokemon[]>([]);
   const [allPokemon, setAllPokemon] = useState<Pokemon[]>([]);
   const [selectedSlot, setSelectedSlot] = useState<number>(0);
+  const [selectedBox, setSelectedBox] = useState<'team' | 'other' | 'graveyard'>('team');
   const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
 
@@ -129,7 +133,38 @@ const PublicView = () => {
     });
   };
 
-  const currentSlot = team[selectedSlot];
+  const getCurrentSlot = () => {
+    switch (selectedBox) {
+      case 'team':
+        return team[selectedSlot];
+      case 'other':
+        return otherBox[selectedSlot] || {
+          id: `other-${selectedSlot}`,
+          pokemon: null,
+          nickname: '',
+          level: 1,
+          ability: '',
+          pokeball: 'pokeball' as const,
+          animated: false,
+          zoom: 1.5,
+          place: '',
+        };
+      case 'graveyard':
+        return graveyardBox[selectedSlot] || {
+          id: `graveyard-${selectedSlot}`,
+          pokemon: null,
+          nickname: '',
+          level: 1,
+          ability: '',
+          pokeball: 'pokeball' as const,
+          animated: false,
+          zoom: 1.5,
+          place: '',
+        };
+    }
+  };
+
+  const currentSlot = getCurrentSlot();
 
   // Add save/load handlers
   const handleSaveTeam = () => {
@@ -212,7 +247,7 @@ const PublicView = () => {
         <div className="max-w-6xl mx-auto space-y-4">
           {/* Admin Panel */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Team Overview */}
+            {/* Pokemon Boxes */}
             <Card className="bg-slate-800/90 border-purple-500/30 col-span-1">
               <CardHeader>
                 <CardTitle className="text-purple-300 flex justify-between items-center">
@@ -247,57 +282,47 @@ const PublicView = () => {
                   </div>
                 </CardTitle>
               </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-3 gap-3">
-                  {team.map((slot, index) => (
-                    <button
-                      key={slot.id}
-                      onClick={() => setSelectedSlot(index)}
-                      className={`p-3 rounded-lg border-2 transition-all ${
-                        selectedSlot === index
-                          ? 'border-purple-400 bg-purple-500/20'
-                          : 'border-slate-600 bg-slate-700/50 hover:border-purple-500/50'
-                      }`}
-                    >
-                      <div className="text-center">
-                        <div className="text-xs text-slate-400 mb-1">Slot {index + 1}</div>
-                        {slot.pokemon ? (
-                          <>
-                            <img
-                              src={getPokemonSpriteUrl(slot.pokemon, false)}
-                              alt={slot.pokemon.name.english}
-                              className="w-12 h-12 mx-auto mb-1"
-                              style={{
-                                transform: `scale(${slot.zoom})`,
-                                objectPosition: 'center'
-                              }}
-                              onError={(e) => {
-                                const target = e.target as HTMLImageElement;
-                                target.style.display = 'none';
-                              }}
-                            />
-                            <div className="text-xs text-white font-medium truncate">
-                              {slot.nickname || slot.pokemon.name.english}
-                            </div>
-                            <div className="text-xs text-purple-300">Lv. {slot.level}</div>
-                          </>
-                        ) : (
-                          <div className="w-12 h-12 bg-slate-600 rounded mx-auto mb-1 flex items-center justify-center">
-                            <span className="text-slate-400">?</span>
-                          </div>
-                        )}
-                      </div>
-                    </button>
-                  ))}
-                </div>
+              <CardContent className="space-y-4">
+                <PokemonBox
+                  title="Team Box"
+                  slots={team}
+                  maxSlots={6}
+                  onSlotClick={(index) => {
+                    setSelectedSlot(index);
+                    setSelectedBox('team');
+                  }}
+                  selectedSlot={selectedBox === 'team' ? selectedSlot : undefined}
+                />
+                
+                <PokemonBox
+                  title="Other Box"
+                  slots={otherBox}
+                  maxSlots={12}
+                  onSlotClick={(index) => {
+                    setSelectedSlot(index);
+                    setSelectedBox('other');
+                  }}
+                  selectedSlot={selectedBox === 'other' ? selectedSlot : undefined}
+                />
+                
+                <PokemonBox
+                  title="Graveyard Box"
+                  slots={graveyardBox}
+                  maxSlots={12}
+                  onSlotClick={(index) => {
+                    setSelectedSlot(index);
+                    setSelectedBox('graveyard');
+                  }}
+                  selectedSlot={selectedBox === 'graveyard' ? selectedSlot : undefined}
+                />
               </CardContent>
               <CardFooter>
-              <Button
-                      onClick={addFixtures}
-                      className="bg-purple-600 hover:bg-purple-700"
-                    >
-                      Default
-                    </Button>
+                <Button
+                  onClick={addFixtures}
+                  className="bg-purple-600 hover:bg-purple-700"
+                >
+                  Default
+                </Button>
               </CardFooter>
             </Card>
 
