@@ -40,7 +40,19 @@ const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
   
   // Filter options based on input
   const filteredOptions = options.filter(option => {
-    const searchText = inputValue.toLowerCase();
+    const searchText = inputValue.toLowerCase().trim();
+    
+    // If input is empty, show all options
+    if (searchText === "") {
+      return true;
+    }
+    
+    // If the input matches the label of an option with empty value, show all options
+    const emptyValueOption = options.find(opt => opt.value === "" && opt.label.toLowerCase() === searchText);
+    if (emptyValueOption) {
+      return true;
+    }
+    
     return (
       option.label.toLowerCase().includes(searchText) ||
       option.value.toLowerCase().includes(searchText) ||
