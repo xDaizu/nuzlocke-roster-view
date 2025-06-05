@@ -132,44 +132,29 @@ const PublicView = () => {
       return;
     }
 
-    const newTeam = Array.from({ length: 6 }, (_, index) => {
-      if (index < fixtures.length) {
-        const fixture = fixtures[index];
-        const pokemon = allPokemon.find(p => 
-          p.name.english.toLowerCase() === fixture.name.toLowerCase()
-        );
-        
-        return {
-          id: `slot-${index}`,
-          pokemon: pokemon || null,
-          nickname: fixture.nickname,
-          level: fixture.level || 1,
-          ability: (fixture as any).ability || '',
-          pokeball: (fixture as any).pokeball || 'pokeball',
-          animated: false,
-          zoom: 1.5,
-          place: fixture.place || '',
-          box: fixture.box || 'team',
-        };
-      }
+    // Process all fixtures, not just the first 6
+    const newSlots = fixtures.map((fixture, index) => {
+      const pokemon = allPokemon.find(p => 
+        p.name.english.toLowerCase() === fixture.name.toLowerCase()
+      );
       
       return {
-        id: `slot-${index}`,
-        pokemon: null,
-        nickname: '',
-        level: 1,
-        ability: '',
-        pokeball: 'pokeball' as const,
+        id: `fixture-slot-${index}`,
+        pokemon: pokemon || null,
+        nickname: fixture.nickname,
+        level: fixture.level || 1,
+        ability: (fixture as any).ability || '',
+        pokeball: (fixture as any).pokeball || 'pokeball',
         animated: false,
         zoom: 1.5,
-        place: '',
-        box: 'team',
+        place: fixture.place || '',
+        box: fixture.box || 'team',
       };
     });
 
-    const finalSlots = newTeam.map(slot => ({ ...slot, box: (slot.box === 'team' || slot.box === 'other' || slot.box === 'graveyard') ? slot.box : 'other' } as TeamPokemon));
+    const finalSlots = newSlots.map(slot => ({ ...slot, box: (slot.box === 'team' || slot.box === 'other' || slot.box === 'graveyard') ? slot.box : 'other' } as TeamPokemon));
     setAllSlots(finalSlots);
-    console.log('Fixtures loaded successfully!');
+    console.log('Fixtures loaded successfully!', finalSlots);
   };
 
   if (isLoading) {
