@@ -99,10 +99,11 @@ const PublicView = () => {
 
   const addFixtures = () => {
     const fixtures = [
-      { name: 'Mareep', nickname: 'RazorMorel', ability: 'arena-trap', level: 10, place: '', box: 'team' },
-      { name: 'Lotad', nickname: 'Calos', level: 8, place: '', box: 'team' },
-      { name: 'Turtwig', nickname: 'Pablo', level: 7, place: '', box: 'team' },
-      { name: 'Jigglypuff', nickname: 'Vancleemp', ability: 'compound-eyes', level: 10, place: '', box: 'team' }
+      { name: 'Turtwig', nickname: 'Pablo', level: 10, place: '', box: 'team', ability: 'arena-trap' },
+      { name: 'Lotad', nickname: 'Calos', level: 10, place: '', box: 'team' },
+      { name: 'Mareep', nickname: 'RazorMorel', level: 10, place: '', box: 'team' },
+      { name: 'Sealeo', nickname: 'Darkdimon', level: 10, place: '', box: 'team' },
+      { name: 'Jigglypuff', nickname: 'Vancleemp', level: 8, place: '', box: 'graveyard', ability: 'compound-eyes' }
     ];
 
     const newTeam = Array.from({ length: 6 }, (_, index) => {
@@ -117,7 +118,7 @@ const PublicView = () => {
           pokemon: pokemon || null,
           nickname: fixture.nickname,
           level: fixture.level || 1,
-          ability: fixture.ability || '',
+          ability: (fixture as any).ability || '',
           pokeball: 'pokeball' as const,
           animated: false,
           zoom: 1.5,
