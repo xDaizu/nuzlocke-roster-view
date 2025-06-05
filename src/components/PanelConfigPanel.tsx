@@ -2,15 +2,16 @@ import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Settings } from "lucide-react";
+import { Settings, ChevronUp, ChevronDown } from "lucide-react";
 import { translations } from "@/data/translations";
+import { Button } from "@/components/ui/button";
 
 interface PanelConfig {
-  boxPanel: number;
-  slotEditor: number;
-  placesPanel: number;
-  weaknessPanel: number;
-  configPanel: number;
+  boxPanel: { columns: number; order: number };
+  slotEditor: { columns: number; order: number };
+  placesPanel: { columns: number; order: number };
+  weaknessPanel: { columns: number; order: number };
+  configPanel: { columns: number; order: number };
 }
 
 interface PanelConfigPanelProps {
@@ -19,17 +20,36 @@ interface PanelConfigPanelProps {
 }
 
 const PanelConfigPanel: React.FC<PanelConfigPanelProps> = ({ config, onConfigChange }) => {
-  const updateConfig = (panel: keyof PanelConfig, value: number) => {
+  const updateConfig = (panel: keyof PanelConfig, columns: number) => {
     onConfigChange({
       ...config,
-      [panel]: value
+      [panel]: {
+        ...config[panel],
+        columns
+      }
     });
+  };
+
+  const movePanel = (panel: keyof PanelConfig, direction: 'up' | 'down') => {
+    const currentOrder = config[panel].order;
+    const newOrder = direction === 'up' ? currentOrder - 1 : currentOrder + 1;
+    
+    // Find panel with the target order
+    const targetPanel = Object.entries(config).find(([_, value]) => value.order === newOrder)?.[0] as keyof PanelConfig;
+    
+    if (targetPanel) {
+      onConfigChange({
+        ...config,
+        [panel]: { ...config[panel], order: newOrder },
+        [targetPanel]: { ...config[targetPanel], order: currentOrder }
+      });
+    }
   };
 
   const getColumnText = (num: number) => 
     `${num} ${num > 1 ? translations.config.columnsPlural : translations.config.columnsSingular}`;
 
-  const totalColumns = config.boxPanel + config.slotEditor + config.placesPanel + config.weaknessPanel + config.configPanel;
+  const totalColumns = config.boxPanel.columns + config.slotEditor.columns + config.placesPanel.columns + config.weaknessPanel.columns + config.configPanel.columns;
   const isValidConfig = totalColumns <= 6;
 
   return (
@@ -42,105 +62,58 @@ const PanelConfigPanel: React.FC<PanelConfigPanelProps> = ({ config, onConfigCha
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="grid grid-cols-1 gap-3">
-          {/* Box Panel Config */}
-          <div className="space-y-2">
-            <Label className="text-white text-sm">{translations.panels.boxPanel}</Label>
-            <Select 
-              value={config.boxPanel.toString()} 
-              onValueChange={(value) => updateConfig('boxPanel', parseInt(value))}
-            >
-              <SelectTrigger className="bg-slate-700 border-slate-600 text-white">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent className="bg-slate-700 border-slate-600">
-                {[1, 2, 3, 4, 5, 6].map(num => (
-                  <SelectItem key={num} value={num.toString()} className="text-white focus:bg-slate-600">
-                    {getColumnText(num)}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
-          {/* Slot Editor Config */}
-          <div className="space-y-2">
-            <Label className="text-white text-sm">{translations.panels.slotEditor}</Label>
-            <Select 
-              value={config.slotEditor.toString()} 
-              onValueChange={(value) => updateConfig('slotEditor', parseInt(value))}
-            >
-              <SelectTrigger className="bg-slate-700 border-slate-600 text-white">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent className="bg-slate-700 border-slate-600">
-                {[1, 2, 3, 4, 5, 6].map(num => (
-                  <SelectItem key={num} value={num.toString()} className="text-white focus:bg-slate-600">
-                    {getColumnText(num)}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
-          {/* Places Panel Config */}
-          <div className="space-y-2">
-            <Label className="text-white text-sm">{translations.panels.placesPanel}</Label>
-            <Select 
-              value={config.placesPanel.toString()} 
-              onValueChange={(value) => updateConfig('placesPanel', parseInt(value))}
-            >
-              <SelectTrigger className="bg-slate-700 border-slate-600 text-white">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent className="bg-slate-700 border-slate-600">
-                {[1, 2, 3, 4, 5, 6].map(num => (
-                  <SelectItem key={num} value={num.toString()} className="text-white focus:bg-slate-600">
-                    {getColumnText(num)}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
-          {/* Weakness Panel Config */}
-          <div className="space-y-2">
-            <Label className="text-white text-sm">{translations.panels.weaknessPanel}</Label>
-            <Select 
-              value={config.weaknessPanel.toString()} 
-              onValueChange={(value) => updateConfig('weaknessPanel', parseInt(value))}
-            >
-              <SelectTrigger className="bg-slate-700 border-slate-600 text-white">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent className="bg-slate-700 border-slate-600">
-                {[1, 2, 3, 4, 5, 6].map(num => (
-                  <SelectItem key={num} value={num.toString()} className="text-white focus:bg-slate-600">
-                    {getColumnText(num)}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
-          {/* Config Panel Config */}
-          <div className="space-y-2">
-            <Label className="text-white text-sm">{translations.panels.configPanel}</Label>
-            <Select 
-              value={config.configPanel.toString()} 
-              onValueChange={(value) => updateConfig('configPanel', parseInt(value))}
-            >
-              <SelectTrigger className="bg-slate-700 border-slate-600 text-white">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent className="bg-slate-700 border-slate-600">
-                {[1, 2, 3, 4, 5, 6].map(num => (
-                  <SelectItem key={num} value={num.toString()} className="text-white focus:bg-slate-600">
-                    {getColumnText(num)}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+          {/* Render panels in order */}
+          {Object.entries(config)
+            .sort(([, a], [, b]) => a.order - b.order)
+            .map(([panelKey, panelConfig]) => {
+              const panelName = translations.panels[panelKey as keyof typeof translations.panels];
+              const isFirst = panelConfig.order === 1;
+              const isLast = panelConfig.order === Object.keys(config).length;
+              
+              return (
+                <div key={panelKey} className="space-y-2 p-3 bg-slate-700/30 rounded-lg border border-slate-600/50">
+                  <div className="flex items-center justify-between">
+                    <Label className="text-white text-sm">{panelName}</Label>
+                    <div className="flex items-center gap-1">
+                      <span className="text-xs text-slate-400">#{panelConfig.order}</span>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => movePanel(panelKey as keyof PanelConfig, 'up')}
+                        disabled={isFirst}
+                        className="h-6 w-6 p-0 text-slate-400 hover:text-white"
+                      >
+                        <ChevronUp className="w-3 h-3" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => movePanel(panelKey as keyof PanelConfig, 'down')}
+                        disabled={isLast}
+                        className="h-6 w-6 p-0 text-slate-400 hover:text-white"
+                      >
+                        <ChevronDown className="w-3 h-3" />
+                      </Button>
+                    </div>
+                  </div>
+                  <Select 
+                    value={panelConfig.columns.toString()} 
+                    onValueChange={(value) => updateConfig(panelKey as keyof PanelConfig, parseInt(value))}
+                  >
+                    <SelectTrigger className="bg-slate-700 border-slate-600 text-white">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent className="bg-slate-700 border-slate-600">
+                      {[1, 2, 3, 4, 5, 6].map(num => (
+                        <SelectItem key={num} value={num.toString()} className="text-white focus:bg-slate-600">
+                          {getColumnText(num)}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              );
+            })}
         </div>
 
         {/* Total Columns Indicator */}

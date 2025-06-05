@@ -18,11 +18,11 @@ import { translations } from "@/data/translations";
 import { storageService } from "@/services/storageService";
 
 interface PanelConfig {
-  boxPanel: number;
-  slotEditor: number;
-  placesPanel: number;
-  weaknessPanel: number;
-  configPanel: number;
+  boxPanel: { columns: number; order: number };
+  slotEditor: { columns: number; order: number };
+  placesPanel: { columns: number; order: number };
+  weaknessPanel: { columns: number; order: number };
+  configPanel: { columns: number; order: number };
 }
 
 const PublicView = () => {
@@ -58,11 +58,11 @@ const PublicView = () => {
   const [selectedBox, setSelectedBox] = useState<'team' | 'other' | 'graveyard'>('team');
   const [isLoading, setIsLoading] = useState(true);
   const [panelConfig, setPanelConfig] = useState<PanelConfig>({
-    boxPanel: 2,
-    slotEditor: 2,
-    placesPanel: 2,
-    weaknessPanel: 2,
-    configPanel: 2
+    boxPanel: { columns: 2, order: 1 },
+    slotEditor: { columns: 2, order: 2 },
+    placesPanel: { columns: 2, order: 3 },
+    weaknessPanel: { columns: 2, order: 4 },
+    configPanel: { columns: 2, order: 5 }
   });
   const { toast } = useToast();
 
@@ -240,126 +240,152 @@ const PublicView = () => {
         <div className="max-w-6xl mx-auto space-y-4">
           {/* Admin Panel */}
           <div className="grid grid-cols-1 lg:grid-cols-6 gap-6">
-            <div className={getColSpanClass(panelConfig.boxPanel)}>
-              <PublicBoxPanel
-              team={team}
-              otherBox={otherBox}
-              graveyardBox={graveyardBox}
-              selectedSlot={selectedSlot}
-              selectedBox={selectedBox}
-              onSlotClick={(box, idx) => { 
-                console.log('Slot clicked:', box, idx);
-                setSelectedBox(box); 
-                setSelectedSlot(idx); 
-              }}
-              onAddFixtures={addFixtures}
-              setTeam={setAllSlots}
-              allSlots={allSlots}
-              />
-            </div>
-            <div className={getColSpanClass(panelConfig.slotEditor)}>
-              <PublicSlotEditor
-              currentSlot={
-                (() => {
-                  const targetSlots = selectedBox === 'team' ? team : selectedBox === 'other' ? otherBox : graveyardBox;
-                  let targetSlot = targetSlots[selectedSlot];
-                  
-                  console.log('Current slot selection:', {
-                    selectedBox,
-                    selectedSlot,
-                    targetSlotsLength: targetSlots.length,
-                    targetSlot: targetSlot ? 'exists' : 'null',
-                    targetSlotId: targetSlot?.id
-                  });
-                  
-                  // If slot doesn't exist, return a default empty slot
-                  if (!targetSlot) {
-                    const newSlotId = `${selectedBox}-${selectedSlot}`;
-                    targetSlot = {
-                      id: newSlotId,
-                      pokemon: null,
-                      nickname: '',
-                      level: 1,
-                      ability: '',
-                      pokeball: 'pokeball' as const,
-                      animated: false,
-                      staticZoom: 1.5,
-                      animatedZoom: 1.5,
-                      place: '',
-                      box: selectedBox,
-                    };
-                    console.log('Created placeholder slot:', targetSlot);
-                  }
-                  
-                  return targetSlot;
-                })()
-              }
-              allPokemon={allPokemon}
-              selectedSlot={selectedSlot}
-              onUpdate={(updates) => {
-                const targetSlots = selectedBox === 'team' ? team : selectedBox === 'other' ? otherBox : graveyardBox;
-                let targetSlot = targetSlots[selectedSlot];
+            {/* Render panels in configured order */}
+            {Object.entries(panelConfig)
+              .sort(([, a], [, b]) => a.order - b.order)
+              .map(([panelKey, panelData]) => {
+                const colSpanClass = getColSpanClass(panelData.columns);
                 
-                if (targetSlot) {
-                  // Find the actual index in allSlots and update
-                  const actualIndex = allSlots.findIndex(slot => slot.id === targetSlot.id);
-                  if (actualIndex !== -1) {
-                    updateSlot(actualIndex, updates);
-                  } else {
-                    console.error('Could not find slot in allSlots:', targetSlot.id);
-                  }
-                } else {
-                  // Create a new slot and add it to allSlots
-                  const newSlotId = `${selectedBox}-${Date.now()}-${selectedSlot}`;
-                  const newSlot = {
-                    id: newSlotId,
-                    pokemon: null,
-                    nickname: '',
-                    level: 1,
-                    ability: '',
-                    pokeball: 'pokeball' as const,
-                    animated: false,
-                    staticZoom: 1.5,
-                    animatedZoom: 1.5,
-                    place: '',
-                    box: selectedBox,
-                    ...updates
-                  };
-                  setAllSlots(prev => [...prev, newSlot]);
-                  console.log('Created new slot:', newSlot);
+                switch (panelKey) {
+                  case 'boxPanel':
+                    return (
+                      <div key={panelKey} className={colSpanClass}>
+                        <PublicBoxPanel
+                          team={team}
+                          otherBox={otherBox}
+                          graveyardBox={graveyardBox}
+                          selectedSlot={selectedSlot}
+                          selectedBox={selectedBox}
+                          onSlotClick={(box, idx) => { 
+                            console.log('Slot clicked:', box, idx);
+                            setSelectedBox(box); 
+                            setSelectedSlot(idx); 
+                          }}
+                          onAddFixtures={addFixtures}
+                          setTeam={setAllSlots}
+                          allSlots={allSlots}
+                        />
+                      </div>
+                    );
+                  case 'slotEditor':
+                    return (
+                      <div key={panelKey} className={colSpanClass}>
+                        <PublicSlotEditor
+                          currentSlot={
+                            (() => {
+                              const targetSlots = selectedBox === 'team' ? team : selectedBox === 'other' ? otherBox : graveyardBox;
+                              let targetSlot = targetSlots[selectedSlot];
+                              
+                              console.log('Current slot selection:', {
+                                selectedBox,
+                                selectedSlot,
+                                targetSlotsLength: targetSlots.length,
+                                targetSlot: targetSlot ? 'exists' : 'null',
+                                targetSlotId: targetSlot?.id
+                              });
+                              
+                              // If slot doesn't exist, return a default empty slot
+                              if (!targetSlot) {
+                                const newSlotId = `${selectedBox}-${selectedSlot}`;
+                                targetSlot = {
+                                  id: newSlotId,
+                                  pokemon: null,
+                                  nickname: '',
+                                  level: 1,
+                                  ability: '',
+                                  pokeball: 'pokeball' as const,
+                                  animated: false,
+                                  staticZoom: 1.5,
+                                  animatedZoom: 1.5,
+                                  place: '',
+                                  box: selectedBox,
+                                };
+                                console.log('Created placeholder slot:', targetSlot);
+                              }
+                              
+                              return targetSlot;
+                            })()
+                          }
+                          allPokemon={allPokemon}
+                          selectedSlot={selectedSlot}
+                          onUpdate={(updates) => {
+                            const targetSlots = selectedBox === 'team' ? team : selectedBox === 'other' ? otherBox : graveyardBox;
+                            let targetSlot = targetSlots[selectedSlot];
+                            
+                            if (targetSlot) {
+                              // Find the actual index in allSlots and update
+                              const actualIndex = allSlots.findIndex(slot => slot.id === targetSlot.id);
+                              if (actualIndex !== -1) {
+                                updateSlot(actualIndex, updates);
+                              } else {
+                                console.error('Could not find slot in allSlots:', targetSlot.id);
+                              }
+                            } else {
+                              // Create a new slot and add it to allSlots
+                              const newSlotId = `${selectedBox}-${Date.now()}-${selectedSlot}`;
+                              const newSlot = {
+                                id: newSlotId,
+                                pokemon: null,
+                                nickname: '',
+                                level: 1,
+                                ability: '',
+                                pokeball: 'pokeball' as const,
+                                animated: false,
+                                staticZoom: 1.5,
+                                animatedZoom: 1.5,
+                                place: '',
+                                box: selectedBox,
+                                ...updates
+                              };
+                              setAllSlots(prev => [...prev, newSlot]);
+                              console.log('Created new slot:', newSlot);
+                            }
+                          }}
+                          onClear={() => {
+                            const targetSlots = selectedBox === 'team' ? team : selectedBox === 'other' ? otherBox : graveyardBox;
+                            const targetSlot = targetSlots[selectedSlot];
+                            if (targetSlot) {
+                              const actualIndex = allSlots.findIndex(slot => slot.id === targetSlot.id);
+                              if (actualIndex !== -1) {
+                                clearSlot(actualIndex);
+                              }
+                            }
+                            // If slot doesn't exist, there's nothing to clear
+                          }}
+                        />
+                      </div>
+                    );
+                  case 'placesPanel':
+                    return (
+                      <div key={panelKey} className={colSpanClass}>
+                        <PlacesPanel
+                          allSlots={allSlots}
+                          placesData={placesData}
+                        />
+                      </div>
+                    );
+                  case 'weaknessPanel':
+                    return (
+                      <div key={panelKey} className={colSpanClass}>
+                        <WeaknessPanel
+                          allPokemon={allPokemon}
+                          translations={translations}
+                        />
+                      </div>
+                    );
+                  case 'configPanel':
+                    return (
+                      <div key={panelKey} className={colSpanClass}>
+                        <PanelConfigPanel
+                          config={panelConfig}
+                          onConfigChange={setPanelConfig}
+                        />
+                      </div>
+                    );
+                  default:
+                    return null;
                 }
-              }}
-              onClear={() => {
-                const targetSlots = selectedBox === 'team' ? team : selectedBox === 'other' ? otherBox : graveyardBox;
-                const targetSlot = targetSlots[selectedSlot];
-                if (targetSlot) {
-                  const actualIndex = allSlots.findIndex(slot => slot.id === targetSlot.id);
-                  if (actualIndex !== -1) {
-                    clearSlot(actualIndex);
-                  }
-                }
-                // If slot doesn't exist, there's nothing to clear
-              }}
-              />
-            </div>
-            <div className={getColSpanClass(panelConfig.placesPanel)}>
-              <PlacesPanel
-                allSlots={allSlots}
-                placesData={placesData}
-              />
-            </div>
-            <div className={getColSpanClass(panelConfig.weaknessPanel)}>
-              <WeaknessPanel
-                allPokemon={allPokemon}
-                translations={translations}
-              />
-            </div>
-            <div className={getColSpanClass(panelConfig.configPanel)}>
-              <PanelConfigPanel
-                config={panelConfig}
-                onConfigChange={setPanelConfig}
-              />
-            </div>
+              })}
           </div>
         </div>
       </div>
