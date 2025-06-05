@@ -2,22 +2,22 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Switch } from "@/components/ui/switch";
 import { TeamPokemon, Pokemon, PokeballType } from "@/types/pokemon";
 import { saveTeam, loadTeam } from "@/utils/teamStorage";
 import { fetchPokemonData, getPokemonSpriteUrl, POKEBALL_DATA } from "@/utils/pokemonData";
 import { useToast } from "@/hooks/use-toast";
 import { Link } from "react-router-dom";
 import SlotEditor from "@/components/SlotEditor";
+import PokemonBox from "@/components/PokemonBox";
 import placesData from "@/data/places_es.json";
 
 const AdminView = () => {
   const [team, setTeam] = useState<TeamPokemon[]>([]);
+  const [otherBox, setOtherBox] = useState<TeamPokemon[]>([]);
+  const [graveyardBox, setGraveyardBox] = useState<TeamPokemon[]>([]);
   const [allPokemon, setAllPokemon] = useState<Pokemon[]>([]);
   const [selectedSlot, setSelectedSlot] = useState<number>(0);
+  const [selectedBox, setSelectedBox] = useState<'team' | 'other' | 'graveyard'>('team');
   const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
 
@@ -32,6 +32,32 @@ const AdminView = () => {
         
         setAllPokemon(pokemonData);
         setTeam(savedTeam);
+        
+        // Initialize other boxes with empty slots
+        setOtherBox(Array.from({ length: 12 }, (_, index) => ({
+          id: `other-${index}`,
+          pokemon: null,
+          nickname: '',
+          level: 1,
+          ability: '',
+          pokeball: 'pokeball',
+          animated: false,
+          zoom: 1.5,
+          place: '',
+        })));
+        
+        setGraveyardBox(Array.from({ length: 12 }, (_, index) => ({
+          id: `graveyard-${index}`,
+          pokemon: null,
+          nickname: '',
+          level: 1,
+          ability: '',
+          pokeball: 'pokeball',
+          animated: false,
+          zoom: 1.5,
+          place: '',
+        })));
+        
         console.log('Loaded Pokemon data:', pokemonData.length, 'entries');
         console.log('Loaded team:', savedTeam);
       } catch (error) {
@@ -49,12 +75,35 @@ const AdminView = () => {
     initializeData();
   }, [toast]);
 
+  const getBox = (boxType: 'team' | 'other' | 'graveyard') => {
+    switch (boxType) {
+      case 'team': return team;
+      case 'other': return otherBox;
+      case 'graveyard': return graveyardBox;
+    }
+  };
+
+  const setBox = (boxType: 'team' | 'other' | 'graveyard', newBox: TeamPokemon[]) => {
+    switch (boxType) {
+      case 'team': 
+        setTeam(newBox);
+        saveTeam(newBox);
+        break;
+      case 'other': 
+        setOtherBox(newBox);
+        break;
+      case 'graveyard': 
+        setGraveyardBox(newBox);
+        break;
+    }
+  };
+
   const updateSlot = (slotIndex: number, updates: Partial<TeamPokemon>) => {
-    const newTeam = [...team];
-    newTeam[slotIndex] = { ...newTeam[slotIndex], ...updates };
-    setTeam(newTeam);
-    saveTeam(newTeam);
-    console.log('Updated slot', slotIndex, 'with:', updates);
+    const currentBox = getBox(selectedBox);
+    const newBox = [...currentBox];
+    newBox[slotIndex] = { ...newBox[slotIndex], ...updates };
+    setBox(selectedBox, newBox);
+    console.log('Updated slot', slotIndex, 'in', selectedBox, 'with:', updates);
   };
 
   const clearSlot = (slotIndex: number) => {
@@ -65,15 +114,56 @@ const AdminView = () => {
       ability: '',
       pokeball: 'pokeball',
       animated: false,
-      zoom: 1.5
+      zoom: 1.5,
+      place: '',
     });
     toast({
       title: "Slot Cleared",
-      description: `Slot ${slotIndex + 1} has been cleared`
+      description: `Slot ${slotIndex + 1} in ${selectedBox} has been cleared`
     });
   };
 
-  const currentSlot = team[selectedSlot];
+  const handleDragDrop = (
+    fromBox: 'team' | 'other' | 'graveyard',
+    fromIndex: number,
+    toBox: 'team' | 'other' | 'graveyard',
+    toIndex: number
+  ) => {
+    const sourceBox = getBox(fromBox);
+    const targetBox = getBox(toBox);
+    
+    const sourcePokemon = sourceBox[fromIndex];
+    const targetPokemon = targetBox[toIndex];
+    
+    // Create new boxes with swapped Pokemon
+    const newSourceBox = [...sourceBox];
+    const newTargetBox = [...targetBox];
+    
+    if (fromBox === toBox) {
+      // Same box - just swap
+      newSourceBox[fromIndex] = targetPokemon;
+      newSourceBox[toIndex] = sourcePokemon;
+      setBox(fromBox, newSourceBox);
+    } else {
+      // Different boxes - swap between them
+      newSourceBox[fromIndex] = targetPokemon;
+      newTargetBox[toIndex] = sourcePokemon;
+      setBox(fromBox, newSourceBox);
+      setBox(toBox, newTargetBox);
+    }
+    
+    toast({
+      title: "Pokemon Moved",
+      description: `Pokemon moved from ${fromBox} to ${toBox}`
+    });
+  };
+
+  const handleSlotClick = (boxType: 'team' | 'other' | 'graveyard', index: number) => {
+    setSelectedBox(boxType);
+    setSelectedSlot(index);
+  };
+
+  const currentSlot = getBox(selectedBox)[selectedSlot];
 
   if (isLoading) {
     return (
@@ -106,54 +196,42 @@ const AdminView = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Team Overview */}
+          {/* Pokemon Boxes */}
           <Card className="bg-slate-800/90 border-purple-500/30 col-span-1">
             <CardHeader>
-              <CardTitle className="text-purple-300">Current Team</CardTitle>
+              <CardTitle className="text-purple-300">Pokemon Boxes</CardTitle>
             </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-3 gap-3">
-                {team.map((slot, index) => (
-                  <button
-                    key={slot.id}
-                    onClick={() => setSelectedSlot(index)}
-                    className={`p-3 rounded-lg border-2 transition-all ${
-                      selectedSlot === index
-                        ? 'border-purple-400 bg-purple-500/20'
-                        : 'border-slate-600 bg-slate-700/50 hover:border-purple-500/50'
-                    }`}
-                  >
-                    <div className="text-center">
-                      <div className="text-xs text-slate-400 mb-1">Slot {index + 1}</div>
-                      {slot.pokemon ? (
-                        <>
-                          <img
-                            src={getPokemonSpriteUrl(slot.pokemon, false)}
-                            alt={slot.pokemon.name.english}
-                            className="w-12 h-12 mx-auto mb-1"
-                            style={{
-                              transform: `scale(${slot.zoom || 1.5})`,
-                              objectPosition: 'center'
-                            }}
-                            onError={(e) => {
-                              const target = e.target as HTMLImageElement;
-                              target.style.display = 'none';
-                            }}
-                          />
-                          <div className="text-xs text-white font-medium truncate">
-                            {slot.nickname || slot.pokemon.name.english}
-                          </div>
-                          <div className="text-xs text-purple-300">Lv. {slot.level}</div>
-                        </>
-                      ) : (
-                        <div className="w-12 h-12 bg-slate-600 rounded mx-auto mb-1 flex items-center justify-center">
-                          <span className="text-slate-400">?</span>
-                        </div>
-                      )}
-                    </div>
-                  </button>
-                ))}
-              </div>
+            <CardContent className="space-y-4">
+              <PokemonBox
+                title="Team"
+                slots={team}
+                maxSlots={6}
+                onSlotClick={(index) => handleSlotClick('team', index)}
+                selectedSlot={selectedBox === 'team' ? selectedSlot : undefined}
+                onDragDrop={(fromIndex, toIndex) => handleDragDrop('team', fromIndex, 'team', toIndex)}
+                onDragDropExternal={(fromBox, fromIndex, toIndex) => handleDragDrop(fromBox, fromIndex, 'team', toIndex)}
+                boxType="team"
+              />
+              <PokemonBox
+                title="Other Box"
+                slots={otherBox}
+                maxSlots={12}
+                onSlotClick={(index) => handleSlotClick('other', index)}
+                selectedSlot={selectedBox === 'other' ? selectedSlot : undefined}
+                onDragDrop={(fromIndex, toIndex) => handleDragDrop('other', fromIndex, 'other', toIndex)}
+                onDragDropExternal={(fromBox, fromIndex, toIndex) => handleDragDrop(fromBox, fromIndex, 'other', toIndex)}
+                boxType="other"
+              />
+              <PokemonBox
+                title="Graveyard"
+                slots={graveyardBox}
+                maxSlots={12}
+                onSlotClick={(index) => handleSlotClick('graveyard', index)}
+                selectedSlot={selectedBox === 'graveyard' ? selectedSlot : undefined}
+                onDragDrop={(fromIndex, toIndex) => handleDragDrop('graveyard', fromIndex, 'graveyard', toIndex)}
+                onDragDropExternal={(fromBox, fromIndex, toIndex) => handleDragDrop(fromBox, fromIndex, 'graveyard', toIndex)}
+                boxType="graveyard"
+              />
             </CardContent>
           </Card>
 

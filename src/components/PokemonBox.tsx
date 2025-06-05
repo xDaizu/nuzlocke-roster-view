@@ -9,6 +9,9 @@ interface PokemonBoxProps {
   maxSlots: number;
   onSlotClick?: (index: number) => void;
   selectedSlot?: number;
+  onDragDrop?: (fromIndex: number, toIndex: number) => void;
+  onDragDropExternal?: (fromBox: 'team' | 'other' | 'graveyard', fromIndex: number, toIndex: number) => void;
+  boxType: 'team' | 'other' | 'graveyard';
 }
 
 const PokemonBox: React.FC<PokemonBoxProps> = ({
@@ -17,6 +20,9 @@ const PokemonBox: React.FC<PokemonBoxProps> = ({
   maxSlots,
   onSlotClick,
   selectedSlot,
+  onDragDrop,
+  onDragDropExternal,
+  boxType,
 }) => {
   // Fill empty slots
   const filledSlots = [...slots];
@@ -34,6 +40,40 @@ const PokemonBox: React.FC<PokemonBoxProps> = ({
     });
   }
 
+  const handleDragStart = (e: React.DragEvent, index: number) => {
+    const dragData = {
+      boxType,
+      index,
+      pokemon: filledSlots[index]
+    };
+    e.dataTransfer.setData('application/json', JSON.stringify(dragData));
+    e.dataTransfer.effectAllowed = 'move';
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+  };
+
+  const handleDrop = (e: React.DragEvent, targetIndex: number) => {
+    e.preventDefault();
+    
+    try {
+      const dragData = JSON.parse(e.dataTransfer.getData('application/json'));
+      const { boxType: sourceBoxType, index: sourceIndex } = dragData;
+      
+      if (sourceBoxType === boxType) {
+        // Same box - use internal drag drop
+        onDragDrop?.(sourceIndex, targetIndex);
+      } else {
+        // Different box - use external drag drop
+        onDragDropExternal?.(sourceBoxType, sourceIndex, targetIndex);
+      }
+    } catch (error) {
+      console.error('Error handling drop:', error);
+    }
+  };
+
   return (
     <div className="bg-slate-700/50 rounded-lg p-3">
       <h3 className="text-purple-300 font-medium mb-3 text-sm">{title}</h3>
@@ -42,18 +82,22 @@ const PokemonBox: React.FC<PokemonBoxProps> = ({
           <button
             key={slot.id}
             onClick={() => onSlotClick?.(index)}
+            draggable={slot.pokemon !== null}
+            onDragStart={(e) => handleDragStart(e, index)}
+            onDragOver={handleDragOver}
+            onDrop={(e) => handleDrop(e, index)}
             className={`p-2 rounded border-2 transition-all ${
               selectedSlot === index
                 ? 'border-purple-400 bg-purple-500/20'
                 : 'border-slate-600 bg-slate-800/50 hover:border-purple-500/50'
-            }`}
+            } ${slot.pokemon ? 'cursor-grab active:cursor-grabbing' : ''}`}
           >
             {slot.pokemon ? (
               <div className="text-center">
                 <img
                   src={getPokemonSpriteUrl(slot.pokemon, false)}
                   alt={slot.pokemon.name.english}
-                  className="w-8 h-8 mx-auto mb-1"
+                  className="w-8 h-8 mx-auto mb-1 pointer-events-none"
                   style={{
                     transform: `scale(${slot.zoom})`,
                     objectPosition: 'center'
