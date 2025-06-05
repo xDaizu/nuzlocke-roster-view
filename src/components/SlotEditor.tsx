@@ -69,14 +69,14 @@ const SlotEditor: React.FC<SlotEditorProps> = ({
       {showHeader && (
         <CardHeader>
           <CardTitle className="text-purple-300 flex justify-between items-center">
-            Edit Slot {slotIndex !== undefined ? slotIndex + 1 : ""}
+            Editar Espacio {slotIndex !== undefined ? slotIndex + 1 : ""}
             <Button
               variant="destructive"
               size="sm"
               onClick={onClear}
               className="bg-red-600 hover:bg-red-700"
             >
-              Clear Slot
+              Borrar
             </Button>
           </CardTitle>
         </CardHeader>
@@ -123,7 +123,7 @@ const SlotEditor: React.FC<SlotEditorProps> = ({
 
           {/* Nickname */}
           <div className="space-y-1">
-            <Label className="text-slate-300 text-xs">Nickname</Label>
+            <Label className="text-slate-300 text-xs">Apodo</Label>
             <Input
               value={slot.nickname}
               onChange={(e) => onUpdate({ nickname: e.target.value })}
@@ -134,7 +134,7 @@ const SlotEditor: React.FC<SlotEditorProps> = ({
 
           {/* Level */}
           <div className="space-y-1">
-            <Label className="text-slate-300 text-xs">Level</Label>
+            <Label className="text-slate-300 text-xs">Nivel</Label>
             <Input
               type="number"
               min="1"
@@ -147,7 +147,7 @@ const SlotEditor: React.FC<SlotEditorProps> = ({
 
           {/* Ability (Select) */}
           <div className="space-y-1">
-            <Label className="text-slate-300 text-xs">Ability</Label>
+            <Label className="text-slate-300 text-xs">Habilidad</Label>
             <Select
               value={slot.ability || "none"}
               onValueChange={(value) => {
@@ -230,7 +230,7 @@ const SlotEditor: React.FC<SlotEditorProps> = ({
             </div>
             {showBoxSelect && (
               <div className="space-y-1 w-full sm:w-1/2">
-                <Label className="text-slate-300 text-xs">Box</Label>
+                <Label className="text-slate-300 text-xs">Caja</Label>
                 <Select
                   value={slot.box}
                   onValueChange={(value) => onUpdate({ box: value as 'team' | 'other' | 'graveyard' })}
@@ -239,9 +239,9 @@ const SlotEditor: React.FC<SlotEditorProps> = ({
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent className="bg-slate-700 border-slate-600 max-h-60 text-xs">
-                    <SelectItem value="team">Team</SelectItem>
-                    <SelectItem value="other">Other Box</SelectItem>
-                    <SelectItem value="graveyard">Graveyard</SelectItem>
+                    <SelectItem value="team">Equipo</SelectItem>
+                    <SelectItem value="other">El PC</SelectItem>
+                    <SelectItem value="graveyard">El sielo</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -287,7 +287,7 @@ const SlotEditor: React.FC<SlotEditorProps> = ({
               checked={slot.animated}
               onCheckedChange={(checked) => onUpdate({ animated: checked })}
             />
-            <Label htmlFor="animated" className="text-slate-300 text-xs">Use animated sprite</Label>
+            <Label htmlFor="animated" className="text-slate-300 text-xs">Usar GIF animado</Label>
           </div>
 
           {/* Zoom Control - only show for static sprites */}

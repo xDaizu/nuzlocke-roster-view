@@ -3,9 +3,10 @@ import { TeamPokemon, Pokemon } from "@/types/pokemon";
 import { fetchPokemonData, getPokemonSpriteUrl, POKEBALL_DATA } from "@/utils/pokemonData";
 import { useToast } from "@/hooks/use-toast";
 import PublicHeader from "@/components/PublicHeader";
-import PublicAdminPanel from "@/components/PublicAdminPanel";
+import PublicBoxPanel from "@/components/PublicBoxPanel";
 import PublicSlotEditor from "@/components/PublicSlotEditor";
 import PlacesPanel from "@/components/PlacesPanel";
+import PanelConfigPanel from "@/components/PanelConfigPanel";
 import { Label } from "@/components/ui/label";
 import TeamSlot from "@/components/TeamSlot";
 import React from "react";
@@ -13,7 +14,26 @@ import abilitiesData from "@/data/abilities_es.json";
 import placesData from "@/data/places_es.json";
 import { pokemonFixtures } from "@/data/fixtures";
 
+interface PanelConfig {
+  boxPanel: number;
+  slotEditor: number;
+  placesPanel: number;
+  configPanel: number;
+}
+
 const PublicView = () => {
+  // Column span class mapping to ensure Tailwind includes all classes
+  const getColSpanClass = (span: number): string => {
+    const spanClasses: Record<number, string> = {
+      1: 'lg:col-span-1',
+      2: 'lg:col-span-2',
+      3: 'lg:col-span-3',
+      4: 'lg:col-span-4',
+      5: 'lg:col-span-5',
+      6: 'lg:col-span-6'
+    };
+    return spanClasses[span] || 'lg:col-span-1';
+  };
   const [allSlots, setAllSlots] = useState<TeamPokemon[]>(() => 
     Array.from({ length: 6 }, (_, index) => ({
       id: `slot-${index}`,
@@ -32,6 +52,12 @@ const PublicView = () => {
   const [selectedSlot, setSelectedSlot] = useState<number>(0);
   const [selectedBox, setSelectedBox] = useState<'team' | 'other' | 'graveyard'>('team');
   const [isLoading, setIsLoading] = useState(true);
+  const [panelConfig, setPanelConfig] = useState<PanelConfig>({
+    boxPanel: 2,
+    slotEditor: 2,
+    placesPanel: 2,
+    configPanel: 2
+  });
   const { toast } = useToast();
 
   // Filter slots by box type, defaulting to 'other' if no box is set
@@ -200,8 +226,9 @@ const PublicView = () => {
       <div className="pt-[170px] p-4">
         <div className="max-w-6xl mx-auto space-y-4">
           {/* Admin Panel */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <PublicAdminPanel
+          <div className="grid grid-cols-1 lg:grid-cols-6 gap-6">
+            <div className={getColSpanClass(panelConfig.boxPanel)}>
+              <PublicBoxPanel
               team={team}
               otherBox={otherBox}
               graveyardBox={graveyardBox}
@@ -214,8 +241,10 @@ const PublicView = () => {
               }}
               onAddFixtures={addFixtures}
               setTeam={setAllSlots}
-            />
-            <PublicSlotEditor
+              />
+            </div>
+            <div className={getColSpanClass(panelConfig.slotEditor)}>
+              <PublicSlotEditor
               currentSlot={
                 (() => {
                   const targetSlots = selectedBox === 'team' ? team : selectedBox === 'other' ? otherBox : graveyardBox;
@@ -295,11 +324,20 @@ const PublicView = () => {
                 }
                 // If slot doesn't exist, there's nothing to clear
               }}
-            />
-            <PlacesPanel
-              allSlots={allSlots}
-              placesData={placesData}
-            />
+              />
+            </div>
+            <div className={getColSpanClass(panelConfig.placesPanel)}>
+              <PlacesPanel
+                allSlots={allSlots}
+                placesData={placesData}
+              />
+            </div>
+            <div className={getColSpanClass(panelConfig.configPanel)}>
+              <PanelConfigPanel
+                config={panelConfig}
+                onConfigChange={setPanelConfig}
+              />
+            </div>
           </div>
         </div>
       </div>
