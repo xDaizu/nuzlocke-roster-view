@@ -38,6 +38,18 @@ const WeaknessPanel: React.FC<WeaknessPanelProps> = ({ allPokemon, translations 
       return { veryWeak: [], weak: [], resistant: [], veryResistant: [], immune: [] };
     }
 
+    // Handle Fairy type: filter it out for dual types, or replace with Normal for pure Fairy
+    let filteredTypes = types.filter(type => type !== "Fairy");
+    
+    // If Pokemon only has Fairy type, treat it as Normal type for calculations
+    if (filteredTypes.length === 0 && types.includes("Fairy")) {
+      filteredTypes = ["Normal"];
+    }
+    
+    if (filteredTypes.length === 0) {
+      return { veryWeak: [], weak: [], resistant: [], veryResistant: [], immune: [] };
+    }
+
     const allTypes = Object.keys(typesData);
     const effectiveness: { [key: string]: number } = {};
 
@@ -46,8 +58,8 @@ const WeaknessPanel: React.FC<WeaknessPanelProps> = ({ allPokemon, translations 
       effectiveness[type] = 1.0;
     });
 
-    // Apply effectiveness for each of the Pokemon's types
-    types.forEach(pokemonType => {
+    // Apply effectiveness for each of the Pokemon's types (excluding Fairy)
+    filteredTypes.forEach(pokemonType => {
       const typeData = (typesData as any)[pokemonType];
       if (typeData) {
         // Apply weaknesses (2x damage)
@@ -114,7 +126,7 @@ const WeaknessPanel: React.FC<WeaknessPanelProps> = ({ allPokemon, translations 
       Dragon: "bg-indigo-700",
       Dark: "bg-gray-800",
       Steel: "bg-gray-500",
-      Fairy: "bg-pink-300"
+      Fairy: "bg-gray-300 opacity-50" // Grayed out for Fairy type
     };
     return colors[type] || "bg-gray-400";
   };
