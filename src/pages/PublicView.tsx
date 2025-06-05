@@ -64,10 +64,19 @@ const PublicView = () => {
   }
 
   const updateSlot = (slotIndex: number, updates: Partial<TeamPokemon>) => {
+    if (slotIndex < 0 || slotIndex >= allSlots.length) {
+      console.error('Invalid slot index:', slotIndex, 'allSlots length:', allSlots.length);
+      return;
+    }
+    
     const newAllSlots = [...allSlots];
-    newAllSlots[slotIndex] = { ...newAllSlots[slotIndex], ...updates };
+    const oldSlot = newAllSlots[slotIndex];
+    newAllSlots[slotIndex] = { ...oldSlot, ...updates };
+    
+    console.log('Updated slot', slotIndex, 'from:', oldSlot, 'to:', newAllSlots[slotIndex]);
+    console.log('Update details:', updates);
+    
     setAllSlots(newAllSlots);
-    console.log('Updated slot', slotIndex, 'with:', updates);
   };
 
   const clearSlot = (slotIndex: number) => {
@@ -164,11 +173,14 @@ const PublicView = () => {
                   box: 'team' as const,
                 };
                 
+                // Find the correct index in allSlots for this team slot
+                const actualSlotIndex = teamPokemon[index] ? allSlots.findIndex(s => s.id === teamPokemon[index].id) : -1;
+                
                 return (
                   <TeamSlot
                     key={slot.id}
                     slot={slot}
-                    index={teamPokemon[index] ? allSlots.indexOf(teamPokemon[index]) : -1}
+                    index={actualSlotIndex}
                     updateSlot={updateSlot}
                     getPokemonSpriteUrl={getPokemonSpriteUrl}
                     pokeballData={POKEBALL_DATA}
@@ -193,7 +205,11 @@ const PublicView = () => {
               graveyardBox={graveyardBox}
               selectedSlot={selectedSlot}
               selectedBox={selectedBox}
-              onSlotClick={(box, idx) => { setSelectedBox(box); setSelectedSlot(idx); }}
+              onSlotClick={(box, idx) => { 
+                console.log('Slot clicked:', box, idx);
+                setSelectedBox(box); 
+                setSelectedSlot(idx); 
+              }}
               onAddFixtures={addFixtures}
               setTeam={setAllSlots}
             />
@@ -202,6 +218,14 @@ const PublicView = () => {
                 (() => {
                   const targetSlots = selectedBox === 'team' ? team : selectedBox === 'other' ? otherBox : graveyardBox;
                   let targetSlot = targetSlots[selectedSlot];
+                  
+                  console.log('Current slot selection:', {
+                    selectedBox,
+                    selectedSlot,
+                    targetSlotsLength: targetSlots.length,
+                    targetSlot: targetSlot ? 'exists' : 'null',
+                    targetSlotId: targetSlot?.id
+                  });
                   
                   // If slot doesn't exist, return a default empty slot
                   if (!targetSlot) {
@@ -218,6 +242,7 @@ const PublicView = () => {
                       place: '',
                       box: selectedBox,
                     };
+                    console.log('Created placeholder slot:', targetSlot);
                   }
                   
                   return targetSlot;
@@ -230,13 +255,16 @@ const PublicView = () => {
                 let targetSlot = targetSlots[selectedSlot];
                 
                 if (targetSlot) {
+                  // Find the actual index in allSlots and update
                   const actualIndex = allSlots.findIndex(slot => slot.id === targetSlot.id);
                   if (actualIndex !== -1) {
                     updateSlot(actualIndex, updates);
+                  } else {
+                    console.error('Could not find slot in allSlots:', targetSlot.id);
                   }
                 } else {
                   // Create a new slot and add it to allSlots
-                  const newSlotId = `${selectedBox}-${selectedSlot}`;
+                  const newSlotId = `${selectedBox}-${Date.now()}-${selectedSlot}`;
                   const newSlot = {
                     id: newSlotId,
                     pokemon: null,
@@ -251,6 +279,7 @@ const PublicView = () => {
                     ...updates
                   };
                   setAllSlots(prev => [...prev, newSlot]);
+                  console.log('Created new slot:', newSlot);
                 }
               }}
               onClear={() => {

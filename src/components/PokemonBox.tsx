@@ -28,7 +28,7 @@ const PokemonBox: React.FC<PokemonBoxProps> = ({
   const filledSlots = [...slots];
   while (filledSlots.length < maxSlots) {
     filledSlots.push({
-      id: `empty-${filledSlots.length}`,
+      id: `empty-${boxType}-${filledSlots.length}`,
       pokemon: null,
       nickname: '',
       level: 1,
@@ -37,6 +37,7 @@ const PokemonBox: React.FC<PokemonBoxProps> = ({
       animated: false,
       zoom: 1.5,
       place: '',
+      box: boxType,
     });
   }
 
