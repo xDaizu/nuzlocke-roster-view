@@ -29,7 +29,7 @@ export const translations = {
     level: "Nivel",
     ability: "Habilidad",
     pokeball: "Pokéball",
-    place: "Lugar",
+    place: "Lugar de captura",
     box: "Caja",
     pokemon: "Pokémon",
     filterPokemon: "Filtrar Pokemon...",

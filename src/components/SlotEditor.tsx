@@ -10,6 +10,7 @@ import abilitiesData from "@/data/abilities_es.json";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { translations } from "@/data/translations";
 
 interface SlotEditorProps {
   slot: TeamPokemon;
@@ -69,14 +70,14 @@ const SlotEditor: React.FC<SlotEditorProps> = ({
       {showHeader && (
         <CardHeader>
           <CardTitle className="text-purple-300 flex justify-between items-center">
-            Editar Espacio {slotIndex !== undefined ? slotIndex + 1 : ""}
+            {translations.panels.slotEditor} {slotIndex !== undefined ? slotIndex + 1 : ""}
             <Button
               variant="destructive"
               size="sm"
               onClick={onClear}
               className="bg-red-600 hover:bg-red-700"
             >
-              Borrar
+              {translations.buttons.clear}
             </Button>
           </CardTitle>
         </CardHeader>
@@ -85,7 +86,7 @@ const SlotEditor: React.FC<SlotEditorProps> = ({
         <form className="grid grid-cols-2 gap-x-4 gap-y-2 items-end">
           {/* Pokemon Selection */}
           <div className="space-y-1">
-            <Label className="text-slate-300 text-xs">Pokemon</Label>
+            <Label className="text-slate-300 text-xs">{translations.forms.pokemon}</Label>
             <Select
               value={slot.pokemon?.id.toString() || "none"}
               onValueChange={(value) => {
@@ -100,14 +101,14 @@ const SlotEditor: React.FC<SlotEditorProps> = ({
               }}
             >
               <SelectTrigger className="bg-slate-700 border-slate-600 h-8 text-xs">
-                <SelectValue placeholder="Select a Pokemon" />
+                <SelectValue placeholder={translations.forms.selectPokemon} />
               </SelectTrigger>
               <SelectContent className="bg-slate-700 border-slate-600 max-h-60 text-xs">
                 <div className="px-2 py-1">
                   <Input
                     value={pokemonFilter}
                     onChange={e => setPokemonFilter(e.target.value)}
-                    placeholder="Filtrar Pokemon..."
+                    placeholder={translations.forms.filterPokemon}
                     className="mb-1 bg-slate-800 border-slate-600 h-7 text-xs"
                   />
                 </div>
@@ -123,11 +124,11 @@ const SlotEditor: React.FC<SlotEditorProps> = ({
 
           {/* Nickname */}
           <div className="space-y-1">
-            <Label className="text-slate-300 text-xs">Apodo</Label>
+            <Label className="text-slate-300 text-xs">{translations.forms.nickname}</Label>
             <Input
               value={slot.nickname}
               onChange={(e) => onUpdate({ nickname: e.target.value })}
-              placeholder={slot.pokemon?.name.english || "Enter nickname"}
+              placeholder={slot.pokemon?.name.english || translations.forms.nickname}
               className="bg-slate-700 border-slate-600 h-8 text-xs"
             />
           </div>
@@ -136,7 +137,7 @@ const SlotEditor: React.FC<SlotEditorProps> = ({
           <div className="grid grid-cols-2 gap-4">
             {/* Level */}
             <div className="space-y-1">
-              <Label className="text-slate-300 text-xs">Nivel</Label>
+              <Label className="text-slate-300 text-xs">{translations.forms.level}</Label>
               <Input
                 type="number"
                 min="1"
@@ -149,7 +150,7 @@ const SlotEditor: React.FC<SlotEditorProps> = ({
 
             {/* Ability (Select) */}
             <div className="space-y-1">
-              <Label className="text-slate-300 text-xs">Habilidad</Label>
+              <Label className="text-slate-300 text-xs">{translations.forms.ability}</Label>
               <Select
                 value={slot.ability || "none"}
                 onValueChange={(value) => {
@@ -164,7 +165,7 @@ const SlotEditor: React.FC<SlotEditorProps> = ({
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <SelectTrigger className="bg-slate-700 border-slate-600 h-8 text-xs">
-                        <SelectValue placeholder="Select an Ability" />
+                        <SelectValue placeholder={translations.forms.selectAbility} />
                       </SelectTrigger>
                     </TooltipTrigger>
                     {selectedAbilityDescription && (
@@ -179,7 +180,7 @@ const SlotEditor: React.FC<SlotEditorProps> = ({
                     <Input
                       value={abilityFilter}
                       onChange={e => setAbilityFilter(e.target.value)}
-                      placeholder="Filtrar habilidades..."
+                      placeholder={translations.forms.filterAbility}
                       className="mb-1 bg-slate-800 border-slate-600 h-7 text-xs"
                     />
                   </div>
@@ -211,7 +212,7 @@ const SlotEditor: React.FC<SlotEditorProps> = ({
           {/* Pokeball and Box (Select) in a row */}
           <div className="flex flex-col sm:flex-row gap-2">
             <div className="space-y-1 w-full sm:w-1/2">
-              <Label className="text-slate-300 text-xs">Pokeball</Label>
+              <Label className="text-slate-300 text-xs">{translations.forms.pokeball}</Label>
               <Select
                 value={slot.pokeball}
                 onValueChange={(value: PokeballType) => onUpdate({ pokeball: value })}
@@ -233,7 +234,7 @@ const SlotEditor: React.FC<SlotEditorProps> = ({
             </div>
             {showBoxSelect && (
               <div className="space-y-1 w-full sm:w-1/2">
-                <Label className="text-slate-300 text-xs">Caja</Label>
+                <Label className="text-slate-300 text-xs">{translations.forms.box}</Label>
                 <Select
                   value={slot.box}
                   onValueChange={(value) => onUpdate({ box: value as 'team' | 'other' | 'graveyard' })}
@@ -242,9 +243,9 @@ const SlotEditor: React.FC<SlotEditorProps> = ({
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent className="bg-slate-700 border-slate-600 max-h-60 text-xs">
-                    <SelectItem value="team">Equipo</SelectItem>
-                    <SelectItem value="other">El PC</SelectItem>
-                    <SelectItem value="graveyard">El sielo</SelectItem>
+                    <SelectItem value="team">{translations.boxes.team}</SelectItem>
+                    <SelectItem value="other">{translations.boxes.other}</SelectItem>
+                    <SelectItem value="graveyard">{translations.boxes.graveyard}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -253,7 +254,7 @@ const SlotEditor: React.FC<SlotEditorProps> = ({
 
           {/* Place (Select) */}
           <div className="space-y-1">
-            <Label className="text-slate-300 text-xs">Lugar</Label>
+            <Label className="text-slate-300 text-xs">{translations.forms.place}</Label>
             <Select
               value={slot.place ? slot.place : "none"}
               onValueChange={(value) => {
@@ -261,7 +262,7 @@ const SlotEditor: React.FC<SlotEditorProps> = ({
               }}
             >
               <SelectTrigger className="bg-slate-700 border-slate-600 h-8 text-xs">
-                <SelectValue placeholder="Sin lugar" />
+                <SelectValue placeholder={translations.forms.selectPlace} />
               </SelectTrigger>
               <SelectContent className="bg-slate-700 border-slate-600 max-h-60 text-xs">
                 <div className="px-2 py-1">
@@ -273,7 +274,7 @@ const SlotEditor: React.FC<SlotEditorProps> = ({
                   />
                 </div>
                 <SelectItem value="none">Sin lugar</SelectItem>
-                <SelectItem value="unknown">Desconocido</SelectItem>
+                <SelectItem value="unknown">{translations.placeholders.unknown}</SelectItem>
                 {filteredPlaces.map((place) => (
                   <SelectItem key={place.id} value={place.id} className="text-xs">
                     {place.nombre}
