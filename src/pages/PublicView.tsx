@@ -227,6 +227,7 @@ const PublicView = () => {
               }}
               onAddFixtures={addFixtures}
               setTeam={setAllSlots}
+              allSlots={allSlots}
               />
             </div>
             <div className={getColSpanClass(panelConfig.slotEditor)}>

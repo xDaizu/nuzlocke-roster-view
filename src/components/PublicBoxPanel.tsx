@@ -19,6 +19,7 @@ interface PublicBoxPanelProps {
   onAddFixtures: () => void;
   setTeam: (team: TeamPokemon[]) => void;
   columnSpan?: number;
+  allSlots: TeamPokemon[]; // Add allSlots for proper save/load
 }
 
 const PublicBoxPanel: React.FC<PublicBoxPanelProps> = ({
@@ -30,12 +31,13 @@ const PublicBoxPanel: React.FC<PublicBoxPanelProps> = ({
   onSlotClick,
   onAddFixtures,
   setTeam,
+  allSlots,
 }) => {
   const { toast } = useToast();
 
   const handleSaveTeam = () => {
     try {
-      storageService.saveTeam(team);
+      storageService.saveTeam(allSlots); // Save all slots, not just team
       toast({
         title: translations.messages.teamSaved,
         description: translations.messages.teamSavedDesc,
@@ -52,9 +54,9 @@ const PublicBoxPanel: React.FC<PublicBoxPanelProps> = ({
 
   const handleLoadTeam = () => {
     try {
-      const loadedTeam = storageService.loadTeam();
-      if (loadedTeam && loadedTeam.length === 6) {
-        setTeam(loadedTeam);
+      const loadedSlots = storageService.loadTeam();
+      if (loadedSlots && loadedSlots.length > 0) {
+        setTeam(loadedSlots); // Load all slots
         toast({
           title: translations.messages.teamLoaded,
           description: translations.messages.teamLoadedDesc,
