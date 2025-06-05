@@ -10,6 +10,7 @@ import TeamSlot from "@/components/TeamSlot";
 import React from "react";
 import abilitiesData from "@/data/abilities_es.json";
 import placesData from "@/data/places_es.json";
+import { pokemonFixtures } from "@/data/fixtures";
 
 const PublicView = () => {
   const [allSlots, setAllSlots] = useState<TeamPokemon[]>(() => 
@@ -73,9 +74,6 @@ const PublicView = () => {
     const oldSlot = newAllSlots[slotIndex];
     newAllSlots[slotIndex] = { ...oldSlot, ...updates };
     
-    console.log('Updated slot', slotIndex, 'from:', oldSlot, 'to:', newAllSlots[slotIndex]);
-    console.log('Update details:', updates);
-    
     setAllSlots(newAllSlots);
   };
 
@@ -98,13 +96,13 @@ const PublicView = () => {
   };
 
   const addFixtures = () => {
-    const fixtures = [
-      { name: 'Turtwig', nickname: 'Pablo', level: 10, place: '', box: 'team', ability: 'arena-trap' },
-      { name: 'Lotad', nickname: 'Calos', level: 10, place: '', box: 'team' },
-      { name: 'Mareep', nickname: 'RazorMorel', level: 10, place: '', box: 'team' },
-      { name: 'Sealeo', nickname: 'Darkdimon', level: 10, place: '', box: 'team' },
-      { name: 'Jigglypuff', nickname: 'Vancleemp', level: 8, place: '', box: 'graveyard', ability: 'compound-eyes' }
-    ];
+    console.log('Loading fixtures...');
+    const fixtures = pokemonFixtures;
+    
+    if (allPokemon.length === 0) {
+      console.error('allPokemon is empty! Cannot load fixtures.');
+      return;
+    }
 
     const newTeam = Array.from({ length: 6 }, (_, index) => {
       if (index < fixtures.length) {
@@ -119,7 +117,7 @@ const PublicView = () => {
           nickname: fixture.nickname,
           level: fixture.level || 1,
           ability: (fixture as any).ability || '',
-          pokeball: 'pokeball' as const,
+          pokeball: (fixture as any).pokeball || 'pokeball',
           animated: false,
           zoom: 1.5,
           place: fixture.place || '',
@@ -141,7 +139,9 @@ const PublicView = () => {
       };
     });
 
-    setAllSlots(newTeam.map(slot => ({ ...slot, box: (slot.box === 'team' || slot.box === 'other' || slot.box === 'graveyard') ? slot.box : 'other' } as TeamPokemon)));
+    const finalSlots = newTeam.map(slot => ({ ...slot, box: (slot.box === 'team' || slot.box === 'other' || slot.box === 'graveyard') ? slot.box : 'other' } as TeamPokemon));
+    setAllSlots(finalSlots);
+    console.log('Fixtures loaded successfully!');
   };
 
   if (isLoading) {
