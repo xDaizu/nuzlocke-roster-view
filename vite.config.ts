@@ -22,5 +22,5 @@ export default defineConfig(({ mode }) => ({
   build: {
     outDir: "dist",
   },
-  base: '/nuzlocke-roster-view/',
+  base: process.env.VITE_BASE_PATH || '/',
 }));
