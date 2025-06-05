@@ -47,12 +47,18 @@ const SlotEditor: React.FC<SlotEditorProps> = ({
 }) => {
   const [abilityFilter, setAbilityFilter] = useState("");
   const [placeFilter, setPlaceFilter] = useState("");
+  const [pokemonFilter, setPokemonFilter] = useState("");
+  
   // Filter by name
   const filteredAbilities = abilitiesData.filter((a: any) =>
     a.name.toLowerCase().includes(abilityFilter.toLowerCase())
   );
   const filteredPlaces = placesData.filter((p) =>
     p.nombre.toLowerCase().includes(placeFilter.toLowerCase())
+  );
+  const filteredPokemon = allPokemon.filter((p) =>
+    p.name.english.toLowerCase().includes(pokemonFilter.toLowerCase()) ||
+    p.id.toString().includes(pokemonFilter)
   );
 
   // Get description for currently selected ability (by slug)
@@ -97,8 +103,16 @@ const SlotEditor: React.FC<SlotEditorProps> = ({
                 <SelectValue placeholder="Select a Pokemon" />
               </SelectTrigger>
               <SelectContent className="bg-slate-700 border-slate-600 max-h-60 text-xs">
+                <div className="px-2 py-1">
+                  <Input
+                    value={pokemonFilter}
+                    onChange={e => setPokemonFilter(e.target.value)}
+                    placeholder="Filtrar Pokemon..."
+                    className="mb-1 bg-slate-800 border-slate-600 h-7 text-xs"
+                  />
+                </div>
                 <SelectItem value="none">No Pokemon</SelectItem>
-                {allPokemon.map((pokemon) => (
+                {filteredPokemon.map((pokemon) => (
                   <SelectItem key={pokemon.id} value={pokemon.id.toString()} className="text-xs">
                     #{pokemon.id.toString().padStart(3, '0')} {pokemon.name.english}
                   </SelectItem>
