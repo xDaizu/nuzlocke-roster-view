@@ -62,7 +62,8 @@ const PokemonBox: React.FC<PokemonBoxProps> = ({
       ability: '',
       pokeball: 'pokeball',
       animated: false,
-      zoom: 1.5,
+      staticZoom: 1.5,
+      animatedZoom: 1.5,
       place: '',
       box: boxType,
     });
@@ -151,10 +152,10 @@ const PokemonBox: React.FC<PokemonBoxProps> = ({
                   src={getPokemonSpriteUrl(slot.pokemon, false)}
                   alt={slot.pokemon.name.english}
                   className="w-8 h-8 mx-auto mb-1 pointer-events-none"
-                  style={{
-                    transform: `scale(${slot.zoom})`,
-                    objectPosition: 'center'
-                  }}
+                                        style={{
+                        transform: 'scale(1.0)',
+                        objectPosition: 'center'
+                      }}
                   onError={(e) => {
                     const target = e.target as HTMLImageElement;
                     target.style.display = 'none';

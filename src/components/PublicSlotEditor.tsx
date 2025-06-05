@@ -43,10 +43,10 @@ const PublicSlotEditor: React.FC<PublicSlotEditorProps> = ({
               src={getPokemonSpriteUrl(currentSlot.pokemon, currentSlot.animated)}
               alt={currentSlot.pokemon.name.english}
               className="w-16 h-16"
-              style={{
-                transform: currentSlot.animated ? 'none' : `scale(${currentSlot.zoom})`,
-                objectPosition: 'center'
-              }}
+                                style={{
+                    transform: `scale(${currentSlot.animated ? currentSlot.animatedZoom : currentSlot.staticZoom})`,
+                    objectPosition: 'center'
+                  }}
               onError={(e) => {
                 const target = e.target as HTMLImageElement;
                 if (currentSlot.animated) {

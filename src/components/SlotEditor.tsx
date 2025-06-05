@@ -290,26 +290,46 @@ const SlotEditor: React.FC<SlotEditorProps> = ({
             <Label htmlFor="animated" className="text-slate-300 text-xs">Usar GIF animado</Label>
           </div>
 
-          {/* Zoom Control - only show for static sprites */}
-          {!slot.animated && (
-            <div className="space-y-1 mt-4">
-              <Label className="text-slate-300 text-xs">Sprite Zoom (Static only)</Label>
+          {/* Zoom Controls */}
+          <div className="space-y-2 mt-4">
+            {/* Static Sprite Zoom */}
+            <div className="space-y-1">
+              <Label className="text-slate-300 text-xs">Sprite Zoom (Estático)</Label>
               <div className="flex items-center space-x-2">
                 <Input
                   type="number"
                   min="0.5"
                   max="3"
                   step="0.1"
-                  value={slot.zoom || 1.5}
-                  onChange={(e) => onUpdate({ zoom: parseFloat(e.target.value) || 1.5 })}
+                  value={slot.staticZoom || 1.5}
+                  onChange={(e) => onUpdate({ staticZoom: parseFloat(e.target.value) || 1.5 })}
                   className="bg-slate-700 border-slate-600 h-8 text-xs w-16"
                 />
                 <span className="text-slate-400 text-xs">
-                  {slot.zoom || 1.5}x zoom
+                  {slot.staticZoom || 1.5}x zoom
                 </span>
               </div>
             </div>
-          )}
+            
+            {/* Animated Sprite Zoom */}
+            <div className="space-y-1">
+              <Label className="text-slate-300 text-xs">Sprite Zoom (Animado)</Label>
+              <div className="flex items-center space-x-2">
+                <Input
+                  type="number"
+                  min="0.5"
+                  max="3"
+                  step="0.1"
+                  value={slot.animatedZoom || 1.0}
+                  onChange={(e) => onUpdate({ animatedZoom: parseFloat(e.target.value) || 1.0 })}
+                  className="bg-slate-700 border-slate-600 h-8 text-xs w-16"
+                />
+                <span className="text-slate-400 text-xs">
+                  {slot.animatedZoom || 1.0}x zoom
+                </span>
+              </div>
+            </div>
+          </div>
         </form>
       </CardContent>
     </>

@@ -25,7 +25,8 @@ export interface TeamPokemon {
   ability: string;
   pokeball: PokeballType;
   animated: boolean;
-  zoom: number; // 1.0 = normal, 1.5 = 150% zoom (cropped from sides)
+  staticZoom: number; // 1.0 = normal, 1.5 = 150% zoom for static sprites
+  animatedZoom: number; // 1.0 = normal, 1.5 = 150% zoom for animated sprites
   place?: string; // Optional, can be empty or 'unknown'
   box: 'team' | 'other' | 'graveyard';
 }

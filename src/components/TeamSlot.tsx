@@ -52,8 +52,8 @@ const TeamSlot: React.FC<TeamSlotProps> = ({
                       maxHeight: '140px',
                       width: '80%',
                       maxWidth: '80%',
-                      // Apply zoom only for static sprites (animated gifs are perfect as-is)
-                      transform: slot.animated ? 'none' : `scale(${slot.zoom})`,
+                      // Apply appropriate zoom for both static and animated sprites
+                      transform: `scale(${slot.animated ? slot.animatedZoom : slot.staticZoom})`,
                       objectPosition: 'center'
                     }}
                     onError={(e) => {

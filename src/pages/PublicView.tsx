@@ -45,7 +45,8 @@ const PublicView = () => {
       ability: '',
       pokeball: 'pokeball' as const,
       animated: false,
-      zoom: 1.5, // Default 1.5x zoom for better visibility
+      staticZoom: 1.5, // Default 1.5x zoom for static sprites
+      animatedZoom: 1.5, // Default 1.5x zoom for animated sprites
       place: '',
       box: 'team',
     }))
@@ -133,7 +134,8 @@ const PublicView = () => {
       ability: '',
       pokeball: 'pokeball',
       animated: false,
-      zoom: 1.5,
+      staticZoom: 1.5,
+      animatedZoom: 1.5,
       place: '',
       box: 'team',
     });
@@ -158,18 +160,19 @@ const PublicView = () => {
         p.name.english.toLowerCase() === fixture.name.toLowerCase()
       );
       
-      return {
-        id: `fixture-slot-${index}`,
-        pokemon: pokemon || null,
-        nickname: fixture.nickname,
-        level: fixture.level || 1,
-        ability: (fixture as any).ability || '',
-        pokeball: (fixture as any).pokeball || 'pokeball',
-        animated: false,
-        zoom: 1.5,
-        place: fixture.place || '',
-        box: fixture.box || 'team',
-      };
+              return {
+          id: `fixture-slot-${index}`,
+          pokemon: pokemon || null,
+          nickname: fixture.nickname,
+          level: fixture.level || 1,
+          ability: (fixture as any).ability || '',
+          pokeball: (fixture as any).pokeball || 'pokeball',
+          animated: false,
+          staticZoom: 1.5,
+          animatedZoom: 1.5,
+          place: fixture.place || '',
+          box: fixture.box || 'team',
+        };
     });
 
     const finalSlots = newSlots.map(slot => ({ ...slot, box: (slot.box === 'team' || slot.box === 'other' || slot.box === 'graveyard') ? slot.box : 'other' } as TeamPokemon));
@@ -202,7 +205,8 @@ const PublicView = () => {
                   ability: '',
                   pokeball: 'pokeball' as const,
                   animated: false,
-                  zoom: 1.5,
+                  staticZoom: 1.5,
+                  animatedZoom: 1.5,
                   place: '',
                   box: 'team' as const,
                 };
@@ -276,7 +280,8 @@ const PublicView = () => {
                       ability: '',
                       pokeball: 'pokeball' as const,
                       animated: false,
-                      zoom: 1.5,
+                      staticZoom: 1.5,
+                      animatedZoom: 1.5,
                       place: '',
                       box: selectedBox,
                     };
@@ -311,7 +316,8 @@ const PublicView = () => {
                     ability: '',
                     pokeball: 'pokeball' as const,
                     animated: false,
-                    zoom: 1.5,
+                    staticZoom: 1.5,
+                    animatedZoom: 1.5,
                     place: '',
                     box: selectedBox,
                     ...updates
