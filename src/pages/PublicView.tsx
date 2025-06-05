@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -11,6 +11,9 @@ import { useToast } from "@/hooks/use-toast";
 import SlotEditor from "@/components/SlotEditor";
 import abilitiesData from "@/data/abilities.json";
 import TeamSlot from "@/components/TeamSlot";
+import { storageService } from "@/services/storageService";
+import { Save, Download, Upload, ArchiveRestore } from "lucide-react";
+import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 
 const PublicView = () => {
   const [team, setTeam] = useState<TeamPokemon[]>(() => 
@@ -123,6 +126,50 @@ const PublicView = () => {
 
   const currentSlot = team[selectedSlot];
 
+  // Add save/load handlers
+  const handleSaveTeam = () => {
+    try {
+      storageService.saveTeam(team);
+      toast({
+        title: "Team Saved",
+        description: "Your team has been saved to localStorage.",
+        variant: "default"
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to save team.",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const handleLoadTeam = () => {
+    try {
+      const loadedTeam = storageService.loadTeam();
+      if (loadedTeam && loadedTeam.length === 6) {
+        setTeam(loadedTeam);
+        toast({
+          title: "Team Loaded",
+          description: "Your team has been loaded from localStorage.",
+          variant: "default"
+        });
+      } else {
+        toast({
+          title: "No Saved Team",
+          description: "No valid team found in localStorage.",
+          variant: "destructive"
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to load team.",
+        variant: "destructive"
+      });
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-purple-900 via-slate-900 to-red-900 flex items-center justify-center">
@@ -164,12 +211,34 @@ const PublicView = () => {
               <CardHeader>
                 <CardTitle className="text-purple-300 flex justify-between items-center">
                   Admin Panel
-                  <Button
-                    onClick={addFixtures}
-                    className="bg-purple-600 hover:bg-purple-700"
-                  >
-                    Cargar de Stream
-                  </Button>
+                  <div className="flex gap-2">
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          onClick={handleSaveTeam}
+                          className="bg-green-600 hover:bg-green-700 p-2"
+                          size="icon"
+                          aria-label="Save Team"
+                        >
+                          <Save className="w-5 h-5" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>Guardar Backup</TooltipContent>
+                    </Tooltip>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          onClick={handleLoadTeam}
+                          className="bg-blue-600 hover:bg-blue-700 p-2"
+                          size="icon"
+                          aria-label="Load Team"
+                        >
+                          <ArchiveRestore className="w-5 h-5" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>Restaurar Backup</TooltipContent>
+                    </Tooltip>
+                  </div>
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -216,6 +285,14 @@ const PublicView = () => {
                   ))}
                 </div>
               </CardContent>
+              <CardFooter>
+              <Button
+                      onClick={addFixtures}
+                      className="bg-purple-600 hover:bg-purple-700"
+                    >
+                      Default
+                    </Button>
+              </CardFooter>
             </Card>
 
             {/* Slot Editor */}
