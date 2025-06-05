@@ -132,77 +132,80 @@ const SlotEditor: React.FC<SlotEditorProps> = ({
             />
           </div>
 
-          {/* Level */}
-          <div className="space-y-1">
-            <Label className="text-slate-300 text-xs">Nivel</Label>
-            <Input
-              type="number"
-              min="1"
-              max="100"
-              value={slot.level}
-              onChange={(e) => onUpdate({ level: parseInt(e.target.value) || 1 })}
-              className="bg-slate-700 border-slate-600 h-8 text-xs"
-            />
-          </div>
+          {/* Level and Ability Row */}
+          <div className="grid grid-cols-2 gap-4">
+            {/* Level */}
+            <div className="space-y-1">
+              <Label className="text-slate-300 text-xs">Nivel</Label>
+              <Input
+                type="number"
+                min="1"
+                max="100"
+                value={slot.level}
+                onChange={(e) => onUpdate({ level: parseInt(e.target.value) || 1 })}
+                className="bg-slate-700 border-slate-600 h-8 text-xs"
+              />
+            </div>
 
-          {/* Ability (Select) */}
-          <div className="space-y-1">
-            <Label className="text-slate-300 text-xs">Habilidad</Label>
-            <Select
-              value={slot.ability || "none"}
-              onValueChange={(value) => {
-                if (value === "none") {
-                  onUpdate({ ability: "" });
-                } else {
-                  onUpdate({ ability: value }); // value is the slug
-                }
-              }}
-            >
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <SelectTrigger className="bg-slate-700 border-slate-600 h-8 text-xs">
-                      <SelectValue placeholder="Select an Ability" />
-                    </SelectTrigger>
-                  </TooltipTrigger>
-                  {selectedAbilityDescription && (
-                    <TooltipContent className="text-sm max-w-xs">
-                      {selectedAbilityDescription}
-                    </TooltipContent>
-                  )}
-                </Tooltip>
-              </TooltipProvider>
-              <SelectContent className="bg-slate-700 border-slate-600 max-h-60 text-xs">
-                <div className="px-2 py-1">
-                  <Input
-                    value={abilityFilter}
-                    onChange={e => setAbilityFilter(e.target.value)}
-                    placeholder="Filtrar habilidades..."
-                    className="mb-1 bg-slate-800 border-slate-600 h-7 text-xs"
-                  />
-                </div>
-                <SelectItem value="none">Sin habilidad</SelectItem>
-                {filteredAbilities.map((ability: any) => (
-                  <TooltipProvider key={ability.slug}>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <SelectItem
-                          value={ability.slug}
-                          className="text-xs"
-                        >
-                          {ability.name}
-                        </SelectItem>
-                      </TooltipTrigger>
-                      {ability.description && (
-                        <TooltipContent className="text-sm max-w-xs">
-                          {ability.description}
-                        </TooltipContent>
-                      )}
-                    </Tooltip>
-                  </TooltipProvider>
-                ))}
-              </SelectContent>
-            </Select>
+            {/* Ability (Select) */}
+            <div className="space-y-1">
+              <Label className="text-slate-300 text-xs">Habilidad</Label>
+              <Select
+                value={slot.ability || "none"}
+                onValueChange={(value) => {
+                  if (value === "none") {
+                    onUpdate({ ability: "" });
+                  } else {
+                    onUpdate({ ability: value }); // value is the slug
+                  }
+                }}
+              >
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <SelectTrigger className="bg-slate-700 border-slate-600 h-8 text-xs">
+                        <SelectValue placeholder="Select an Ability" />
+                      </SelectTrigger>
+                    </TooltipTrigger>
+                    {selectedAbilityDescription && (
+                      <TooltipContent className="text-sm max-w-xs">
+                        {selectedAbilityDescription}
+                      </TooltipContent>
+                    )}
+                  </Tooltip>
+                </TooltipProvider>
+                <SelectContent className="bg-slate-700 border-slate-600 max-h-60 text-xs">
+                  <div className="px-2 py-1">
+                    <Input
+                      value={abilityFilter}
+                      onChange={e => setAbilityFilter(e.target.value)}
+                      placeholder="Filtrar habilidades..."
+                      className="mb-1 bg-slate-800 border-slate-600 h-7 text-xs"
+                    />
+                  </div>
+                  <SelectItem value="none">Sin habilidad</SelectItem>
+                  {filteredAbilities.map((ability: any) => (
+                    <TooltipProvider key={ability.slug}>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <SelectItem
+                            value={ability.slug}
+                            className="text-xs"
+                          >
+                            {ability.name}
+                          </SelectItem>
+                        </TooltipTrigger>
+                        {ability.description && (
+                          <TooltipContent className="text-sm max-w-xs">
+                            {ability.description}
+                          </TooltipContent>
+                        )}
+                      </Tooltip>
+                    </TooltipProvider>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
           </div>
 
           {/* Pokeball and Box (Select) in a row */}
@@ -291,42 +294,44 @@ const SlotEditor: React.FC<SlotEditorProps> = ({
           </div>
 
           {/* Zoom Controls */}
-          <div className="space-y-2 mt-4">
-            {/* Static Sprite Zoom */}
-            <div className="space-y-1">
-              <Label className="text-slate-300 text-xs">Sprite Zoom (Estático)</Label>
-              <div className="flex items-center space-x-2">
-                <Input
-                  type="number"
-                  min="0.5"
-                  max="3"
-                  step="0.1"
-                  value={slot.staticZoom || 1.5}
-                  onChange={(e) => onUpdate({ staticZoom: parseFloat(e.target.value) || 1.5 })}
-                  className="bg-slate-700 border-slate-600 h-8 text-xs w-16"
-                />
-                <span className="text-slate-400 text-xs">
-                  {slot.staticZoom || 1.5}x zoom
-                </span>
+          <div className="mt-4">
+            <div className="grid grid-cols-2 gap-4">
+              {/* Static Sprite Zoom */}
+              <div className="space-y-1">
+                <Label className="text-slate-300 text-xs">Sprite Zoom (Estático)</Label>
+                <div className="flex items-center space-x-2">
+                  <Input
+                    type="number"
+                    min="0.5"
+                    max="3"
+                    step="0.1"
+                    value={slot.staticZoom || 1.5}
+                    onChange={(e) => onUpdate({ staticZoom: parseFloat(e.target.value) || 1.5 })}
+                    className="bg-slate-700 border-slate-600 h-8 text-xs w-16"
+                  />
+                  <span className="text-slate-400 text-xs">
+                    {slot.staticZoom || 1.5}x
+                  </span>
+                </div>
               </div>
-            </div>
-            
-            {/* Animated Sprite Zoom */}
-            <div className="space-y-1">
-              <Label className="text-slate-300 text-xs">Sprite Zoom (Animado)</Label>
-              <div className="flex items-center space-x-2">
-                <Input
-                  type="number"
-                  min="0.5"
-                  max="3"
-                  step="0.1"
-                  value={slot.animatedZoom || 1.0}
-                  onChange={(e) => onUpdate({ animatedZoom: parseFloat(e.target.value) || 1.0 })}
-                  className="bg-slate-700 border-slate-600 h-8 text-xs w-16"
-                />
-                <span className="text-slate-400 text-xs">
-                  {slot.animatedZoom || 1.0}x zoom
-                </span>
+              
+              {/* Animated Sprite Zoom */}
+              <div className="space-y-1">
+                <Label className="text-slate-300 text-xs">Sprite Zoom (Animado)</Label>
+                <div className="flex items-center space-x-2">
+                  <Input
+                    type="number"
+                    min="0.5"
+                    max="3"
+                    step="0.1"
+                    value={slot.animatedZoom || 1.0}
+                    onChange={(e) => onUpdate({ animatedZoom: parseFloat(e.target.value) || 1.0 })}
+                    className="bg-slate-700 border-slate-600 h-8 text-xs w-16"
+                  />
+                  <span className="text-slate-400 text-xs">
+                    {slot.animatedZoom || 1.0}x
+                  </span>
+                </div>
               </div>
             </div>
           </div>
