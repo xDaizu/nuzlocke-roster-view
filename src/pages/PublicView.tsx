@@ -5,6 +5,7 @@ import { useToast } from "@/hooks/use-toast";
 import PublicHeader from "@/components/PublicHeader";
 import PublicAdminPanel from "@/components/PublicAdminPanel";
 import PublicSlotEditor from "@/components/PublicSlotEditor";
+import PlacesPanel from "@/components/PlacesPanel";
 import { Label } from "@/components/ui/label";
 import TeamSlot from "@/components/TeamSlot";
 import React from "react";
@@ -294,6 +295,10 @@ const PublicView = () => {
                 }
                 // If slot doesn't exist, there's nothing to clear
               }}
+            />
+            <PlacesPanel
+              allSlots={allSlots}
+              placesData={placesData}
             />
           </div>
         </div>
