@@ -11,6 +11,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { cn } from "@/lib/utils";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { translations } from "@/data/translations";
+import AutocompleteInput from "@/components/AutocompleteInput";
 
 interface SlotEditorProps {
   slot: TeamPokemon;
@@ -46,21 +47,35 @@ const SlotEditor: React.FC<SlotEditorProps> = ({
   placesData,
   showBoxSelect = true,
 }) => {
-  const [abilityFilter, setAbilityFilter] = useState("");
-  const [placeFilter, setPlaceFilter] = useState("");
-  const [pokemonFilter, setPokemonFilter] = useState("");
+
   
-  // Filter by name
-  const filteredAbilities = abilitiesData.filter((a: any) =>
-    a.name.toLowerCase().includes(abilityFilter.toLowerCase())
-  );
-  const filteredPlaces = placesData.filter((p) =>
-    p.nombre.toLowerCase().includes(placeFilter.toLowerCase())
-  );
-  const filteredPokemon = allPokemon.filter((p) =>
-    p.name.english.toLowerCase().includes(pokemonFilter.toLowerCase()) ||
-    p.id.toString().includes(pokemonFilter)
-  );
+  // Prepare autocomplete options
+  const pokemonOptions = allPokemon.map(pokemon => ({
+    value: pokemon.id.toString(),
+    label: `#${pokemon.id.toString().padStart(3, '0')} ${pokemon.name.english}`,
+    searchText: `${pokemon.id} ${pokemon.name.english}`
+  }));
+
+  const abilityOptions = [
+    { value: "", label: "Sin habilidad" },
+    ...abilitiesData.map((ability: any) => ({
+      value: ability.slug,
+      label: ability.name,
+      searchText: `${ability.name} ${ability.description}`
+    }))
+  ];
+
+  const placeOptions = [
+    { value: "", label: "Sin lugar" },
+    { value: "unknown", label: translations.placeholders.unknown },
+    ...placesData.map((place) => ({
+      value: place.id,
+      label: place.nombre,
+      searchText: place.nombre
+    }))
+  ];
+
+
 
   // Get description for currently selected ability (by slug)
   const selectedAbilityDescription = slot.ability ? getAbilityDescription(slot.ability) : "";
@@ -87,10 +102,10 @@ const SlotEditor: React.FC<SlotEditorProps> = ({
           {/* Pokemon Selection */}
           <div className="space-y-1">
             <Label className="text-slate-300 text-xs">{translations.forms.pokemon}</Label>
-            <Select
-              value={slot.pokemon?.id.toString() || "none"}
-              onValueChange={(value) => {
-                if (value === "none") {
+            <AutocompleteInput
+              value={slot.pokemon?.id.toString() || ""}
+              onChange={(value) => {
+                if (value === "") {
                   onUpdate({ pokemon: null });
                 } else {
                   const pokemon = allPokemon.find(p => p.id.toString() === value);
@@ -99,27 +114,10 @@ const SlotEditor: React.FC<SlotEditorProps> = ({
                   }
                 }
               }}
-            >
-              <SelectTrigger className="bg-slate-700 border-slate-600 h-8 text-xs">
-                <SelectValue placeholder={translations.forms.selectPokemon} />
-              </SelectTrigger>
-              <SelectContent className="bg-slate-700 border-slate-600 max-h-60 text-xs">
-                <div className="px-2 py-1">
-                  <Input
-                    value={pokemonFilter}
-                    onChange={e => setPokemonFilter(e.target.value)}
-                    placeholder={translations.forms.filterPokemon}
-                    className="mb-1 bg-slate-800 border-slate-600 h-7 text-xs"
-                  />
-                </div>
-                <SelectItem value="none">No Pokemon</SelectItem>
-                {filteredPokemon.map((pokemon) => (
-                  <SelectItem key={pokemon.id} value={pokemon.id.toString()} className="text-xs">
-                    #{pokemon.id.toString().padStart(3, '0')} {pokemon.name.english}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+              options={pokemonOptions}
+              placeholder={translations.forms.selectPokemon}
+              emptyMessage="No Pokemon found"
+            />
           </div>
 
           {/* Nickname */}
@@ -151,61 +149,26 @@ const SlotEditor: React.FC<SlotEditorProps> = ({
             {/* Ability (Select) */}
             <div className="space-y-1">
               <Label className="text-slate-300 text-xs">{translations.forms.ability}</Label>
-              <Select
-                value={slot.ability || "none"}
-                onValueChange={(value) => {
-                  if (value === "none") {
-                    onUpdate({ ability: "" });
-                  } else {
-                    onUpdate({ ability: value }); // value is the slug
-                  }
-                }}
-              >
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <SelectTrigger className="bg-slate-700 border-slate-600 h-8 text-xs">
-                        <SelectValue placeholder={translations.forms.selectAbility} />
-                      </SelectTrigger>
-                    </TooltipTrigger>
-                    {selectedAbilityDescription && (
-                      <TooltipContent className="text-sm max-w-xs">
-                        {selectedAbilityDescription}
-                      </TooltipContent>
-                    )}
-                  </Tooltip>
-                </TooltipProvider>
-                <SelectContent className="bg-slate-700 border-slate-600 max-h-60 text-xs">
-                  <div className="px-2 py-1">
-                    <Input
-                      value={abilityFilter}
-                      onChange={e => setAbilityFilter(e.target.value)}
-                      placeholder={translations.forms.filterAbility}
-                      className="mb-1 bg-slate-800 border-slate-600 h-7 text-xs"
-                    />
-                  </div>
-                  <SelectItem value="none">Sin habilidad</SelectItem>
-                  {filteredAbilities.map((ability: any) => (
-                    <TooltipProvider key={ability.slug}>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <SelectItem
-                            value={ability.slug}
-                            className="text-xs"
-                          >
-                            {ability.name}
-                          </SelectItem>
-                        </TooltipTrigger>
-                        {ability.description && (
-                          <TooltipContent className="text-sm max-w-xs">
-                            {ability.description}
-                          </TooltipContent>
-                        )}
-                      </Tooltip>
-                    </TooltipProvider>
-                  ))}
-                </SelectContent>
-              </Select>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <div>
+                      <AutocompleteInput
+                        value={slot.ability || ""}
+                        onChange={(value) => onUpdate({ ability: value })}
+                        options={abilityOptions}
+                        placeholder={translations.forms.selectAbility}
+                        emptyMessage="No abilities found"
+                      />
+                    </div>
+                  </TooltipTrigger>
+                  {selectedAbilityDescription && (
+                    <TooltipContent className="text-sm max-w-xs">
+                      {selectedAbilityDescription}
+                    </TooltipContent>
+                  )}
+                </Tooltip>
+              </TooltipProvider>
             </div>
           </div>
 
@@ -255,33 +218,13 @@ const SlotEditor: React.FC<SlotEditorProps> = ({
           {/* Place (Select) */}
           <div className="space-y-1">
             <Label className="text-slate-300 text-xs">{translations.forms.place}</Label>
-            <Select
-              value={slot.place ? slot.place : "none"}
-              onValueChange={(value) => {
-                onUpdate({ place: value === "none" ? "" : value });
-              }}
-            >
-              <SelectTrigger className="bg-slate-700 border-slate-600 h-8 text-xs">
-                <SelectValue placeholder={translations.forms.selectPlace} />
-              </SelectTrigger>
-              <SelectContent className="bg-slate-700 border-slate-600 max-h-60 text-xs">
-                <div className="px-2 py-1">
-                  <Input
-                    value={placeFilter}
-                    onChange={e => setPlaceFilter(e.target.value)}
-                    placeholder="Filtrar lugares..."
-                    className="mb-1 bg-slate-800 border-slate-600 h-7 text-xs"
-                  />
-                </div>
-                <SelectItem value="none">Sin lugar</SelectItem>
-                <SelectItem value="unknown">{translations.placeholders.unknown}</SelectItem>
-                {filteredPlaces.map((place) => (
-                  <SelectItem key={place.id} value={place.id} className="text-xs">
-                    {place.nombre}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <AutocompleteInput
+              value={slot.place || ""}
+              onChange={(value) => onUpdate({ place: value })}
+              options={placeOptions}
+              placeholder={translations.forms.selectPlace}
+              emptyMessage="No places found"
+            />
           </div>
 
           {/* Animated Toggle */}

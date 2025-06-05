@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Shield, Zap, X } from "lucide-react";
 import typesData from "@/data/types.json";
+import AutocompleteInput from "@/components/AutocompleteInput";
 
 interface WeaknessPanelProps {
   allPokemon: any[];
@@ -21,16 +22,13 @@ interface TypeEffectiveness {
 
 const WeaknessPanel: React.FC<WeaknessPanelProps> = ({ allPokemon, translations }) => {
   const [selectedPokemon, setSelectedPokemon] = useState<any>(null);
-  const [pokemonFilter, setPokemonFilter] = useState("");
 
-  // Filter Pokemon based on search
-  const filteredPokemon = useMemo(() => {
-    if (!pokemonFilter) return allPokemon.slice(0, 20); // Show first 20 if no filter
-    return allPokemon.filter((pokemon: any) =>
-      pokemon.name.english.toLowerCase().includes(pokemonFilter.toLowerCase()) ||
-      pokemon.name.spanish?.toLowerCase().includes(pokemonFilter.toLowerCase())
-    ).slice(0, 20);
-  }, [allPokemon, pokemonFilter]);
+  // Prepare autocomplete options
+  const pokemonOptions = allPokemon.map(pokemon => ({
+    value: pokemon.id.toString(),
+    label: `#${pokemon.id.toString().padStart(3, '0')} ${pokemon.name.english}`,
+    searchText: `${pokemon.id} ${pokemon.name.english} ${pokemon.name.spanish || ''}`
+  }));
 
   // Calculate type effectiveness for single or dual type Pokemon
   const calculateTypeEffectiveness = (types: string[]): TypeEffectiveness => {
@@ -150,35 +148,16 @@ const WeaknessPanel: React.FC<WeaknessPanelProps> = ({ allPokemon, translations 
       <CardContent className="space-y-4">
         {/* Pokemon Selector */}
         <div className="space-y-2">
-          <Select
+          <AutocompleteInput
             value={selectedPokemon?.id?.toString() || ""}
-            onValueChange={(value) => {
+            onChange={(value) => {
               const pokemon = allPokemon.find(p => p.id.toString() === value);
               setSelectedPokemon(pokemon || null);
             }}
-          >
-            <SelectTrigger className="bg-slate-700 border-slate-600 h-8">
-              <SelectValue placeholder="Seleccionar Pokémon" />
-            </SelectTrigger>
-            <SelectContent className="bg-slate-700 border-slate-600 max-h-60">
-              <div className="px-2 py-1">
-                <Input
-                  value={pokemonFilter}
-                  onChange={e => setPokemonFilter(e.target.value)}
-                  placeholder="Buscar Pokémon..."
-                  className="mb-1 bg-slate-800 border-slate-600 h-7 text-xs"
-                />
-              </div>
-              {filteredPokemon.map((pokemon: any) => (
-                <SelectItem key={pokemon.id} value={pokemon.id.toString()} className="text-xs">
-                  <div className="flex items-center gap-2">
-                    <span>#{pokemon.id.toString().padStart(3, '0')}</span>
-                    <span>{pokemon.name.english}</span>
-                  </div>
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+            options={pokemonOptions}
+            placeholder="Seleccionar Pokémon"
+            emptyMessage="No Pokémon found"
+          />
         </div>
 
         {selectedPokemon ? (
