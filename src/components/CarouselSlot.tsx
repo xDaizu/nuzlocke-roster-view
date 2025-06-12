@@ -70,9 +70,9 @@ const CarouselSlot: React.FC<CarouselSlotProps> = ({
 
                 {/* Pokemon sprite with transition and box-specific styling */}
                 <div className="relative flex-1 flex items-center justify-center min-h-0 w-full">
-                  {/* Moon icon for PC Pokemon */}
+                  {/* Moon icon for PC Pokemon - positioned to not interfere with sprite centering */}
                   {isPC && (
-                    <div className="absolute -top-2 -left-1 z-10 text-blue-300 animate-pulse">
+                    <div className="absolute top-0 left-0 z-10 text-blue-300 animate-pulse">
                       <Moon className="w-4 h-4 drop-shadow-md" />
                     </div>
                   )}
