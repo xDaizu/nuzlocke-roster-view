@@ -8,6 +8,7 @@ import PublicSlotEditor from "@/components/PublicSlotEditor";
 import PlacesPanel from "@/components/PlacesPanel";
 import PanelConfigPanel from "@/components/PanelConfigPanel";
 import WeaknessPanel from "@/components/WeaknessPanel";
+import CarouselSlot from "@/components/CarouselSlot";
 import { Label } from "@/components/ui/label";
 import TeamSlot from "@/components/TeamSlot";
 import React from "react";
