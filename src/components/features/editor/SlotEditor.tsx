@@ -108,7 +108,7 @@ const SlotEditor: React.FC<SlotEditorProps> = ({
         </CardHeader>
       )}
       <CardContent>
-        <form className="grid grid-cols-2 gap-x-4 gap-y-2 items-end">
+        <div className="grid grid-cols-2 gap-x-4 gap-y-2 items-end">
           {/* Pokemon Selection */}
           <div className="space-y-1">
             <Label className="text-slate-300 text-xs">{translations.forms.pokemon}</Label>
@@ -289,7 +289,7 @@ const SlotEditor: React.FC<SlotEditorProps> = ({
               </div>
             </div>
           </div>
-        </form>
+        </div>
       </CardContent>
     </>
   );
