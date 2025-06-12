@@ -12,7 +12,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { cn } from "@/lib/utils";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { translations } from "@/data/translations";
-import AutocompleteInput from "@/components/AutocompleteInput";
+import AutocompleteInput from "./AutocompleteInput";
 import type { Place } from '@/types';
 
 interface SlotEditorProps {

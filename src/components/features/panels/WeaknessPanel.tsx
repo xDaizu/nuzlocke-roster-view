@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Shield, Zap, X } from "lucide-react";
 import { TypeRepository } from '@/repositories/TypeRepository';
 import type { PokemonType } from '@/types';
-import AutocompleteInput from "@/components/AutocompleteInput";
+import { AutocompleteInput } from "@/components/features/editor";
 
 interface WeaknessPanelProps {
   allPokemon: any[];

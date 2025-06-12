@@ -3,7 +3,7 @@ import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { TeamPokemon, Pokemon } from "@/types/pokemon";
 import { getPokemonSpriteUrl, POKEBALL_DATA } from "@/utils/pokemonData";
-import SlotEditor from "@/components/SlotEditor";
+import SlotEditor from "./SlotEditor";
 import { PlaceRepository } from '@/repositories/PlaceRepository';
 import type { Place } from '@/types';
 

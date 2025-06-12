@@ -2,15 +2,23 @@ import { useState, useEffect } from "react";
 import { TeamPokemon, Pokemon } from "@/types/pokemon";
 import { fetchPokemonData, getPokemonSpriteUrl, POKEBALL_DATA } from "@/utils/pokemonData";
 import { useToast } from "@/hooks/use-toast";
-import PublicHeader from "@/components/PublicHeader";
-import PublicBoxPanel from "@/components/PublicBoxPanel";
-import PublicSlotEditor from "@/components/PublicSlotEditor";
-import PlacesPanel from "@/components/PlacesPanel";
-import PanelConfigPanel from "@/components/PanelConfigPanel";
-import WeaknessPanel from "@/components/WeaknessPanel";
-import CarouselSlot from "@/components/CarouselSlot";
+import { 
+  PublicHeader, 
+  TeamSlot 
+} from "@/components/features/team";
+import { 
+  PublicSlotEditor 
+} from "@/components/features/editor";
+import { 
+  PublicBoxPanel,
+  PlacesPanel,
+  PanelConfigPanel,
+  WeaknessPanel 
+} from "@/components/features/panels";
+import { 
+  CarouselSlot 
+} from "@/components/features/carousel";
 import { Label } from "@/components/ui/label";
-import TeamSlot from "@/components/TeamSlot";
 import React from "react";
 import { pokemonFixtures } from "@/data/fixtures";
 import { translations } from "@/data/translations";

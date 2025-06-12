@@ -2,7 +2,7 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { TeamPokemon } from "@/types/pokemon";
-import PokemonBox from "@/components/PokemonBox";
+import { PokemonBox } from "@/components/features/team";
 import { storageService } from "@/services/storageService";
 import { Save, ArchiveRestore, Package } from "lucide-react";
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";

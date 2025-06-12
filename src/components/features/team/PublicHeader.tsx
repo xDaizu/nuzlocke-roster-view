@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { TeamPokemon } from "@/types/pokemon";
 import { getPokemonSpriteUrl, POKEBALL_DATA } from "@/utils/pokemonData";
-import TeamSlot from "@/components/TeamSlot";
+import TeamSlot from "./TeamSlot";
 import { PlaceRepository } from '@/repositories/PlaceRepository';
 import type { Place } from '@/types';
 import { AbilitiesRepository } from '@/repositories/AbilitiesRepository';
