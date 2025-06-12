@@ -29,23 +29,6 @@ interface SlotEditorProps {
 
 const abilitiesRepo = RepositoryFactory.createAbilitiesRepository();
 
-const [abilitiesData, setAbilitiesData] = useState<Ability[]>([]);
-
-useEffect(() => {
-  abilitiesRepo.getAll().then(setAbilitiesData);
-}, []);
-
-const abilityNames = abilitiesData.map((a: Ability) => a.name);
-const abilitySlugMap = Object.fromEntries(abilitiesData.map((a: Ability) => [a.slug, a]));
-const abilityNameMap = Object.fromEntries(abilitiesData.map((a: Ability) => [a.name, a]));
-
-// Helper to get ability description
-const getAbilityDescription = (slugOrName: string) => {
-  // Try slug first, then name
-  const found = abilitySlugMap[slugOrName] || abilityNameMap[slugOrName];
-  return found ? found.description : "";
-};
-
 const SlotEditor: React.FC<SlotEditorProps> = ({
   slot,
   allPokemon,
@@ -57,8 +40,23 @@ const SlotEditor: React.FC<SlotEditorProps> = ({
   placesData,
   showBoxSelect = true,
 }) => {
+  const [abilitiesData, setAbilitiesData] = useState<Ability[]>([]);
 
-  
+  useEffect(() => {
+    abilitiesRepo.getAll().then(setAbilitiesData);
+  }, []);
+
+  const abilityNames = abilitiesData.map((a: Ability) => a.name);
+  const abilitySlugMap = Object.fromEntries(abilitiesData.map((a: Ability) => [a.slug, a]));
+  const abilityNameMap = Object.fromEntries(abilitiesData.map((a: Ability) => [a.name, a]));
+
+  // Helper to get ability description
+  const getAbilityDescription = (slugOrName: string) => {
+    // Try slug first, then name
+    const found = abilitySlugMap[slugOrName] || abilityNameMap[slugOrName];
+    return found ? found.description : "";
+  };
+
   // Prepare autocomplete options
   const pokemonOptions = allPokemon.map(pokemon => ({
     value: pokemon.id.toString(),
@@ -84,8 +82,6 @@ const SlotEditor: React.FC<SlotEditorProps> = ({
       searchText: place.name
     }))
   ];
-
-
 
   // Get description for currently selected ability (by slug)
   const selectedAbilityDescription = slot.ability ? getAbilityDescription(slot.ability) : "";
