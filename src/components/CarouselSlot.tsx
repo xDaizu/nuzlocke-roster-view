@@ -1,11 +1,11 @@
-
 import React, { useState, useEffect } from "react";
 import { TeamPokemon } from "@/types/pokemon";
 import { getPokemonSpriteUrl, POKEBALL_DATA } from "@/utils/pokemonData";
 import { MapPin, Moon } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import abilitiesData from "@/data/pokemon/abilities_es.json";
 import placesData from "@/data/places_es.json";
+import { AbilitiesRepository } from '@/repositories/AbilitiesRepository';
+import type { Ability } from '@/types';
 
 interface CarouselSlotProps {
   otherBox: TeamPokemon[];
@@ -20,13 +20,18 @@ const CarouselSlot: React.FC<CarouselSlotProps> = ({
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [currentAbility, setCurrentAbility] = useState<Ability | undefined>(undefined);
 
   // Combine PC and graveyard boxes, filter out empty slots
   const allPokemon = [...otherBox, ...graveyardBox].filter(slot => slot.pokemon !== null);
 
-  const getAbilityData = (slug: string) => {
-    return abilitiesData.find((a) => a.slug === slug);
+  const abilitiesRepo = new AbilitiesRepository();
+
+  const getAbilityData = async (slug: string) => {
+    return await abilitiesRepo.getAbility(slug);
   };
+
+  const currentSlot = allPokemon[currentIndex];
 
   useEffect(() => {
     if (allPokemon.length === 0) return;
@@ -43,7 +48,14 @@ const CarouselSlot: React.FC<CarouselSlotProps> = ({
     return () => clearInterval(interval);
   }, [allPokemon.length, intervalSeconds]);
 
-  const currentSlot = allPokemon[currentIndex];
+  useEffect(() => {
+    if (currentSlot && currentSlot.ability) {
+      abilitiesRepo.getAbility(currentSlot.ability).then(setCurrentAbility);
+    } else {
+      setCurrentAbility(undefined);
+    }
+  }, [currentSlot?.ability]);
+
   const isGraveyard = currentSlot?.box === 'graveyard';
   const isPC = currentSlot?.box === 'other';
 
@@ -156,8 +168,8 @@ const CarouselSlot: React.FC<CarouselSlotProps> = ({
         </TooltipTrigger>
         {currentSlot && (
           <TooltipContent className="text-sm max-w-xs">
-            <div className="font-bold mb-1">{getAbilityData(currentSlot.ability)?.name}</div>
-            <div>{getAbilityData(currentSlot.ability)?.description}</div>
+            <div className="font-bold mb-1">{currentAbility?.name}</div>
+            <div>{currentAbility?.description}</div>
             {currentSlot.place && (
               <div className="flex items-center justify-center gap-1 text-xs text-purple-800 mt-0.5">
                 <MapPin className="w-3 h-3 inline-block" />

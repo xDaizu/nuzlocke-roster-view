@@ -5,8 +5,9 @@ import { Switch } from "@/components/ui/switch";
 import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { TeamPokemon, Pokemon, PokeballType } from "@/types/pokemon";
-import React, { useState } from "react";
-import abilitiesData from "@/data/pokemon/abilities_es.json";
+import React, { useState, useEffect } from "react";
+import { AbilitiesRepository } from '@/repositories/AbilitiesRepository';
+import type { Ability } from '@/types';
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
@@ -25,9 +26,17 @@ interface SlotEditorProps {
   showBoxSelect?: boolean;
 }
 
-const abilityNames = abilitiesData.map((a: any) => a.name);
-const abilitySlugMap = Object.fromEntries(abilitiesData.map((a: any) => [a.slug, a]));
-const abilityNameMap = Object.fromEntries(abilitiesData.map((a: any) => [a.name, a]));
+const abilitiesRepo = new AbilitiesRepository();
+
+const [abilitiesData, setAbilitiesData] = useState<Ability[]>([]);
+
+useEffect(() => {
+  abilitiesRepo.getAll().then(setAbilitiesData);
+}, []);
+
+const abilityNames = abilitiesData.map((a: Ability) => a.name);
+const abilitySlugMap = Object.fromEntries(abilitiesData.map((a: Ability) => [a.slug, a]));
+const abilityNameMap = Object.fromEntries(abilitiesData.map((a: Ability) => [a.name, a]));
 
 // Helper to get ability description
 const getAbilityDescription = (slugOrName: string) => {
@@ -58,7 +67,7 @@ const SlotEditor: React.FC<SlotEditorProps> = ({
 
   const abilityOptions = [
     { value: "", label: "Sin habilidad" },
-    ...abilitiesData.map((ability: any) => ({
+    ...abilitiesData.map((ability: Ability) => ({
       value: ability.slug,
       label: ability.name,
       searchText: `${ability.name} ${ability.description}`

@@ -1,15 +1,23 @@
-
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { TeamPokemon } from "@/types/pokemon";
 import { getPokemonSpriteUrl, POKEBALL_DATA } from "@/utils/pokemonData";
 import TeamSlot from "@/components/TeamSlot";
-import abilitiesData from "@/data/pokemon/abilities_es.json";
 import placesData from "@/data/places_es.json";
+import { AbilitiesRepository } from '@/repositories/AbilitiesRepository';
+import type { Ability } from '@/types';
 
 interface PublicHeaderProps {
   team: TeamPokemon[];
   updateSlot: (slotIndex: number, updates: Partial<TeamPokemon>) => void;
 }
+
+const abilitiesRepo = new AbilitiesRepository();
+
+const [abilitiesData, setAbilitiesData] = useState<Ability[]>([]);
+
+useEffect(() => {
+  abilitiesRepo.getAll().then(setAbilitiesData);
+}, []);
 
 const PublicHeader: React.FC<PublicHeaderProps> = ({ team, updateSlot }) => {
   return (

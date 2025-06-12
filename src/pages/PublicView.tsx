@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { TeamPokemon, Pokemon } from "@/types/pokemon";
 import { fetchPokemonData, getPokemonSpriteUrl, POKEBALL_DATA } from "@/utils/pokemonData";
@@ -13,11 +12,12 @@ import CarouselSlot from "@/components/CarouselSlot";
 import { Label } from "@/components/ui/label";
 import TeamSlot from "@/components/TeamSlot";
 import React from "react";
-import abilitiesData from "@/data/pokemon/abilities_es.json";
 import placesData from "@/data/places_es.json";
 import { pokemonFixtures } from "@/data/fixtures";
 import { translations } from "@/data/translations";
 import { storageService } from "@/services/storageService";
+import { AbilitiesRepository } from '@/repositories/AbilitiesRepository';
+import type { Ability } from '@/types';
 
 interface PanelConfig {
   boxPanel: { columns: number; order: number };
@@ -26,6 +26,8 @@ interface PanelConfig {
   weaknessPanel: { columns: number; order: number };
   configPanel: { columns: number; order: number };
 }
+
+const abilitiesRepo = new AbilitiesRepository();
 
 const PublicView = () => {
   // Column span class mapping to ensure Tailwind includes all classes
@@ -67,6 +69,11 @@ const PublicView = () => {
     configPanel: { columns: 2, order: 5 }
   });
   const { toast } = useToast();
+  const [abilitiesData, setAbilitiesData] = useState<Ability[]>([]);
+
+  useEffect(() => {
+    abilitiesRepo.getAll().then(setAbilitiesData);
+  }, []);
 
   // Filter slots by box type, defaulting to 'other' if no box is set
   const team = allSlots.filter(slot => (slot.box || 'other') === 'team');

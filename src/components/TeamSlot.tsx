@@ -1,6 +1,7 @@
 import React from "react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { MapPin } from "lucide-react";
+import type { Ability } from '@/types';
 
 interface TeamSlotProps {
   slot: any;
@@ -8,7 +9,10 @@ interface TeamSlotProps {
   updateSlot: (index: number, updates: Partial<any>) => void;
   getPokemonSpriteUrl: (pokemon: any, animated: boolean) => string;
   pokeballData: Record<string, { image: string; name: string }>;
-  abilitiesData: Array<{ slug: string; name: string; description: string }>;
+  /**
+   * List of abilities, provided from AbilitiesRepository
+   */
+  abilitiesData: Ability[];
   placesData: Array<{ id: string; nombre: string }>;
 }
 
