@@ -70,6 +70,7 @@ export function loadFixturesToTeamPokemon(
       animatedZoom: 1.5,
       place: fixture.place || '',
       box,
+      dead: typeof fixture.dead === 'boolean' ? fixture.dead : false,
     };
   });
 

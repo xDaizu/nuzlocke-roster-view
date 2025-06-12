@@ -1,4 +1,3 @@
-
 import { TeamPokemon } from "@/types/pokemon";
 import { STORAGE_KEYS, TEAM_CONFIG } from "@/constants";
 
@@ -25,7 +24,8 @@ export const loadTeam = (): TeamPokemon[] => {
         ...slot,
         staticZoom: slot.staticZoom || slot.zoom || 1.5,
         animatedZoom: slot.animatedZoom || slot.zoom || 1.5,
-        box: slot.box || 'team' // Default to 'team' for legacy data
+        box: slot.box || 'team', // Default to 'team' for legacy data
+        dead: typeof slot.dead === 'boolean' ? slot.dead : false, // Default to false
       }));
     }
   } catch (error) {
@@ -45,5 +45,6 @@ export const loadTeam = (): TeamPokemon[] => {
     animatedZoom: TEAM_CONFIG.DEFAULT_ZOOM.ANIMATED,
     place: '',
     box: TEAM_CONFIG.DEFAULT_BOX,
+    dead: false, // Default to false
   }));
 };
