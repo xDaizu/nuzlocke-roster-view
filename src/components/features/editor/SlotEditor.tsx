@@ -5,13 +5,15 @@ import { Switch } from "@/components/ui/switch";
 import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { TeamPokemon, Pokemon, PokeballType } from "@/types/pokemon";
-import React, { useState } from "react";
-import abilitiesData from "@/data/abilities_es.json";
+import React, { useState, useEffect } from "react";
+import { RepositoryFactory } from '@/repositories';
+import type { Ability } from '@/types';
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { translations } from "@/data/translations";
-import AutocompleteInput from "@/components/AutocompleteInput";
+import AutocompleteInput from "./AutocompleteInput";
+import type { Place } from '@/types';
 
 interface SlotEditorProps {
   slot: TeamPokemon;
@@ -21,20 +23,11 @@ interface SlotEditorProps {
   onClear: () => void;
   slotIndex?: number;
   showHeader?: boolean;
-  placesData: Array<{ id: string; nombre: string }>;
+  placesData: Place[];
   showBoxSelect?: boolean;
 }
 
-const abilityNames = abilitiesData.map((a: any) => a.name);
-const abilitySlugMap = Object.fromEntries(abilitiesData.map((a: any) => [a.slug, a]));
-const abilityNameMap = Object.fromEntries(abilitiesData.map((a: any) => [a.name, a]));
-
-// Helper to get ability description
-const getAbilityDescription = (slugOrName: string) => {
-  // Try slug first, then name
-  const found = abilitySlugMap[slugOrName] || abilityNameMap[slugOrName];
-  return found ? found.description : "";
-};
+const abilitiesRepo = RepositoryFactory.createAbilitiesRepository();
 
 const SlotEditor: React.FC<SlotEditorProps> = ({
   slot,
@@ -47,8 +40,23 @@ const SlotEditor: React.FC<SlotEditorProps> = ({
   placesData,
   showBoxSelect = true,
 }) => {
+  const [abilitiesData, setAbilitiesData] = useState<Ability[]>([]);
 
-  
+  useEffect(() => {
+    abilitiesRepo.getAll().then(setAbilitiesData);
+  }, []);
+
+  const abilityNames = abilitiesData.map((a: Ability) => a.name);
+  const abilitySlugMap = Object.fromEntries(abilitiesData.map((a: Ability) => [a.slug, a]));
+  const abilityNameMap = Object.fromEntries(abilitiesData.map((a: Ability) => [a.name, a]));
+
+  // Helper to get ability description
+  const getAbilityDescription = (slugOrName: string) => {
+    // Try slug first, then name
+    const found = abilitySlugMap[slugOrName] || abilityNameMap[slugOrName];
+    return found ? found.description : "";
+  };
+
   // Prepare autocomplete options
   const pokemonOptions = allPokemon.map(pokemon => ({
     value: pokemon.id.toString(),
@@ -58,7 +66,7 @@ const SlotEditor: React.FC<SlotEditorProps> = ({
 
   const abilityOptions = [
     { value: "", label: "Sin habilidad" },
-    ...abilitiesData.map((ability: any) => ({
+    ...abilitiesData.map((ability: Ability) => ({
       value: ability.slug,
       label: ability.name,
       searchText: `${ability.name} ${ability.description}`
@@ -70,12 +78,10 @@ const SlotEditor: React.FC<SlotEditorProps> = ({
     { value: "unknown", label: translations.placeholders.unknown },
     ...placesData.map((place) => ({
       value: place.id,
-      label: place.nombre,
-      searchText: place.nombre
+      label: place.name,
+      searchText: place.name
     }))
   ];
-
-
 
   // Get description for currently selected ability (by slug)
   const selectedAbilityDescription = slot.ability ? getAbilityDescription(slot.ability) : "";
@@ -98,7 +104,7 @@ const SlotEditor: React.FC<SlotEditorProps> = ({
         </CardHeader>
       )}
       <CardContent>
-        <form className="grid grid-cols-2 gap-x-4 gap-y-2 items-end">
+        <div className="grid grid-cols-2 gap-x-4 gap-y-2 items-end">
           {/* Pokemon Selection */}
           <div className="space-y-1">
             <Label className="text-slate-300 text-xs">{translations.forms.pokemon}</Label>
@@ -279,7 +285,7 @@ const SlotEditor: React.FC<SlotEditorProps> = ({
               </div>
             </div>
           </div>
-        </form>
+        </div>
       </CardContent>
     </>
   );

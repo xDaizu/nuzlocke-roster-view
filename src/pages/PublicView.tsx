@@ -1,23 +1,32 @@
-
 import { useState, useEffect } from "react";
 import { TeamPokemon, Pokemon } from "@/types/pokemon";
-import { fetchPokemonData, getPokemonSpriteUrl, POKEBALL_DATA } from "@/utils/pokemonData";
+import { fetchPokemonData, getPokemonSpriteUrl, POKEBALL_DATA, loadFixturesToTeamPokemon } from "@/utils/pokemonData";
 import { useToast } from "@/hooks/use-toast";
-import PublicHeader from "@/components/PublicHeader";
-import PublicBoxPanel from "@/components/PublicBoxPanel";
-import PublicSlotEditor from "@/components/PublicSlotEditor";
-import PlacesPanel from "@/components/PlacesPanel";
-import PanelConfigPanel from "@/components/PanelConfigPanel";
-import WeaknessPanel from "@/components/WeaknessPanel";
-import CarouselSlot from "@/components/CarouselSlot";
+import { 
+  PublicHeader, 
+  TeamSlot 
+} from "@/components/features/team";
+import { 
+  PublicSlotEditor 
+} from "@/components/features/editor";
+import { 
+  PublicBoxPanel,
+  PlacesPanel,
+  PanelConfigPanel,
+  WeaknessPanel 
+} from "@/components/features/panels";
+import { 
+  CarouselSlot 
+} from "@/components/features/carousel";
 import { Label } from "@/components/ui/label";
-import TeamSlot from "@/components/TeamSlot";
 import React from "react";
-import abilitiesData from "@/data/abilities_es.json";
-import placesData from "@/data/places_es.json";
 import { pokemonFixtures } from "@/data/fixtures";
 import { translations } from "@/data/translations";
 import { storageService } from "@/services/storageService";
+import { RepositoryFactory } from '@/repositories';
+import type { Ability } from '@/types';
+import { PlaceRepository } from '@/repositories/PlaceRepository';
+import type { Place } from '@/types';
 
 interface PanelConfig {
   boxPanel: { columns: number; order: number };
@@ -26,6 +35,8 @@ interface PanelConfig {
   weaknessPanel: { columns: number; order: number };
   configPanel: { columns: number; order: number };
 }
+
+const abilitiesRepo = RepositoryFactory.createAbilitiesRepository();
 
 const PublicView = () => {
   // Column span class mapping to ensure Tailwind includes all classes
@@ -67,6 +78,17 @@ const PublicView = () => {
     configPanel: { columns: 2, order: 5 }
   });
   const { toast } = useToast();
+  const [abilitiesData, setAbilitiesData] = useState<Ability[]>([]);
+  const [placesData, setPlacesData] = useState<Place[]>([]);
+
+  useEffect(() => {
+    abilitiesRepo.getAll().then(setAbilitiesData);
+  }, []);
+
+  useEffect(() => {
+    const repo = RepositoryFactory.createPlaceRepository();
+    repo.getAll().then(setPlacesData);
+  }, []);
 
   // Filter slots by box type, defaulting to 'other' if no box is set
   const team = allSlots.filter(slot => (slot.box || 'other') === 'team');
@@ -153,34 +175,11 @@ const PublicView = () => {
   const addFixtures = () => {
     console.log('Loading fixtures...');
     const fixtures = pokemonFixtures;
-    
     if (allPokemon.length === 0) {
       console.error('allPokemon is empty! Cannot load fixtures.');
       return;
     }
-
-    // Process all fixtures, not just the first 6
-    const newSlots = fixtures.map((fixture, index) => {
-      const pokemon = allPokemon.find(p => 
-        p.name.english.toLowerCase() === fixture.name.toLowerCase()
-      );
-      
-              return {
-          id: `fixture-slot-${index}`,
-          pokemon: pokemon || null,
-          nickname: fixture.nickname,
-          level: fixture.level || 1,
-          ability: (fixture as any).ability || '',
-          pokeball: (fixture as any).pokeball || 'pokeball',
-          animated: false,
-          staticZoom: 1.5,
-          animatedZoom: 1.5,
-          place: fixture.place || '',
-          box: fixture.box || 'team',
-        };
-    });
-
-    const finalSlots = newSlots.map(slot => ({ ...slot, box: (slot.box === 'team' || slot.box === 'other' || slot.box === 'graveyard') ? slot.box : 'other' } as TeamPokemon));
+    const finalSlots = loadFixturesToTeamPokemon(fixtures, allPokemon);
     setAllSlots(finalSlots);
     console.log('Fixtures loaded successfully!', finalSlots);
   };
@@ -239,6 +238,7 @@ const PublicView = () => {
                 otherBox={otherBox}
                 graveyardBox={graveyardBox}
                 intervalSeconds={10}
+                placesData={placesData}
               />
             </div>
           </div>
@@ -362,6 +362,7 @@ const PublicView = () => {
                             }
                             // If slot doesn't exist, there's nothing to clear
                           }}
+                          placesData={placesData}
                         />
                       </div>
                     );

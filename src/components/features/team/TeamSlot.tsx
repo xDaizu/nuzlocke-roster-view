@@ -1,6 +1,7 @@
 import React from "react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { MapPin } from "lucide-react";
+import type { Ability, Place } from '@/types';
 
 interface TeamSlotProps {
   slot: any;
@@ -8,8 +9,11 @@ interface TeamSlotProps {
   updateSlot: (index: number, updates: Partial<any>) => void;
   getPokemonSpriteUrl: (pokemon: any, animated: boolean) => string;
   pokeballData: Record<string, { image: string; name: string }>;
-  abilitiesData: Array<{ slug: string; name: string; description: string }>;
-  placesData: Array<{ id: string; nombre: string }>;
+  /**
+   * List of abilities, provided from AbilitiesRepository
+   */
+  abilitiesData: Ability[];
+  placesData: Place[];
 }
 
 const TeamSlot: React.FC<TeamSlotProps> = ({
@@ -103,7 +107,7 @@ const TeamSlot: React.FC<TeamSlotProps> = ({
                       <MapPin className="w-3 h-3 inline-block" />
                       {slot.place === 'unknown'
                         ? 'Desconocido'
-                        : (placesData.find((p) => p.id === slot.place)?.nombre || slot.place)}
+                        : (placesData.find((p) => p.id === slot.place)?.name || slot.place)}
                     </div>
                   )}
           </TooltipContent>

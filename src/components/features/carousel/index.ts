@@ -1,0 +1,1 @@
+export { default as CarouselSlot } from './CarouselSlot'; 

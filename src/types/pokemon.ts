@@ -29,6 +29,7 @@ export interface TeamPokemon {
   animatedZoom: number; // 1.0 = normal, 1.5 = 150% zoom for animated sprites
   place?: string; // Optional, can be empty or 'unknown'
   box: 'team' | 'other' | 'graveyard';
+  dead?: boolean; // Optional, defaults to false
 }
 
 export type PokeballType = 'pokeball' | 'superball' | 'sanaball';
