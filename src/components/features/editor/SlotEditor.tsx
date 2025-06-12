@@ -6,7 +6,7 @@ import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { TeamPokemon, Pokemon, PokeballType } from "@/types/pokemon";
 import React, { useState, useEffect } from "react";
-import { AbilitiesRepository } from '@/repositories/AbilitiesRepository';
+import { RepositoryFactory } from '@/repositories';
 import type { Ability } from '@/types';
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
@@ -27,7 +27,7 @@ interface SlotEditorProps {
   showBoxSelect?: boolean;
 }
 
-const abilitiesRepo = new AbilitiesRepository();
+const abilitiesRepo = RepositoryFactory.createAbilitiesRepository();
 
 const [abilitiesData, setAbilitiesData] = useState<Ability[]>([]);
 

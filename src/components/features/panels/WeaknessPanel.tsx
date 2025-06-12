@@ -4,7 +4,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Shield, Zap, X } from "lucide-react";
-import { TypeRepository } from '@/repositories/TypeRepository';
+import { RepositoryFactory } from '@/repositories';
 import type { PokemonType } from '@/types';
 import { AutocompleteInput } from "@/components/features/editor";
 
@@ -21,7 +21,7 @@ interface TypeEffectiveness {
   immune: string[];        // 0x damage
 }
 
-const typeRepo = new TypeRepository();
+const typeRepo = RepositoryFactory.createTypeRepository();
 
 const WeaknessPanel: React.FC<WeaknessPanelProps> = ({ allPokemon, translations }) => {
   const [selectedPokemon, setSelectedPokemon] = useState<any>(null);

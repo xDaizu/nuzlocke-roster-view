@@ -4,7 +4,7 @@ import { getPokemonSpriteUrl, POKEBALL_DATA } from "@/utils/pokemonData";
 import TeamSlot from "./TeamSlot";
 import { PlaceRepository } from '@/repositories/PlaceRepository';
 import type { Place } from '@/types';
-import { AbilitiesRepository } from '@/repositories/AbilitiesRepository';
+import { RepositoryFactory } from '@/repositories';
 import type { Ability } from '@/types';
 
 interface PublicHeaderProps {
@@ -13,7 +13,7 @@ interface PublicHeaderProps {
   placesData: Place[];
 }
 
-const abilitiesRepo = new AbilitiesRepository();
+const abilitiesRepo = RepositoryFactory.createAbilitiesRepository();
 
 const [abilitiesData, setAbilitiesData] = useState<Ability[]>([]);
 

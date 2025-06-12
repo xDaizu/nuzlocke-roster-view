@@ -23,7 +23,7 @@ import React from "react";
 import { pokemonFixtures } from "@/data/fixtures";
 import { translations } from "@/data/translations";
 import { storageService } from "@/services/storageService";
-import { AbilitiesRepository } from '@/repositories/AbilitiesRepository';
+import { RepositoryFactory } from '@/repositories';
 import type { Ability } from '@/types';
 import { PlaceRepository } from '@/repositories/PlaceRepository';
 import type { Place } from '@/types';
@@ -36,7 +36,7 @@ interface PanelConfig {
   configPanel: { columns: number; order: number };
 }
 
-const abilitiesRepo = new AbilitiesRepository();
+const abilitiesRepo = RepositoryFactory.createAbilitiesRepository();
 
 const PublicView = () => {
   // Column span class mapping to ensure Tailwind includes all classes
@@ -86,7 +86,7 @@ const PublicView = () => {
   }, []);
 
   useEffect(() => {
-    const repo = new PlaceRepository();
+    const repo = RepositoryFactory.createPlaceRepository();
     repo.getAll().then(setPlacesData);
   }, []);
 

@@ -3,7 +3,7 @@ import { TeamPokemon } from "@/types/pokemon";
 import { getPokemonSpriteUrl, POKEBALL_DATA } from "@/utils/pokemonData";
 import { MapPin, Moon } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { AbilitiesRepository } from '@/repositories/AbilitiesRepository';
+import { RepositoryFactory } from '@/repositories';
 import type { Ability } from '@/types';
 import { PlaceRepository } from '@/repositories/PlaceRepository';
 import type { Place } from '@/types';
@@ -28,7 +28,7 @@ const CarouselSlot: React.FC<CarouselSlotProps> = ({
   // Combine PC and graveyard boxes, filter out empty slots
   const allPokemon = [...otherBox, ...graveyardBox].filter(slot => slot.pokemon !== null);
 
-  const abilitiesRepo = new AbilitiesRepository();
+  const abilitiesRepo = RepositoryFactory.createAbilitiesRepository();
 
   const getAbilityData = async (slug: string) => {
     return await abilitiesRepo.getAbility(slug);

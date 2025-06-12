@@ -3,9 +3,8 @@ import { POKEBALL_DATA } from './pokemon/pokeballs';
 import pokedex from './pokemon/pokedex.json';
 import placesEs from './pokemon/places_es.json';
 import abilitiesEs from './pokemon/abilities_es.json';
-import { TypeRepository } from '@/repositories/TypeRepository';
+import { RepositoryFactory } from '@/repositories';
 import type { Ability, PokemonType } from '@/types';
-import { PlaceRepository } from '@/repositories/PlaceRepository';
 import type { Place } from '@/types';
 
 // Helper to check object fields and return missing ones
@@ -59,7 +58,7 @@ describe('Data Integrity', () => {
   });
 
   it('should load types and each entry matches PokemonType', async () => {
-    const typeRepo = new TypeRepository();
+    const typeRepo = RepositoryFactory.createTypeRepository();
     const allTypes: PokemonType[] = await typeRepo.getAll();
     expect(Array.isArray(allTypes)).toBe(true);
     allTypes.forEach((type, i) => {
@@ -73,7 +72,7 @@ describe('Data Integrity', () => {
   });
 
   it('should load placesEs and be an array of objects with id and name', async () => {
-    const placeRepo = new PlaceRepository();
+    const placeRepo = RepositoryFactory.createPlaceRepository();
     const places: Place[] = await placeRepo.getAll();
     expect(Array.isArray(places)).toBe(true);
     places.forEach((place) => {
