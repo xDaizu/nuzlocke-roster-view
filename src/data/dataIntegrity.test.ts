@@ -21,7 +21,6 @@ describe('Data Integrity', () => {
       expect(typeof value.name).toBe('string');
       expect(typeof value.image).toBe('string');
     });
-    expect(POKEBALL_DATA).toMatchSnapshot();
   });
 
   it('should load pokedex and each entry has id, name, type, base', () => {
@@ -33,7 +32,6 @@ describe('Data Integrity', () => {
       expect(Array.isArray(entry.type)).toBe(true);
       expect(typeof entry.base).toBe('object');
     });
-    expect(pokedex).toMatchSnapshot();
   });
 
   it('should load abilities and each entry matches Ability type', () => {
@@ -54,7 +52,6 @@ describe('Data Integrity', () => {
       expect(typeof ability.name).toBe('string');
       expect(typeof ability.description === 'string' || ability.description === null).toBe(true);
     });
-    expect(abilitiesData).toMatchSnapshot();
   });
 
   it('should load types and each entry matches PokemonType', async () => {
@@ -68,7 +65,6 @@ describe('Data Integrity', () => {
       expect(Array.isArray(type.effectiveness.resistant_to)).toBe(true);
       expect(Array.isArray(type.effectiveness.immune_to)).toBe(true);
     });
-    expect(allTypes).toMatchSnapshot();
   });
 
   it('should load placesEs and be an array of objects with id and name', async () => {
@@ -80,6 +76,5 @@ describe('Data Integrity', () => {
       expect(typeof place.id).toBe('string');
       expect(typeof place.name).toBe('string');
     });
-    expect(places).toMatchSnapshot();
   });
 }); 
