@@ -1,5 +1,5 @@
-import { describe, it, expect, vi } from 'vitest';
-import { POKEBALL_DATA, getPokemonSpriteUrl, formatPokemonName, fetchPokemonData } from './pokemonData';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { POKEBALL_DATA, getPokemonSpriteUrl, formatPokemonName, fetchPokemonData, __clearPokemonDataCache } from './pokemonData';
 import type { Pokemon } from '@/types/pokemon';
 
 const mockPokemon: Pokemon = {
@@ -45,24 +45,16 @@ describe('formatPokemonName', () => {
 });
 
 describe('fetchPokemonData', () => {
-  it('returns pokemon data from dynamic import', async () => {
-    const mockData = [mockPokemon];
-    vi.stubGlobal('import', vi.fn().mockResolvedValue({ default: mockData }));
-    // Clear cache
-    const mod = await import('./pokemonData');
-    (mod as any).pokemonDataCache = null;
-    const data = await fetchPokemonData();
-    expect(data).toEqual(mockData);
-    vi.unstubAllGlobals();
+  beforeEach(() => {
+    __clearPokemonDataCache();
   });
-  // Commenting out the error test for fetchPokemonData due to dynamic import limitations in Vitest
-  //   it('returns empty array on error', async () => {
-  //     vi.stubGlobal('import', vi.fn().mockRejectedValue(new Error('fail')));
-  //     // Clear cache
-  //     const mod = await import('./pokemonData');
-  //     (mod as any).pokemonDataCache = null;
-  //     const data = await fetchPokemonData();
-  //     expect(data).toEqual([]);
-  //     vi.unstubAllGlobals();
-  //   });
+  it('returns pokemon data from injected importFn', async () => {
+    const mockData = [mockPokemon];
+    const data = await fetchPokemonData(() => Promise.resolve({ default: mockData }));
+    expect(data).toEqual(mockData);
+  });
+  it('returns empty array on error from injected importFn', async () => {
+    const data = await fetchPokemonData(() => Promise.reject(new Error('fail')));
+    expect(data).toEqual([]);
+  });
 }); 

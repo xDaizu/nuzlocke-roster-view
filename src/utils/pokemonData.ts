@@ -28,13 +28,15 @@ export const formatPokemonName = (name: string): string => {
 
 let pokemonDataCache: Pokemon[] | null = null;
 
-export const fetchPokemonData = async (): Promise<Pokemon[]> => {
+export const __clearPokemonDataCache = () => { pokemonDataCache = null; };
+
+export const fetchPokemonData = async (importFn?: () => Promise<{ default: Pokemon[] }>): Promise<Pokemon[]> => {
   if (pokemonDataCache) {
     return pokemonDataCache;
   }
   
   try {
-    const data = (await import("@/data/pokedex.json")).default;
+    const data = (await (importFn ? importFn() : import("@/data/pokedex.json"))).default;
     pokemonDataCache = data;
     return data;
   } catch (error) {
