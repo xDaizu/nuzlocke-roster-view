@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { TeamPokemon, Pokemon } from "@/types/pokemon";
 import { fetchPokemonData, getPokemonSpriteUrl, POKEBALL_DATA } from "@/utils/pokemonData";
@@ -194,11 +195,12 @@ const PublicView = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-900 via-slate-900 to-red-900">
-      {/* Team Box Header */}
+      {/* Team Box Header with 7 slots */}
       <div className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-br from-purple-900 via-slate-900 to-red-900 p-4 border-b border-purple-500/30">
-        <div className="w-[800px] h-[130px] bg-gradient-to-r from-slate-900 via-purple-900/20 to-slate-900 border-2 border-purple-500/30 rounded-lg overflow-hidden mx-auto">
+        <div className="w-[900px] h-[130px] bg-gradient-to-r from-slate-900 via-purple-900/20 to-slate-900 border-2 border-purple-500/30 rounded-lg overflow-hidden mx-auto">
           <div className="h-full p-3">
-            <div className="grid grid-cols-6 gap-2 h-full">
+            <div className="grid grid-cols-7 gap-2 h-full">
+              {/* First 6 slots for team Pokemon */}
               {Array.from({ length: 6 }, (_, index) => {
                 const teamPokemon = allSlots.filter(slot => (slot.box || 'other') === 'team');
                 const slot = teamPokemon[index] || {
@@ -231,6 +233,13 @@ const PublicView = () => {
                   />
                 );
               })}
+              
+              {/* 7th slot - Carousel */}
+              <CarouselSlot
+                otherBox={otherBox}
+                graveyardBox={graveyardBox}
+                intervalSeconds={10}
+              />
             </div>
           </div>
         </div>
