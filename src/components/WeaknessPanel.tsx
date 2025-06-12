@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Shield, Zap, X } from "lucide-react";
 import typesData from "@/data/types.json";
 import AutocompleteInput from "@/components/AutocompleteInput";
+import { getStabEffectiveness } from '@/services/stabService';
 
 interface WeaknessPanelProps {
   allPokemon: any[];
@@ -270,6 +271,59 @@ const WeaknessPanel: React.FC<WeaknessPanelProps> = ({ allPokemon, translations 
                   </div>
                 </div>
               )}
+            </div>
+
+            {/* STAB Section */}
+            <div className="space-y-3 mt-6">
+              <h4 className="text-purple-400 font-semibold text-sm mb-2 flex items-center gap-1">
+                STAB (Same Type Attack Bonus)
+              </h4>
+              {(() => {
+                const stab = getStabEffectiveness(selectedPokemon.type);
+                return (
+                  <>
+                    {/* 2x */}
+                    {stab.weak.length > 0 && (
+                      <div>
+                        <span className="font-semibold text-green-400 text-xs">2x:</span>{' '}
+                        <span className="flex flex-wrap gap-1">
+                          {stab.weak.map((type) => (
+                            <Badge key={type} className={`${getTypeColor(type)} text-white text-xs`}>
+                              {type}
+                            </Badge>
+                          ))}
+                        </span>
+                      </div>
+                    )}
+                    {/* 0.5x */}
+                    {stab.resistant.length > 0 && (
+                      <div>
+                        <span className="font-semibold text-yellow-400 text-xs">0.5x:</span>{' '}
+                        <span className="flex flex-wrap gap-1">
+                          {stab.resistant.map((type) => (
+                            <Badge key={type} className={`${getTypeColor(type)} text-white text-xs`}>
+                              {type}
+                            </Badge>
+                          ))}
+                        </span>
+                      </div>
+                    )}
+                    {/* 0x */}
+                    {stab.immune.length > 0 && (
+                      <div>
+                        <span className="font-semibold text-gray-400 text-xs">0x:</span>{' '}
+                        <span className="flex flex-wrap gap-1">
+                          {stab.immune.map((type) => (
+                            <Badge key={type} className={`${getTypeColor(type)} text-white text-xs`}>
+                              {type}
+                            </Badge>
+                          ))}
+                        </span>
+                      </div>
+                    )}
+                  </>
+                );
+              })()}
             </div>
           </div>
         ) : (
