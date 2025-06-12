@@ -183,6 +183,25 @@ const PublicView = () => {
     console.log('Fixtures loaded successfully!', finalSlots);
   };
 
+  // Export team data to clipboard
+  const exportTeamToClipboard = async () => {
+    try {
+      const team = storageService.loadTeam();
+      await navigator.clipboard.writeText(JSON.stringify(team, null, 2));
+      toast({
+        title: 'Exported!',
+        description: 'Team data copied to clipboard.',
+        variant: 'default',
+      });
+    } catch (err) {
+      toast({
+        title: 'Error',
+        description: 'Failed to copy team data to clipboard.',
+        variant: 'destructive',
+      });
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-purple-900 via-slate-900 to-red-900 flex items-center justify-center">
@@ -193,6 +212,15 @@ const PublicView = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-900 via-slate-900 to-red-900">
+      {/* Export Button */}
+      <div className="flex justify-end p-4">
+        <button
+          onClick={exportTeamToClipboard}
+          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow"
+        >
+          Export Team to Clipboard
+        </button>
+      </div>
       {/* Team Box Header */}
       <div className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-br from-purple-900 via-slate-900 to-red-900 p-4 border-b border-purple-500/30">
         <div className="w-[800px] h-[130px] bg-gradient-to-r from-slate-900 via-purple-900/20 to-slate-900 border-2 border-purple-500/30 rounded-lg overflow-hidden mx-auto">

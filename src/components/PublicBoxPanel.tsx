@@ -78,6 +78,25 @@ const PublicBoxPanel: React.FC<PublicBoxPanelProps> = ({
     }
   };
 
+  // Export team data to clipboard
+  const exportTeamToClipboard = async () => {
+    try {
+      const team = storageService.loadTeam();
+      await navigator.clipboard.writeText(JSON.stringify(team, null, 2));
+      toast({
+        title: 'Exported!',
+        description: 'Team data copied to clipboard.',
+        variant: 'default',
+      });
+    } catch (err) {
+      toast({
+        title: 'Error',
+        description: 'Failed to copy team data to clipboard.',
+        variant: 'destructive',
+      });
+    }
+  };
+
   return (
     <Card className="bg-slate-800/90 border-purple-500/30 col-span-1">
       <CardHeader>
@@ -143,12 +162,20 @@ const PublicBoxPanel: React.FC<PublicBoxPanelProps> = ({
         />
       </CardContent>
       <CardFooter>
-        <Button
-          onClick={onAddFixtures}
-          className="bg-purple-600 hover:bg-purple-700"
-        >
-          {translations.buttons.default}
-        </Button>
+        <div className="flex flex-row gap-2">
+          <Button
+            onClick={onAddFixtures}
+            className="bg-purple-600 hover:bg-purple-700"
+          >
+            {translations.buttons.default}
+          </Button>
+          <Button
+            onClick={exportTeamToClipboard}
+            className="bg-blue-600 hover:bg-blue-700 text-white"
+          >
+            Export to Clipboard
+          </Button>
+        </div>
       </CardFooter>
     </Card>
   );
