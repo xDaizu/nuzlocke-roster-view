@@ -1,7 +1,8 @@
 
 import { TeamPokemon } from "@/types/pokemon";
+import { STORAGE_KEYS, TEAM_CONFIG } from "@/constants";
 
-const STORAGE_KEY = 'nuzlocke-team';
+const STORAGE_KEY = STORAGE_KEYS.LEGACY_TEAM;
 
 export const saveTeam = (team: TeamPokemon[]): void => {
   try {
@@ -32,17 +33,17 @@ export const loadTeam = (): TeamPokemon[] => {
   }
   
   // Return default empty team
-  return Array.from({ length: 6 }, (_, index) => ({
+  return Array.from({ length: TEAM_CONFIG.DEFAULT_TEAM_SIZE }, (_, index) => ({
     id: `slot-${index}`,
     pokemon: null,
     nickname: '',
-    level: 1,
+    level: TEAM_CONFIG.DEFAULT_LEVEL,
     ability: '',
-    pokeball: 'pokeball' as const,
+    pokeball: TEAM_CONFIG.DEFAULT_POKEBALL,
     animated: false,
-    staticZoom: 1.5,
-    animatedZoom: 1.5,
+    staticZoom: TEAM_CONFIG.DEFAULT_ZOOM.STATIC,
+    animatedZoom: TEAM_CONFIG.DEFAULT_ZOOM.ANIMATED,
     place: '',
-    box: 'team' as const,
+    box: TEAM_CONFIG.DEFAULT_BOX,
   }));
 };

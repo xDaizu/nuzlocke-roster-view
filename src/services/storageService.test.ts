@@ -3,9 +3,11 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { storageService } from './storageService';
 import type { TeamPokemon } from '../types/pokemon';
 
-const TEAM_KEY = 'nuzlocke-roster:team';
-const BACKUP_KEY = 'nuzlocke-roster:team-backup';
-const LAST_BACKUP_KEY = 'nuzlocke-roster:last-backup';
+import { STORAGE_KEYS } from '../constants';
+
+const TEAM_KEY = STORAGE_KEYS.TEAM;
+const BACKUP_KEY = STORAGE_KEYS.BACKUP_TEAM;
+const LAST_BACKUP_KEY = STORAGE_KEYS.LAST_BACKUP;
 
 const mockTeam: TeamPokemon[] = [
   {

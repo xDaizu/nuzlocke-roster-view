@@ -4,7 +4,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Shield, Zap, X } from "lucide-react";
-import typesData from "@/data/types.json";
+import typesData from "@/data/pokemon/types.json";
 import AutocompleteInput from "@/components/AutocompleteInput";
 
 interface WeaknessPanelProps {

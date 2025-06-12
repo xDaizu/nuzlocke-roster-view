@@ -6,7 +6,7 @@ import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { TeamPokemon, Pokemon, PokeballType } from "@/types/pokemon";
 import React, { useState } from "react";
-import abilitiesData from "@/data/abilities_es.json";
+import abilitiesData from "@/data/pokemon/abilities_es.json";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";

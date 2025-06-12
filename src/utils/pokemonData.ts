@@ -1,25 +1,15 @@
-import { Pokemon, PokeballInfo, PokeballType } from "@/types/pokemon";
+import { Pokemon } from "@/types/pokemon";
+import { SPRITE_CONFIG } from "@/constants/pokemon";
+import { POKEBALL_DATA } from "@/data/pokemon/pokeballs";
 
-export const POKEBALL_DATA: Record<PokeballType, PokeballInfo> = {
-  pokeball: {
-    name: "Pokeball",
-    image: "https://images.wikidexcdn.net/mwuploads/wikidex/6/6a/latest/20230115164405/Pok%C3%A9_Ball_EP.png"
-  },
-  superball: {
-    name: "Superball", 
-    image: "https://images.wikidexcdn.net/mwuploads/wikidex/3/3f/latest/20230115164421/Super_Ball_EP.png"
-  },
-  sanaball: {
-    name: "Sana Ball",
-    image: "https://images.wikidexcdn.net/mwuploads/wikidex/0/08/latest/20230115165144/Sana_Ball_EP.png"
-  }
-};
+// Re-export POKEBALL_DATA for backward compatibility
+export { POKEBALL_DATA };
 
 export const getPokemonSpriteUrl = (pokemon: Pokemon, animated: boolean = false): string => {
   const name = pokemon.name.english.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-').replace(/-$/, '');
-  const extension = animated ? 'gif' : 'png';
-  const folder = animated ? 'anim/normal' : 'normal';
-  return `https://img.pokemondb.net/sprites/black-white/${folder}/${name}.${extension}`;
+  const extension = animated ? SPRITE_CONFIG.EXTENSIONS.ANIMATED : SPRITE_CONFIG.EXTENSIONS.STATIC;
+  const folder = animated ? SPRITE_CONFIG.FOLDERS.ANIMATED : SPRITE_CONFIG.FOLDERS.STATIC;
+  return `${SPRITE_CONFIG.BASE_URL}/${folder}/${name}.${extension}`;
 };
 
 export const formatPokemonName = (name: string): string => {
@@ -36,7 +26,7 @@ export const fetchPokemonData = async (importFn?: () => Promise<{ default: Pokem
   }
   
   try {
-    const data = (await (importFn ? importFn() : import("@/data/pokedex.json"))).default;
+    const data = (await (importFn ? importFn() : import("@/data/pokemon/pokedex.json"))).default;
     pokemonDataCache = data;
     return data;
   } catch (error) {

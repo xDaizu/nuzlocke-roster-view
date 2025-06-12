@@ -3,7 +3,7 @@ import React from "react";
 import { TeamPokemon } from "@/types/pokemon";
 import { getPokemonSpriteUrl, POKEBALL_DATA } from "@/utils/pokemonData";
 import TeamSlot from "@/components/TeamSlot";
-import abilitiesData from "@/data/abilities_es.json";
+import abilitiesData from "@/data/pokemon/abilities_es.json";
 import placesData from "@/data/places_es.json";
 
 interface PublicHeaderProps {

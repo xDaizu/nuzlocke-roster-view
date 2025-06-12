@@ -1,21 +1,18 @@
 import { TeamPokemon } from '../types/pokemon';
+import { STORAGE_KEYS, STORAGE_CONFIG } from '../constants';
 
 // Storage keys
-const KEYS = {
-  TEAM: 'nuzlocke-roster:team',
-  BACKUP_TEAM: 'nuzlocke-roster:team-backup',
-  LAST_BACKUP: 'nuzlocke-roster:last-backup'
-};
+const KEYS = STORAGE_KEYS;
 
 // Maximum backup versions to keep
-const MAX_BACKUPS = 3;
+const MAX_BACKUPS = STORAGE_CONFIG.MAX_BACKUPS;
 
 /**
  * Check if localStorage is available and working
  */
 const isLocalStorageAvailable = (): boolean => {
   try {
-    const testKey = '__storage_test__';
+    const testKey = STORAGE_CONFIG.TEST_KEY;
     localStorage.setItem(testKey, testKey);
     const result = localStorage.getItem(testKey);
     localStorage.removeItem(testKey);
@@ -32,7 +29,7 @@ const isLocalStorageAvailable = (): boolean => {
 const hasEnoughStorageSpace = (dataSize: number): boolean => {
   try {
     // Check available space using a technique that estimates quota
-    const testKey = '__quota_test__';
+    const testKey = STORAGE_CONFIG.QUOTA_TEST_KEY;
     let testData = '1';
     let quotaExceeded = false;
     
@@ -43,7 +40,7 @@ const hasEnoughStorageSpace = (dataSize: number): boolean => {
         testData += testData; // Double the data size
         
         // Safety check to prevent browser freezing
-        if (testData.length > 10000000) { // 10MB
+        if (testData.length > STORAGE_CONFIG.MAX_STORAGE_SIZE) {
           break;
         }
       }

@@ -13,7 +13,7 @@ import CarouselSlot from "@/components/CarouselSlot";
 import { Label } from "@/components/ui/label";
 import TeamSlot from "@/components/TeamSlot";
 import React from "react";
-import abilitiesData from "@/data/abilities_es.json";
+import abilitiesData from "@/data/pokemon/abilities_es.json";
 import placesData from "@/data/places_es.json";
 import { pokemonFixtures } from "@/data/fixtures";
 import { translations } from "@/data/translations";
