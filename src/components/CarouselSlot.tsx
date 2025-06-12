@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { TeamPokemon } from "@/types/pokemon";
 import { getPokemonSpriteUrl, POKEBALL_DATA } from "@/utils/pokemonData";
-import { MapPin, Zzz } from "lucide-react";
+import { MapPin, Moon } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import abilitiesData from "@/data/abilities_es.json";
 import placesData from "@/data/places_es.json";
@@ -70,10 +70,10 @@ const CarouselSlot: React.FC<CarouselSlotProps> = ({
 
                 {/* Pokemon sprite with transition and box-specific styling */}
                 <div className="relative flex-1 flex items-center justify-center min-h-0 w-full">
-                  {/* ZZZ icon for PC Pokemon */}
+                  {/* Moon icon for PC Pokemon */}
                   {isPC && (
                     <div className="absolute -top-2 -left-1 z-10 text-blue-300 animate-pulse">
-                      <Zzz className="w-4 h-4 drop-shadow-md" />
+                      <Moon className="w-4 h-4 drop-shadow-md" />
                     </div>
                   )}
                   
