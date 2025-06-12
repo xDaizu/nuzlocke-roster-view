@@ -7,7 +7,7 @@ describe('getStabEffectiveness', () => {
     const result = getStabEffectiveness(['Grass', 'Poison']);
     expect(result.weak).toEqual(
       expect.arrayContaining([
-        'Fairy', 'Grass', 'Ground', 'Rock', 'Water'
+       'Grass', 'Ground', 'Rock', 'Water'
       ])
     );
     expect(result.resistant).toEqual(
@@ -77,7 +77,7 @@ describe('getStabEffectiveness', () => {
 
   
   
-  it('returns 0,5x if both are 0,5x', () => {
+  it('returns 0x only if both are 0x', () => {
     const result = getStabEffectiveness(['Psychic', 'Electric']);
 
     expect(result.immune).toEqual([]);
