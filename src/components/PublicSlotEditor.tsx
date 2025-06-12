@@ -1,11 +1,11 @@
-
 import React from "react";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { TeamPokemon, Pokemon } from "@/types/pokemon";
 import { getPokemonSpriteUrl, POKEBALL_DATA } from "@/utils/pokemonData";
 import SlotEditor from "@/components/SlotEditor";
-import placesData from "@/data/places_es.json";
+import { PlaceRepository } from '@/repositories/PlaceRepository';
+import type { Place } from '@/types';
 
 interface PublicSlotEditorProps {
   currentSlot: TeamPokemon;
@@ -13,6 +13,7 @@ interface PublicSlotEditorProps {
   selectedSlot: number;
   onUpdate: (updates: Partial<TeamPokemon>) => void;
   onClear: () => void;
+  placesData: Place[];
 }
 
 const PublicSlotEditor: React.FC<PublicSlotEditorProps> = ({
@@ -21,6 +22,7 @@ const PublicSlotEditor: React.FC<PublicSlotEditorProps> = ({
   selectedSlot,
   onUpdate,
   onClear,
+  placesData,
 }) => {
   return (
     <Card className="bg-slate-800/90 border-purple-500/30 col-span-1 lg:col-span-2">

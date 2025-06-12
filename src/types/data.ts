@@ -18,3 +18,8 @@ export interface TypeEffectiveness {
 
 export type TypeChart = Record<string, TypeEffectiveness>;
 
+export interface Place {
+  id: string;
+  name: string;
+}
+

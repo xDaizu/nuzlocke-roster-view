@@ -1,10 +1,12 @@
 import { describe, it, expect } from 'vitest';
 import { POKEBALL_DATA } from './pokemon/pokeballs';
 import pokedex from './pokemon/pokedex.json';
-import placesEs from './places_es.json';
+import placesEs from './pokemon/places_es.json';
 import abilitiesEs from './pokemon/abilities_es.json';
 import { TypeRepository } from '@/repositories/TypeRepository';
 import type { Ability, PokemonType } from '@/types';
+import { PlaceRepository } from '@/repositories/PlaceRepository';
+import type { Place } from '@/types';
 
 // Helper to check object fields and return missing ones
 function getMissingFields(obj: any, fields: string[]) {
@@ -70,13 +72,15 @@ describe('Data Integrity', () => {
     expect(allTypes).toMatchSnapshot();
   });
 
-  it('should load placesEs and be an array of objects with id and nombre', () => {
-    expect(Array.isArray(placesEs)).toBe(true);
-    placesEs.forEach((place) => {
-      expect(getMissingFields(place, ['id', 'nombre'])).toEqual([]);
+  it('should load placesEs and be an array of objects with id and name', async () => {
+    const placeRepo = new PlaceRepository();
+    const places: Place[] = await placeRepo.getAll();
+    expect(Array.isArray(places)).toBe(true);
+    places.forEach((place) => {
+      expect(getMissingFields(place, ['id', 'name'])).toEqual([]);
       expect(typeof place.id).toBe('string');
-      expect(typeof place.nombre).toBe('string');
+      expect(typeof place.name).toBe('string');
     });
-    expect(placesEs).toMatchSnapshot();
+    expect(places).toMatchSnapshot();
   });
 }); 

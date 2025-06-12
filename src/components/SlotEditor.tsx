@@ -13,6 +13,7 @@ import { cn } from "@/lib/utils";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { translations } from "@/data/translations";
 import AutocompleteInput from "@/components/AutocompleteInput";
+import type { Place } from '@/types';
 
 interface SlotEditorProps {
   slot: TeamPokemon;
@@ -22,7 +23,7 @@ interface SlotEditorProps {
   onClear: () => void;
   slotIndex?: number;
   showHeader?: boolean;
-  placesData: Array<{ id: string; nombre: string }>;
+  placesData: Place[];
   showBoxSelect?: boolean;
 }
 
@@ -79,8 +80,8 @@ const SlotEditor: React.FC<SlotEditorProps> = ({
     { value: "unknown", label: translations.placeholders.unknown },
     ...placesData.map((place) => ({
       value: place.id,
-      label: place.nombre,
-      searchText: place.nombre
+      label: place.name,
+      searchText: place.name
     }))
   ];
 

@@ -1,7 +1,7 @@
 import React from "react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { MapPin } from "lucide-react";
-import type { Ability } from '@/types';
+import type { Ability, Place } from '@/types';
 
 interface TeamSlotProps {
   slot: any;
@@ -13,7 +13,7 @@ interface TeamSlotProps {
    * List of abilities, provided from AbilitiesRepository
    */
   abilitiesData: Ability[];
-  placesData: Array<{ id: string; nombre: string }>;
+  placesData: Place[];
 }
 
 const TeamSlot: React.FC<TeamSlotProps> = ({
@@ -107,7 +107,7 @@ const TeamSlot: React.FC<TeamSlotProps> = ({
                       <MapPin className="w-3 h-3 inline-block" />
                       {slot.place === 'unknown'
                         ? 'Desconocido'
-                        : (placesData.find((p) => p.id === slot.place)?.nombre || slot.place)}
+                        : (placesData.find((p) => p.id === slot.place)?.name || slot.place)}
                     </div>
                   )}
           </TooltipContent>

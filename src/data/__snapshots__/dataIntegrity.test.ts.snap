@@ -1864,6 +1864,283 @@ exports[`Data Integrity > should load all pokeballs and have required fields 1`]
 }
 `;
 
+exports[`Data Integrity > should load placesEs and be an array of objects with id and name 1`] = `
+[
+  {
+    "id": "route-201",
+    "name": "Ruta 201",
+  },
+  {
+    "id": "route-202",
+    "name": "Ruta 202",
+  },
+  {
+    "id": "route-203",
+    "name": "Ruta 203",
+  },
+  {
+    "id": "route-204",
+    "name": "Ruta 204",
+  },
+  {
+    "id": "route-205",
+    "name": "Ruta 205",
+  },
+  {
+    "id": "route-206",
+    "name": "Ruta 206",
+  },
+  {
+    "id": "route-207",
+    "name": "Ruta 207",
+  },
+  {
+    "id": "route-208",
+    "name": "Ruta 208",
+  },
+  {
+    "id": "route-209",
+    "name": "Ruta 209",
+  },
+  {
+    "id": "route-210",
+    "name": "Ruta 210",
+  },
+  {
+    "id": "route-211",
+    "name": "Ruta 211",
+  },
+  {
+    "id": "route-212",
+    "name": "Ruta 212",
+  },
+  {
+    "id": "route-213",
+    "name": "Ruta 213",
+  },
+  {
+    "id": "route-214",
+    "name": "Ruta 214",
+  },
+  {
+    "id": "route-215",
+    "name": "Ruta 215",
+  },
+  {
+    "id": "route-216",
+    "name": "Ruta 216",
+  },
+  {
+    "id": "route-217",
+    "name": "Ruta 217",
+  },
+  {
+    "id": "route-218",
+    "name": "Ruta 218",
+  },
+  {
+    "id": "route-219",
+    "name": "Ruta 219",
+  },
+  {
+    "id": "route-220",
+    "name": "Ruta 220",
+  },
+  {
+    "id": "route-221",
+    "name": "Ruta 221",
+  },
+  {
+    "id": "route-222",
+    "name": "Ruta 222",
+  },
+  {
+    "id": "route-223",
+    "name": "Ruta 223",
+  },
+  {
+    "id": "route-224",
+    "name": "Ruta 224",
+  },
+  {
+    "id": "route-225",
+    "name": "Ruta 225",
+  },
+  {
+    "id": "route-226",
+    "name": "Ruta 226",
+  },
+  {
+    "id": "route-227",
+    "name": "Ruta 227",
+  },
+  {
+    "id": "route-228",
+    "name": "Ruta 228",
+  },
+  {
+    "id": "route-229",
+    "name": "Ruta 229",
+  },
+  {
+    "id": "route-230",
+    "name": "Ruta 230",
+  },
+  {
+    "id": "twinleaf-town",
+    "name": "Pueblo Hojaverde",
+  },
+  {
+    "id": "jubilife-city",
+    "name": "Ciudad Jubileo",
+  },
+  {
+    "id": "oreburgh-city",
+    "name": "Ciudad Pirita",
+  },
+  {
+    "id": "eterna-city",
+    "name": "Ciudad Vetusta",
+  },
+  {
+    "id": "hearthome-city",
+    "name": "Ciudad Corazón",
+  },
+  {
+    "id": "veilstone-city",
+    "name": "Ciudad Rocavelo",
+  },
+  {
+    "id": "pastoria-city",
+    "name": "Ciudad Pradera",
+  },
+  {
+    "id": "canalave-city",
+    "name": "Ciudad Canal",
+  },
+  {
+    "id": "sunyshore-city",
+    "name": "Ciudad Marina",
+  },
+  {
+    "id": "snowpoint-city",
+    "name": "Ciudad Puntaneva",
+  },
+  {
+    "id": "celestic-town",
+    "name": "Pueblo Caelestis",
+  },
+  {
+    "id": "floaroma-town",
+    "name": "Pueblo Aromaflor",
+  },
+  {
+    "id": "sandgem-town",
+    "name": "Pueblo Arena",
+  },
+  {
+    "id": "valley-windworks",
+    "name": "Valle Eólico",
+  },
+  {
+    "id": "eterna-forest",
+    "name": "Bosque Vetusto",
+  },
+  {
+    "id": "oreburgh-gate",
+    "name": "Puerta Pirita",
+  },
+  {
+    "id": "oreburgh-mine",
+    "name": "Mina Pirita",
+  },
+  {
+    "id": "fuego-ironworks",
+    "name": "Forja Fuego",
+  },
+  {
+    "id": "mt-coronet",
+    "name": "Monte Corona",
+  },
+  {
+    "id": "wayward-cave",
+    "name": "Cueva Extravío",
+  },
+  {
+    "id": "turnback-cave",
+    "name": "Cueva Retorno",
+  },
+  {
+    "id": "solaceon-ruins",
+    "name": "Ruinas Sosiego",
+  },
+  {
+    "id": "iron-island",
+    "name": "Isla Hierro",
+  },
+  {
+    "id": "sendoff-spring",
+    "name": "Manantial Silencio",
+  },
+  {
+    "id": "verity-lakefront",
+    "name": "Orilla Veraz",
+  },
+  {
+    "id": "valor-lakefront",
+    "name": "Orilla Valor",
+  },
+  {
+    "id": "acuity-lakefront",
+    "name": "Orilla Agudeza",
+  },
+  {
+    "id": "lost-tower",
+    "name": "Torre Perdida",
+  },
+  {
+    "id": "great-marsh",
+    "name": "Gran Pantano",
+  },
+  {
+    "id": "spear-pillar",
+    "name": "Pilar Spear",
+  },
+  {
+    "id": "snowpoint-temple",
+    "name": "Templo Puntaneva",
+  },
+  {
+    "id": "trophy-garden",
+    "name": "Jardín Trofeo",
+  },
+  {
+    "id": "survival-area",
+    "name": "Zona Supervivencia",
+  },
+  {
+    "id": "resort-area",
+    "name": "Zona Resorte",
+  },
+  {
+    "id": "fight-area",
+    "name": "Zona Combate",
+  },
+  {
+    "id": "battle-zone",
+    "name": "Zona de Batalla",
+  },
+  {
+    "id": "victory-road",
+    "name": "Calle Victoria",
+  },
+  {
+    "id": "pokemon-league",
+    "name": "Liga Pokémon",
+  },
+]
+`;
+
 exports[`Data Integrity > should load placesEs and be an array of objects with id and nombre 1`] = `
 [
   {

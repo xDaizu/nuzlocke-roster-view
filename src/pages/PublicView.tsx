@@ -12,12 +12,13 @@ import CarouselSlot from "@/components/CarouselSlot";
 import { Label } from "@/components/ui/label";
 import TeamSlot from "@/components/TeamSlot";
 import React from "react";
-import placesData from "@/data/places_es.json";
 import { pokemonFixtures } from "@/data/fixtures";
 import { translations } from "@/data/translations";
 import { storageService } from "@/services/storageService";
 import { AbilitiesRepository } from '@/repositories/AbilitiesRepository';
 import type { Ability } from '@/types';
+import { PlaceRepository } from '@/repositories/PlaceRepository';
+import type { Place } from '@/types';
 
 interface PanelConfig {
   boxPanel: { columns: number; order: number };
@@ -70,9 +71,15 @@ const PublicView = () => {
   });
   const { toast } = useToast();
   const [abilitiesData, setAbilitiesData] = useState<Ability[]>([]);
+  const [placesData, setPlacesData] = useState<Place[]>([]);
 
   useEffect(() => {
     abilitiesRepo.getAll().then(setAbilitiesData);
+  }, []);
+
+  useEffect(() => {
+    const repo = new PlaceRepository();
+    repo.getAll().then(setPlacesData);
   }, []);
 
   // Filter slots by box type, defaulting to 'other' if no box is set
@@ -246,6 +253,7 @@ const PublicView = () => {
                 otherBox={otherBox}
                 graveyardBox={graveyardBox}
                 intervalSeconds={10}
+                placesData={placesData}
               />
             </div>
           </div>
@@ -369,6 +377,7 @@ const PublicView = () => {
                             }
                             // If slot doesn't exist, there's nothing to clear
                           }}
+                          placesData={placesData}
                         />
                       </div>
                     );

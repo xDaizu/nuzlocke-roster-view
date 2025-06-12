@@ -3,20 +3,23 @@ import { TeamPokemon } from "@/types/pokemon";
 import { getPokemonSpriteUrl, POKEBALL_DATA } from "@/utils/pokemonData";
 import { MapPin, Moon } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import placesData from "@/data/places_es.json";
 import { AbilitiesRepository } from '@/repositories/AbilitiesRepository';
 import type { Ability } from '@/types';
+import { PlaceRepository } from '@/repositories/PlaceRepository';
+import type { Place } from '@/types';
 
 interface CarouselSlotProps {
   otherBox: TeamPokemon[];
   graveyardBox: TeamPokemon[];
   intervalSeconds?: number;
+  placesData: Place[];
 }
 
 const CarouselSlot: React.FC<CarouselSlotProps> = ({ 
   otherBox, 
   graveyardBox, 
-  intervalSeconds = 10 
+  intervalSeconds = 10,
+  placesData
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
@@ -175,7 +178,7 @@ const CarouselSlot: React.FC<CarouselSlotProps> = ({
                 <MapPin className="w-3 h-3 inline-block" />
                 {currentSlot.place === 'unknown'
                   ? 'Desconocido'
-                  : (placesData.find((p) => p.id === currentSlot.place)?.nombre || currentSlot.place)}
+                  : (placesData.find((p) => p.id === currentSlot.place)?.name || currentSlot.place)}
               </div>
             )}
             <div className="text-xs text-slate-400 mt-1">
