@@ -1,10 +1,10 @@
 import { describe, it, expect } from 'vitest';
 import { POKEBALL_DATA } from './pokemon/pokeballs';
 import pokedex from './pokemon/pokedex.json';
-import types from './pokemon/types.json';
 import placesEs from './places_es.json';
 import abilitiesEs from './pokemon/abilities_es.json';
-import type { Ability } from '@/types';
+import { TypeRepository } from '@/repositories/TypeRepository';
+import type { Ability, PokemonType } from '@/types';
 
 // Helper to check object fields and return missing ones
 function getMissingFields(obj: any, fields: string[]) {
@@ -56,15 +56,18 @@ describe('Data Integrity', () => {
     expect(abilitiesData).toMatchSnapshot();
   });
 
-  it('should load types and each entry has weak_to, resistant_to, immune_to', () => {
-    expect(typeof types).toBe('object');
-    Object.entries(types).forEach(([typeName, typeObj]) => {
-      expect(getMissingFields(typeObj, ['weak_to', 'resistant_to', 'immune_to'])).toEqual([]);
-      expect(Array.isArray(typeObj.weak_to)).toBe(true);
-      expect(Array.isArray(typeObj.resistant_to)).toBe(true);
-      expect(Array.isArray(typeObj.immune_to)).toBe(true);
+  it('should load types and each entry matches PokemonType', async () => {
+    const typeRepo = new TypeRepository();
+    const allTypes: PokemonType[] = await typeRepo.getAll();
+    expect(Array.isArray(allTypes)).toBe(true);
+    allTypes.forEach((type, i) => {
+      expect(typeof type.name).toBe('string');
+      expect(type.effectiveness).toBeTypeOf('object');
+      expect(Array.isArray(type.effectiveness.weak_to)).toBe(true);
+      expect(Array.isArray(type.effectiveness.resistant_to)).toBe(true);
+      expect(Array.isArray(type.effectiveness.immune_to)).toBe(true);
     });
-    expect(types).toMatchSnapshot();
+    expect(allTypes).toMatchSnapshot();
   });
 
   it('should load placesEs and be an array of objects with id and nombre', () => {

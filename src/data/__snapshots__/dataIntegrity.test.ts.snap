@@ -18967,3 +18967,291 @@ exports[`Data Integrity > should load types and each entry has weak_to, resistan
   },
 }
 `;
+
+exports[`Data Integrity > should load types and each entry matches PokemonType 1`] = `
+[
+  {
+    "effectiveness": {
+      "immune_to": [
+        "Ghost",
+      ],
+      "resistant_to": [],
+      "weak_to": [
+        "Fighting",
+      ],
+    },
+    "name": "Normal",
+  },
+  {
+    "effectiveness": {
+      "immune_to": [],
+      "resistant_to": [
+        "Fire",
+        "Grass",
+        "Ice",
+        "Bug",
+        "Steel",
+      ],
+      "weak_to": [
+        "Water",
+        "Rock",
+        "Ground",
+      ],
+    },
+    "name": "Fire",
+  },
+  {
+    "effectiveness": {
+      "immune_to": [],
+      "resistant_to": [
+        "Fire",
+        "Water",
+        "Ice",
+        "Steel",
+      ],
+      "weak_to": [
+        "Electric",
+        "Grass",
+      ],
+    },
+    "name": "Water",
+  },
+  {
+    "effectiveness": {
+      "immune_to": [],
+      "resistant_to": [
+        "Electric",
+        "Flying",
+        "Steel",
+      ],
+      "weak_to": [
+        "Ground",
+      ],
+    },
+    "name": "Electric",
+  },
+  {
+    "effectiveness": {
+      "immune_to": [],
+      "resistant_to": [
+        "Water",
+        "Electric",
+        "Grass",
+        "Ground",
+      ],
+      "weak_to": [
+        "Fire",
+        "Ice",
+        "Poison",
+        "Flying",
+        "Bug",
+      ],
+    },
+    "name": "Grass",
+  },
+  {
+    "effectiveness": {
+      "immune_to": [],
+      "resistant_to": [
+        "Ice",
+      ],
+      "weak_to": [
+        "Fire",
+        "Fighting",
+        "Rock",
+        "Steel",
+      ],
+    },
+    "name": "Ice",
+  },
+  {
+    "effectiveness": {
+      "immune_to": [],
+      "resistant_to": [
+        "Bug",
+        "Rock",
+        "Dark",
+      ],
+      "weak_to": [
+        "Flying",
+        "Psychic",
+      ],
+    },
+    "name": "Fighting",
+  },
+  {
+    "effectiveness": {
+      "immune_to": [],
+      "resistant_to": [
+        "Grass",
+        "Fighting",
+        "Poison",
+        "Bug",
+      ],
+      "weak_to": [
+        "Ground",
+        "Psychic",
+      ],
+    },
+    "name": "Poison",
+  },
+  {
+    "effectiveness": {
+      "immune_to": [
+        "Electric",
+      ],
+      "resistant_to": [
+        "Poison",
+        "Rock",
+      ],
+      "weak_to": [
+        "Water",
+        "Ice",
+        "Grass",
+      ],
+    },
+    "name": "Ground",
+  },
+  {
+    "effectiveness": {
+      "immune_to": [
+        "Ground",
+      ],
+      "resistant_to": [
+        "Grass",
+        "Fighting",
+        "Bug",
+      ],
+      "weak_to": [
+        "Electric",
+        "Ice",
+        "Rock",
+      ],
+    },
+    "name": "Flying",
+  },
+  {
+    "effectiveness": {
+      "immune_to": [],
+      "resistant_to": [
+        "Fighting",
+        "Psychic",
+      ],
+      "weak_to": [
+        "Bug",
+        "Ghost",
+        "Dark",
+      ],
+    },
+    "name": "Psychic",
+  },
+  {
+    "effectiveness": {
+      "immune_to": [],
+      "resistant_to": [
+        "Grass",
+        "Fighting",
+        "Ground",
+      ],
+      "weak_to": [
+        "Fire",
+        "Flying",
+        "Rock",
+      ],
+    },
+    "name": "Bug",
+  },
+  {
+    "effectiveness": {
+      "immune_to": [],
+      "resistant_to": [
+        "Normal",
+        "Fire",
+        "Poison",
+        "Flying",
+      ],
+      "weak_to": [
+        "Water",
+        "Grass",
+        "Fighting",
+        "Ground",
+        "Steel",
+      ],
+    },
+    "name": "Rock",
+  },
+  {
+    "effectiveness": {
+      "immune_to": [
+        "Normal",
+        "Fighting",
+      ],
+      "resistant_to": [
+        "Poison",
+        "Bug",
+      ],
+      "weak_to": [
+        "Ghost",
+        "Dark",
+      ],
+    },
+    "name": "Ghost",
+  },
+  {
+    "effectiveness": {
+      "immune_to": [],
+      "resistant_to": [
+        "Fire",
+        "Water",
+        "Electric",
+        "Grass",
+      ],
+      "weak_to": [
+        "Ice",
+        "Dragon",
+      ],
+    },
+    "name": "Dragon",
+  },
+  {
+    "effectiveness": {
+      "immune_to": [
+        "Psychic",
+      ],
+      "resistant_to": [
+        "Ghost",
+        "Dark",
+      ],
+      "weak_to": [
+        "Fighting",
+        "Bug",
+      ],
+    },
+    "name": "Dark",
+  },
+  {
+    "effectiveness": {
+      "immune_to": [
+        "Poison",
+      ],
+      "resistant_to": [
+        "Normal",
+        "Grass",
+        "Ice",
+        "Flying",
+        "Psychic",
+        "Bug",
+        "Rock",
+        "Dragon",
+        "Steel",
+      ],
+      "weak_to": [
+        "Fire",
+        "Fighting",
+        "Ground",
+      ],
+    },
+    "name": "Steel",
+  },
+]
+`;

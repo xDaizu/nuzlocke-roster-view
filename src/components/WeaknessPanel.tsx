@@ -1,10 +1,11 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Shield, Zap, X } from "lucide-react";
-import typesData from "@/data/pokemon/types.json";
+import { TypeRepository } from '@/repositories/TypeRepository';
+import type { PokemonType } from '@/types';
 import AutocompleteInput from "@/components/AutocompleteInput";
 
 interface WeaknessPanelProps {
@@ -20,8 +21,15 @@ interface TypeEffectiveness {
   immune: string[];        // 0x damage
 }
 
+const typeRepo = new TypeRepository();
+
 const WeaknessPanel: React.FC<WeaknessPanelProps> = ({ allPokemon, translations }) => {
   const [selectedPokemon, setSelectedPokemon] = useState<any>(null);
+  const [allTypes, setAllTypes] = useState<PokemonType[]>([]);
+
+  useEffect(() => {
+    typeRepo.getAll().then(setAllTypes);
+  }, []);
 
   // Prepare autocomplete options
   const pokemonOptions = allPokemon.map(pokemon => ({
@@ -48,17 +56,16 @@ const WeaknessPanel: React.FC<WeaknessPanelProps> = ({ allPokemon, translations 
       return { veryWeak: [], weak: [], resistant: [], veryResistant: [], immune: [] };
     }
 
-    const allTypes = Object.keys(typesData);
     const effectiveness: { [key: string]: number } = {};
 
     // Initialize all types with 1x effectiveness
     allTypes.forEach(type => {
-      effectiveness[type] = 1.0;
+      effectiveness[type.name] = 1.0;
     });
 
     // Apply effectiveness for each of the Pokemon's types (excluding Fairy)
     filteredTypes.forEach(pokemonType => {
-      const typeData = (typesData as any)[pokemonType];
+      const typeData = allTypes.find(type => type.name === pokemonType);
       if (typeData) {
         // Apply weaknesses (2x damage)
         typeData.weak_to?.forEach((attackType: string) => {
