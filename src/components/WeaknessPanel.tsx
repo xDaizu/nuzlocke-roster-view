@@ -298,7 +298,7 @@ const WeaknessPanel: React.FC<WeaknessPanelProps> = ({ allPokemon, translations 
                     {/* 0.5x */}
                     {stab.resistant.length > 0 && (
                       <div>
-                        <span className="font-semibold text-green-400 text-xs">Estos tipos estan bastante a salvo... (maximo 0.75x):</span>{' '}
+                        <span className="font-semibold text-green-600 text-xs">Estos tipos estan bastante a salvo... (0.75x):</span>{' '}
                         <span className="flex flex-wrap gap-1">
                           {stab.resistant.map((type) => (
                             <Badge key={type} className={`${getTypeColor(type)} text-white text-xs`}>
@@ -311,7 +311,7 @@ const WeaknessPanel: React.FC<WeaknessPanelProps> = ({ allPokemon, translations 
                     {/* 0x */}
                     {stab.immune.length > 0 && (
                       <div>
-                        <span className="font-semibold text-gray-400 text-xs">0x:</span>{' '}
+                        <span className="font-semibold text-green-400 text-xs">Imposible recibir daño STAB:</span>{' '}
                         <span className="flex flex-wrap gap-1">
                           {stab.immune.map((type) => (
                             <Badge key={type} className={`${getTypeColor(type)} text-white text-xs`}>
