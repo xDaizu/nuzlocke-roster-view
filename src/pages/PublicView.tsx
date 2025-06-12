@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { TeamPokemon, Pokemon } from "@/types/pokemon";
-import { fetchPokemonData, getPokemonSpriteUrl, POKEBALL_DATA } from "@/utils/pokemonData";
+import { fetchPokemonData, getPokemonSpriteUrl, POKEBALL_DATA, loadFixturesToTeamPokemon } from "@/utils/pokemonData";
 import { useToast } from "@/hooks/use-toast";
 import { 
   PublicHeader, 
@@ -175,34 +175,11 @@ const PublicView = () => {
   const addFixtures = () => {
     console.log('Loading fixtures...');
     const fixtures = pokemonFixtures;
-    
     if (allPokemon.length === 0) {
       console.error('allPokemon is empty! Cannot load fixtures.');
       return;
     }
-
-    // Process all fixtures, not just the first 6
-    const newSlots = fixtures.map((fixture, index) => {
-      const pokemon = allPokemon.find(p => 
-        p.name.english.toLowerCase() === fixture.name.toLowerCase()
-      );
-      
-              return {
-          id: `fixture-slot-${index}`,
-          pokemon: pokemon || null,
-          nickname: fixture.nickname,
-          level: fixture.level || 1,
-          ability: (fixture as any).ability || '',
-          pokeball: (fixture as any).pokeball || 'pokeball',
-          animated: false,
-          staticZoom: 1.5,
-          animatedZoom: 1.5,
-          place: fixture.place || '',
-          box: fixture.box || 'team',
-        };
-    });
-
-    const finalSlots = newSlots.map(slot => ({ ...slot, box: (slot.box === 'team' || slot.box === 'other' || slot.box === 'graveyard') ? slot.box : 'other' } as TeamPokemon));
+    const finalSlots = loadFixturesToTeamPokemon(fixtures, allPokemon);
     setAllSlots(finalSlots);
     console.log('Fixtures loaded successfully!', finalSlots);
   };

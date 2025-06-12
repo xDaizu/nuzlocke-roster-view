@@ -1,6 +1,7 @@
 import { Pokemon } from "@/types/pokemon";
 import { SPRITE_CONFIG } from "@/constants/pokemon";
 import { POKEBALL_DATA } from "@/data/pokemon/pokeballs";
+import type { TeamPokemon } from '../types/pokemon';
 
 // Re-export POKEBALL_DATA for backward compatibility
 export { POKEBALL_DATA };
@@ -34,3 +35,43 @@ export const fetchPokemonData = async (importFn?: () => Promise<{ default: Pokem
     return [];
   }
 };
+
+/**
+ * Loads fixtures and transforms them into TeamPokemon[] using the same logic as the app.
+ * @param fixtures - The raw fixture data
+ * @param allPokemon - The full list of Pokemon
+ */
+export function loadFixturesToTeamPokemon(
+  fixtures: any[],
+  allPokemon: Pokemon[]
+): TeamPokemon[] {
+  const newSlots = fixtures.map((fixture, index) => {
+    const pokemon = allPokemon.find(p =>
+      p.name.english.toLowerCase() === fixture.name.toLowerCase()
+    );
+
+    // Accept both 'other' and 'pc' as 'other' for box
+    let box: 'team' | 'other' | 'graveyard' = 'team';
+    if (fixture.box === 'team' || fixture.box === 'graveyard') {
+      box = fixture.box;
+    } else {
+      box = 'other';
+    }
+
+    return {
+      id: `fixture-slot-${index}`,
+      pokemon: pokemon || null,
+      nickname: fixture.nickname,
+      level: fixture.level || 1,
+      ability: fixture.ability || '',
+      pokeball: fixture.pokeball || 'pokeball',
+      animated: false,
+      staticZoom: 1.5,
+      animatedZoom: 1.5,
+      place: fixture.place || '',
+      box,
+    };
+  });
+
+  return newSlots;
+}
