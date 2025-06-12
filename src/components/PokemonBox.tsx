@@ -1,4 +1,3 @@
-
 import React from "react";
 import { TeamPokemon } from "@/types/pokemon";
 import { getPokemonSpriteUrl } from "@/utils/pokemonData";
@@ -37,14 +36,16 @@ const PokemonBox: React.FC<PokemonBoxProps> = ({
   } else if (isDynamicBox) {
     // Dynamic boxes: show pokemon + minimal empty slots for interaction, max 200
     const pokemonCount = slots.filter(slot => slot.pokemon).length;
-    
+    const slotsPerRow = columnSpan * 2;
     if (pokemonCount === 0) {
-      // If no Pokemon, show 0 slots
-      targetSlotCount = 0;
+      // If no Pokemon, show a full row of empty slots
+      targetSlotCount = slotsPerRow;
     } else {
-      // Find the next multiple of "slots per row" and fill to that
-      const slotsPerRow = columnSpan * 2;
-      const nextMultiple = Math.ceil(pokemonCount / slotsPerRow) * slotsPerRow;
+      // Always at least one empty slot
+      let nextMultiple = Math.ceil((pokemonCount + 1) / slotsPerRow) * slotsPerRow;
+      if (pokemonCount % slotsPerRow === 0) {
+        nextMultiple = pokemonCount + slotsPerRow;
+      }
       targetSlotCount = Math.min(nextMultiple, 200);
     }
   } else {
@@ -103,23 +104,19 @@ const PokemonBox: React.FC<PokemonBoxProps> = ({
     }
   };
 
-  // Grid layout logic based on panel column span
+  // Add getGridCols function back
   const getGridCols = () => {
     if (isTeamBox) return 'grid-cols-3'; // Team always 3 columns (2 rows of 3)
-    
     // For dynamic boxes, slots per row = columnSpan * 2
     const slotsPerRow = columnSpan * 2;
-    
-    // Map to Tailwind grid classes
     const gridClasses: Record<number, string> = {
       2: 'grid-cols-2',
-      4: 'grid-cols-4', 
+      4: 'grid-cols-4',
       6: 'grid-cols-6',
       8: 'grid-cols-8',
       10: 'grid-cols-10',
       12: 'grid-cols-12'
     };
-    
     return gridClasses[slotsPerRow] || 'grid-cols-4'; // Default fallback
   };
 
