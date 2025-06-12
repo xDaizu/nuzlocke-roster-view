@@ -180,9 +180,9 @@ const WeaknessPanel: React.FC<WeaknessPanelProps> = ({ allPokemon, translations 
               {/* Very Weak (4x) */}
               {typeEffectiveness.veryWeak.length > 0 && (
                 <div>
-                  <h4 className="text-red-600 font-semibold text-sm mb-2 flex items-center gap-1">
+                  <h4 className="text-green-600 font-semibold text-sm mb-2 flex items-center gap-1">
                     <Zap className="w-4 h-4" />
-                    Muy Débil (4x)
+                    Muy Débil a ataques de tipo: (4x)
                   </h4>
                   <div className="flex flex-wrap gap-1">
                     {typeEffectiveness.veryWeak.map((type) => (
@@ -199,9 +199,9 @@ const WeaknessPanel: React.FC<WeaknessPanelProps> = ({ allPokemon, translations 
               {/* Weak (2x) */}
               {typeEffectiveness.weak.length > 0 && (
                 <div>
-                  <h4 className="text-red-400 font-semibold text-sm mb-2 flex items-center gap-1">
+                  <h4 className="text-green-400 font-semibold text-sm mb-2 flex items-center gap-1">
                     <Zap className="w-4 h-4" />
-                    Débil (2x)
+                    Débil a ataques de tipo:(2x)
                   </h4>
                   <div className="flex flex-wrap gap-1">
                     {typeEffectiveness.weak.map((type) => (
@@ -218,9 +218,9 @@ const WeaknessPanel: React.FC<WeaknessPanelProps> = ({ allPokemon, translations 
               {/* Resistant (0.5x) */}
               {typeEffectiveness.resistant.length > 0 && (
                 <div>
-                  <h4 className="text-green-400 font-semibold text-sm mb-2 flex items-center gap-1">
+                  <h4 className="text-red-400 font-semibold text-sm mb-2 flex items-center gap-1">
                     <Shield className="w-4 h-4" />
-                    Resistente (0.5x)
+                    Resistente contra ataques de tipo: (0.5x)
                   </h4>
                   <div className="flex flex-wrap gap-1">
                     {typeEffectiveness.resistant.map((type) => (
@@ -237,9 +237,9 @@ const WeaknessPanel: React.FC<WeaknessPanelProps> = ({ allPokemon, translations 
               {/* Very Resistant (0.25x) */}
               {typeEffectiveness.veryResistant.length > 0 && (
                 <div>
-                  <h4 className="text-green-600 font-semibold text-sm mb-2 flex items-center gap-1">
+                  <h4 className="text-red-600 font-semibold text-sm mb-2 flex items-center gap-1">
                     <Shield className="w-4 h-4" />
-                    Muy Resistente (0.25x)
+                    Muy resistente contra ataques de tipo: (0.25x)
                   </h4>
                   <div className="flex flex-wrap gap-1">
                     {typeEffectiveness.veryResistant.map((type) => (
@@ -276,7 +276,7 @@ const WeaknessPanel: React.FC<WeaknessPanelProps> = ({ allPokemon, translations 
             {/* STAB Section */}
             <div className="space-y-3 mt-6">
               <h4 className="text-purple-400 font-semibold text-sm mb-2 flex items-center gap-1">
-                STAB (Same Type Attack Bonus)
+                Peligro STAB al atacar...
               </h4>
               {(() => {
                 const stab = getStabEffectiveness(selectedPokemon.type);
@@ -285,7 +285,7 @@ const WeaknessPanel: React.FC<WeaknessPanelProps> = ({ allPokemon, translations 
                     {/* 2x */}
                     {stab.weak.length > 0 && (
                       <div>
-                        <span className="font-semibold text-green-400 text-xs">2x:</span>{' '}
+                        <span className="font-semibold text-red-400 text-xs">Ojito con sacar estos (les hace 3x):</span>{' '}
                         <span className="flex flex-wrap gap-1">
                           {stab.weak.map((type) => (
                             <Badge key={type} className={`${getTypeColor(type)} text-white text-xs`}>
@@ -298,7 +298,7 @@ const WeaknessPanel: React.FC<WeaknessPanelProps> = ({ allPokemon, translations 
                     {/* 0.5x */}
                     {stab.resistant.length > 0 && (
                       <div>
-                        <span className="font-semibold text-yellow-400 text-xs">0.5x:</span>{' '}
+                        <span className="font-semibold text-green-400 text-xs">Estos tipos estan bastante a salvo... (maximo 0.75x):</span>{' '}
                         <span className="flex flex-wrap gap-1">
                           {stab.resistant.map((type) => (
                             <Badge key={type} className={`${getTypeColor(type)} text-white text-xs`}>
