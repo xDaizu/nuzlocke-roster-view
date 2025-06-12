@@ -6,50 +6,55 @@ export interface StabEffectiveness {
   immune: string[];    // 0x
 }
 
+function calculateDamageModifier(attackingType: string, defendingType: string): number {
+  const defender = typesData[defendingType];
+  if (!defender) {
+    throw new Error(`Unknown defending type: ${defendingType}`);
+  }
+
+  if (defender.weak_to.includes(attackingType)) {
+    return 2;
+  } else if (defender.resistant_to.includes(attackingType)) {
+    return 0.5;
+  } else if (defender.immune_to.includes(attackingType)) {
+    return 0;
+  } else {
+    return 1;
+  }
+}
+
 /**
  * For a given set of types, returns all types that are weak (2x), resistant (0.5x), or immune (0x) to attacks of any of those types.
- * For each defending type, show the best effectiveness (2x > 1x > 0.5x > 0x) that any attacking type can achieve.
+ * For each defending type, take the maximum effectiveness across all attacking types (2 > 1 > 0.5 > 0).
+ * Classify by max effectiveness: 2x goes to weak, 0.5x to resistant, 0x to immune. Skip 1x. Immune only if all attacking types do 0x.
  */
-export function getStabEffectiveness(types: string[]): StabEffectiveness {
+export function getStabEffectiveness(attackingTypes: string[]): StabEffectiveness {
+  const weak: string[] = [];
+  const resistant: string[] = [];
+  const immune: string[] = [];
   const allTypes = Object.keys(typesData);
-  const bestEffect: Record<string, number> = {};
 
-  for (const defendType of allTypes) {
-    let max = 1;
-    let allHalf = true;
+  for (const defendingType of allTypes) {
+    let maxEffectiveness = 0;
     let allZero = true;
-    for (const attackType of types) {
-      const data = (typesData as any)[attackType];
-      if (!data) continue;
-      if (data.weak_to?.includes(defendType)) {
-        max = Math.max(max, 2);
-        allHalf = false;
-        allZero = false;
-      } else if (data.resistant_to?.includes(defendType)) {
-        max = Math.max(max, 0.5);
-        allZero = false;
-      } else if (data.immune_to?.includes(defendType)) {
-        max = Math.max(max, 0);
-        allHalf = false;
-      } else {
-        allHalf = false;
-        allZero = false;
-      }
+    for (const attackingType of attackingTypes) {
+      const effectiveness = calculateDamageModifier(attackingType, defendingType);
+      if (effectiveness !== 0) allZero = false;
+      maxEffectiveness = Math.max(maxEffectiveness, effectiveness);
     }
-    // 2x if any type is 2x
-    if (max === 2) {
-      bestEffect[defendType] = 2;
-    } else if (allHalf) {
-      bestEffect[defendType] = 0.5;
+    if (maxEffectiveness === 2) {
+      weak.push(defendingType);
+    } else if (maxEffectiveness === 0.5) {
+      resistant.push(defendingType);
     } else if (allZero) {
-      bestEffect[defendType] = 0;
+      immune.push(defendingType);
     }
-    // else: not included (1x or mixed)
+    // skip 1x
   }
 
   return {
-    weak: Object.keys(bestEffect).filter(t => bestEffect[t] === 2).sort(),
-    resistant: Object.keys(bestEffect).filter(t => bestEffect[t] === 0.5).sort(),
-    immune: Object.keys(bestEffect).filter(t => bestEffect[t] === 0).sort(),
+    weak: weak.sort(),
+    resistant: resistant.sort(),
+    immune: immune.sort(),
   };
-} 
+}
