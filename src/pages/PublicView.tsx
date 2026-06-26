@@ -74,7 +74,7 @@ const PublicView = () => {
             setAllSlots(savedSlots);
             toast({
               title: translations.messages.teamLoaded,
-              description: "Datos guardados cargados automáticamente",
+              description: translations.messages.autoLoaded,
               variant: "default"
             });
           }
@@ -155,7 +155,7 @@ const PublicView = () => {
           onClick={exportTeamToClipboard}
           className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow"
         >
-          Export Team to Clipboard
+          {translations.buttons.exportClipboard}
         </button>
       </div>
       {/* Team Box Header */}

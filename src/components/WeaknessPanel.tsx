@@ -150,7 +150,7 @@ const WeaknessPanel: React.FC<WeaknessPanelProps> = ({ allPokemon, translations 
       <CardHeader className="pb-3">
         <CardTitle className="text-purple-300 text-lg flex items-center gap-2">
           <Shield className="w-5 h-5" />
-          Análisis de Tipos
+          {translations.panels.weaknessPanel}
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -163,8 +163,8 @@ const WeaknessPanel: React.FC<WeaknessPanelProps> = ({ allPokemon, translations 
               setSelectedPokemon(pokemon || null);
             }}
             options={pokemonOptions}
-            placeholder="Seleccionar Pokémon"
-            emptyMessage="No Pokémon found"
+            placeholder={translations.weakness.selectPokemon}
+            emptyMessage={translations.weakness.emptyMessage}
           />
         </div>
 
@@ -189,7 +189,7 @@ const WeaknessPanel: React.FC<WeaknessPanelProps> = ({ allPokemon, translations 
                 <div>
                   <h4 className="text-green-600 font-semibold text-sm mb-2 flex items-center gap-1">
                     <Zap className="w-4 h-4" />
-                    Muy Débil a ataques de tipo: (4x)
+                    {translations.weakness.veryWeak}
                   </h4>
                   <div className="flex flex-wrap gap-1">
                     {typeEffectiveness.veryWeak.map((type) => (
@@ -208,7 +208,7 @@ const WeaknessPanel: React.FC<WeaknessPanelProps> = ({ allPokemon, translations 
                 <div>
                   <h4 className="text-green-400 font-semibold text-sm mb-2 flex items-center gap-1">
                     <Zap className="w-4 h-4" />
-                    Débil a ataques de tipo:(2x)
+                    {translations.weakness.weak}
                   </h4>
                   <div className="flex flex-wrap gap-1">
                     {typeEffectiveness.weak.map((type) => (
@@ -227,7 +227,7 @@ const WeaknessPanel: React.FC<WeaknessPanelProps> = ({ allPokemon, translations 
                 <div>
                   <h4 className="text-red-400 font-semibold text-sm mb-2 flex items-center gap-1">
                     <Shield className="w-4 h-4" />
-                    Resistente contra ataques de tipo: (0.5x)
+                    {translations.weakness.resistant}
                   </h4>
                   <div className="flex flex-wrap gap-1">
                     {typeEffectiveness.resistant.map((type) => (
@@ -246,7 +246,7 @@ const WeaknessPanel: React.FC<WeaknessPanelProps> = ({ allPokemon, translations 
                 <div>
                   <h4 className="text-red-600 font-semibold text-sm mb-2 flex items-center gap-1">
                     <Shield className="w-4 h-4" />
-                    Muy resistente contra ataques de tipo: (0.25x)
+                    {translations.weakness.veryResistant}
                   </h4>
                   <div className="flex flex-wrap gap-1">
                     {typeEffectiveness.veryResistant.map((type) => (
@@ -265,7 +265,7 @@ const WeaknessPanel: React.FC<WeaknessPanelProps> = ({ allPokemon, translations 
                 <div>
                   <h4 className="text-purple-400 font-semibold text-sm mb-2 flex items-center gap-1">
                     <X className="w-4 h-4" />
-                    Inmune
+                    {translations.weakness.immune}
                   </h4>
                   <div className="flex flex-wrap gap-1">
                     {typeEffectiveness.immune.map((type) => (
@@ -283,7 +283,7 @@ const WeaknessPanel: React.FC<WeaknessPanelProps> = ({ allPokemon, translations 
             {/* STAB Section */}
             <div className="space-y-3 mt-6">
               <h4 className="text-purple-400 font-semibold text-sm mb-2 flex items-center gap-1">
-                Peligro STAB al atacar...
+                {translations.weakness.stabTitle}
               </h4>
               {(() => {
                 const stab = getStabEffectiveness(selectedPokemon.type);
@@ -292,7 +292,7 @@ const WeaknessPanel: React.FC<WeaknessPanelProps> = ({ allPokemon, translations 
                     {/* 2x */}
                     {stab.weak.length > 0 && (
                       <div>
-                        <span className="font-semibold text-red-400 text-xs">Ojito con sacar estos (les hace 3x):</span>{' '}
+                        <span className="font-semibold text-red-400 text-xs">{translations.weakness.stabWeak}</span>{' '}
                         <span className="flex flex-wrap gap-1">
                           {stab.weak.map((type) => (
                             <Badge key={type} className={`${getTypeColor(type)} text-white text-xs`}>
@@ -305,7 +305,7 @@ const WeaknessPanel: React.FC<WeaknessPanelProps> = ({ allPokemon, translations 
                     {/* 0.5x */}
                     {stab.resistant.length > 0 && (
                       <div>
-                        <span className="font-semibold text-green-600 text-xs">Estos tipos estan bastante a salvo... (0.75x):</span>{' '}
+                        <span className="font-semibold text-green-600 text-xs">{translations.weakness.stabResistant}</span>{' '}
                         <span className="flex flex-wrap gap-1">
                           {stab.resistant.map((type) => (
                             <Badge key={type} className={`${getTypeColor(type)} text-white text-xs`}>
@@ -318,7 +318,7 @@ const WeaknessPanel: React.FC<WeaknessPanelProps> = ({ allPokemon, translations 
                     {/* 0x */}
                     {stab.immune.length > 0 && (
                       <div>
-                        <span className="font-semibold text-green-400 text-xs">Imposible recibir daño STAB:</span>{' '}
+                        <span className="font-semibold text-green-400 text-xs">{translations.weakness.stabImmune}</span>{' '}
                         <span className="flex flex-wrap gap-1">
                           {stab.immune.map((type) => (
                             <Badge key={type} className={`${getTypeColor(type)} text-white text-xs`}>
@@ -336,7 +336,7 @@ const WeaknessPanel: React.FC<WeaknessPanelProps> = ({ allPokemon, translations 
         ) : (
           <div className="text-center text-slate-400 py-8">
             <Shield className="w-12 h-12 mx-auto mb-2 opacity-50" />
-            <p className="text-sm">Selecciona un Pokémon para ver su análisis de tipos</p>
+            <p className="text-sm">{translations.weakness.emptyState}</p>
           </div>
         )}
       </CardContent>

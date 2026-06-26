@@ -155,7 +155,7 @@ const PublicBoxPanel: React.FC<PublicBoxPanelProps> = ({
             onClick={exportTeamToClipboard}
             className="bg-blue-600 hover:bg-blue-700 text-white"
           >
-            Export to Clipboard
+            {translations.buttons.exportClipboard}
           </Button>
         </div>
       </CardFooter>

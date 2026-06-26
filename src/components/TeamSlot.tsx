@@ -2,6 +2,7 @@ import React from "react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { MapPin } from "lucide-react";
 import { Pokemon, TeamPokemon } from "@/types/pokemon";
+import { translations } from "@/data/translations";
 
 interface TeamSlotProps {
   slot: TeamPokemon;
@@ -90,7 +91,7 @@ const TeamSlot: React.FC<TeamSlotProps> = ({
                   <div className="w-16 h-16 bg-slate-700/50 rounded-full mb-1 mx-auto flex items-center justify-center">
                     <span className="text-2xl">?</span>
                   </div>
-                  <div className="text-sm">Vacío</div>
+                  <div className="text-sm">{translations.messages.empty}</div>
                 </div>
               </div>
             )}
@@ -103,7 +104,7 @@ const TeamSlot: React.FC<TeamSlotProps> = ({
                     <div className="flex items-center justify-center gap-1 text-xs text-purple-800 mt-0.5">
                       <MapPin className="w-3 h-3 inline-block" />
                       {slot.place === 'unknown'
-                        ? 'Desconocido'
+                        ? translations.placeholders.unknown
                         : (placesData.find((p) => p.id === slot.place)?.nombre || slot.place)}
                     </div>
                   )}

@@ -18,9 +18,10 @@ export const translations = {
   // Buttons and actions
   buttons: {
     save: "Guardar Backup",
-    load: "Restaurar Backup", 
+    load: "Restaurar Backup",
     clear: "Limpiar",
-    default: "Default"
+    default: "Default",
+    exportClipboard: "Exportar al portapapeles"
   },
 
   // Forms and inputs
@@ -56,7 +57,12 @@ export const translations = {
     error: "Error",
     saveError: "Failed to save team.",
     loadError: "Failed to load team.",
-    pokemonDataError: "Failed to load Pokemon data"
+    pokemonDataError: "Failed to load Pokemon data",
+    autoLoaded: "Datos guardados cargados automáticamente",
+    exported: "¡Exportado!",
+    exportedDesc: "Datos del equipo copiados al portapapeles.",
+    exportError: "No se pudieron copiar los datos del equipo al portapapeles.",
+    empty: "Vacío"
   },
 
   // Placeholders and defaults
@@ -64,6 +70,22 @@ export const translations = {
     noName: "Sin nombre",
     unknown: "Desconocido",
     pokemonCount: "Pokémon"
+  },
+
+  // Weakness / type-analysis panel
+  weakness: {
+    selectPokemon: "Seleccionar Pokémon",
+    emptyMessage: "No Pokémon found",
+    emptyState: "Selecciona un Pokémon para ver su análisis de tipos",
+    veryWeak: "Muy Débil a ataques de tipo: (4x)",
+    weak: "Débil a ataques de tipo:(2x)",
+    resistant: "Resistente contra ataques de tipo: (0.5x)",
+    veryResistant: "Muy resistente contra ataques de tipo: (0.25x)",
+    immune: "Inmune",
+    stabTitle: "Peligro STAB al atacar...",
+    stabWeak: "Ojito con sacar estos (les hace 3x):",
+    stabResistant: "Estos tipos estan bastante a salvo... (0.75x):",
+    stabImmune: "Imposible recibir daño STAB:"
   },
 
   // Configuration

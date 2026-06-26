@@ -2,6 +2,7 @@ import React from "react";
 import { TeamPokemon } from "@/types/pokemon";
 import { getPokemonSpriteUrl } from "@/utils/pokemonData";
 import { createEmptySlot } from "@/utils/slots";
+import { translations } from "@/data/translations";
 
 interface PokemonBoxProps {
   title: string;
@@ -76,7 +77,7 @@ const PokemonBox: React.FC<PokemonBoxProps> = ({
       <h3 className="text-purple-300 font-medium mb-3 text-sm">{title}</h3>
       {targetSlotCount === 0 ? (
         <div className="text-center text-slate-400 py-4 text-xs">
-          Vacío
+          {translations.messages.empty}
         </div>
       ) : (
         <div className={`grid gap-2 ${getGridCols()}`}>
