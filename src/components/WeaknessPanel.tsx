@@ -7,11 +7,18 @@ import { Shield, Zap, X } from "lucide-react";
 import typesData from "@/data/types.json";
 import AutocompleteInput from "@/components/AutocompleteInput";
 import { getStabEffectiveness } from '@/services/stabService';
+import { Pokemon } from "@/types/pokemon";
+import { Translations } from "@/data/translations";
 
 interface WeaknessPanelProps {
-  allPokemon: any[];
-  translations: any;
+  allPokemon: Pokemon[];
+  translations: Translations;
 }
+
+type TypeChart = Record<
+  string,
+  { weak_to?: string[]; resistant_to?: string[]; immune_to?: string[] }
+>;
 
 interface TypeEffectiveness {
   veryWeak: string[];      // 4x damage
@@ -22,7 +29,7 @@ interface TypeEffectiveness {
 }
 
 const WeaknessPanel: React.FC<WeaknessPanelProps> = ({ allPokemon, translations }) => {
-  const [selectedPokemon, setSelectedPokemon] = useState<any>(null);
+  const [selectedPokemon, setSelectedPokemon] = useState<Pokemon | null>(null);
 
   // Prepare autocomplete options
   const pokemonOptions = allPokemon.map(pokemon => ({
@@ -59,7 +66,7 @@ const WeaknessPanel: React.FC<WeaknessPanelProps> = ({ allPokemon, translations 
 
     // Apply effectiveness for each of the Pokemon's types (excluding Fairy)
     filteredTypes.forEach(pokemonType => {
-      const typeData = (typesData as any)[pokemonType];
+      const typeData = (typesData as TypeChart)[pokemonType];
       if (typeData) {
         // Apply weaknesses (2x damage)
         typeData.weak_to?.forEach((attackType: string) => {

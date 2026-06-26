@@ -1,12 +1,13 @@
 import React from "react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { MapPin } from "lucide-react";
+import { Pokemon, TeamPokemon } from "@/types/pokemon";
 
 interface TeamSlotProps {
-  slot: any;
+  slot: TeamPokemon;
   index: number;
-  updateSlot: (index: number, updates: Partial<any>) => void;
-  getPokemonSpriteUrl: (pokemon: any, animated: boolean) => string;
+  updateSlot: (index: number, updates: Partial<TeamPokemon>) => void;
+  getPokemonSpriteUrl: (pokemon: Pokemon, animated: boolean) => string;
   pokeballData: Record<string, { image: string; name: string }>;
   abilitiesData: Array<{ slug: string; name: string; description: string }>;
   placesData: Array<{ id: string; nombre: string }>;
