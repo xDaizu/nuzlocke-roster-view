@@ -76,28 +76,22 @@ const PublicView = () => {
       try {
         const pokemonData = await fetchPokemonData();
         setAllPokemon(pokemonData);
-        console.log('Loaded Pokemon data:', pokemonData.length, 'entries');
-        
+
         // Check for saved data and load it automatically
         try {
           const savedSlots = storageService.loadTeam();
           if (savedSlots && savedSlots.length > 0) {
-            console.log('Found saved data, loading automatically:', savedSlots.length, 'slots');
             setAllSlots(savedSlots);
             toast({
               title: translations.messages.teamLoaded,
               description: "Datos guardados cargados automáticamente",
               variant: "default"
             });
-          } else {
-            console.log('No saved data found, using default empty slots');
           }
         } catch (loadError) {
-          console.error('Error loading saved data:', loadError);
           // Don't show error toast for failed auto-load, just continue with empty slots
         }
       } catch (error) {
-        console.error('Error initializing data:', error);
         toast({
           title: translations.messages.error,
           description: translations.messages.pokemonDataError,
@@ -117,7 +111,6 @@ const PublicView = () => {
 
   const updateSlot = (slotIndex: number, updates: Partial<TeamPokemon>) => {
     if (slotIndex < 0 || slotIndex >= allSlots.length) {
-      console.error('Invalid slot index:', slotIndex, 'allSlots length:', allSlots.length);
       return;
     }
     
@@ -148,11 +141,9 @@ const PublicView = () => {
   };
 
   const addFixtures = () => {
-    console.log('Loading fixtures...');
     const fixtures = pokemonFixtures;
-    
+
     if (allPokemon.length === 0) {
-      console.error('allPokemon is empty! Cannot load fixtures.');
       return;
     }
 
@@ -179,7 +170,6 @@ const PublicView = () => {
 
     const finalSlots = newSlots.map(slot => ({ ...slot, box: (slot.box === 'team' || slot.box === 'other' || slot.box === 'graveyard') ? slot.box : 'other' } as TeamPokemon));
     setAllSlots(finalSlots);
-    console.log('Fixtures loaded successfully!', finalSlots);
   };
 
   // Export team data to clipboard
@@ -283,10 +273,9 @@ const PublicView = () => {
                           graveyardBox={graveyardBox}
                           selectedSlot={selectedSlot}
                           selectedBox={selectedBox}
-                          onSlotClick={(box, idx) => { 
-                            console.log('Slot clicked:', box, idx);
-                            setSelectedBox(box); 
-                            setSelectedSlot(idx); 
+                          onSlotClick={(box, idx) => {
+                            setSelectedBox(box);
+                            setSelectedSlot(idx);
                           }}
                           onAddFixtures={addFixtures}
                           setTeam={setAllSlots}
@@ -302,15 +291,7 @@ const PublicView = () => {
                             (() => {
                               const targetSlots = selectedBox === 'team' ? team : selectedBox === 'other' ? otherBox : graveyardBox;
                               let targetSlot = targetSlots[selectedSlot];
-                              
-                              console.log('Current slot selection:', {
-                                selectedBox,
-                                selectedSlot,
-                                targetSlotsLength: targetSlots.length,
-                                targetSlot: targetSlot ? 'exists' : 'null',
-                                targetSlotId: targetSlot?.id
-                              });
-                              
+
                               // If slot doesn't exist, return a default empty slot
                               if (!targetSlot) {
                                 const newSlotId = `${selectedBox}-${selectedSlot}`;
@@ -327,9 +308,8 @@ const PublicView = () => {
                                   place: '',
                                   box: selectedBox,
                                 };
-                                console.log('Created placeholder slot:', targetSlot);
                               }
-                              
+
                               return targetSlot;
                             })()
                           }
@@ -344,8 +324,6 @@ const PublicView = () => {
                               const actualIndex = allSlots.findIndex(slot => slot.id === targetSlot.id);
                               if (actualIndex !== -1) {
                                 updateSlot(actualIndex, updates);
-                              } else {
-                                console.error('Could not find slot in allSlots:', targetSlot.id);
                               }
                             } else {
                               // Create a new slot and add it to allSlots
@@ -365,7 +343,6 @@ const PublicView = () => {
                                 ...updates
                               };
                               setAllSlots(prev => [...prev, newSlot]);
-                              console.log('Created new slot:', newSlot);
                             }
                           }}
                           onClear={() => {
