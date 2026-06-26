@@ -12,7 +12,7 @@ export const exportTeamToClipboard = async (): Promise<void> => {
       description: translations.messages.exportedDesc,
       variant: 'default',
     });
-  } catch (err) {
+  } catch {
     toast({
       title: translations.messages.error,
       description: translations.messages.exportError,

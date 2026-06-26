@@ -16,7 +16,7 @@ export function usePokemonData() {
       try {
         const pokemonData = await fetchPokemonData();
         setAllPokemon(pokemonData);
-      } catch (error) {
+      } catch {
         toast({
           title: translations.messages.error,
           description: translations.messages.pokemonDataError,

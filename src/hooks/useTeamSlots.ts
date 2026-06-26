@@ -31,7 +31,7 @@ export function useTeamSlots(allPokemon: Pokemon[]) {
           variant: "default",
         });
       }
-    } catch (loadError) {
+    } catch {
       // Don't show error toast for failed auto-load, just continue with empty slots
     }
   }, [toast]);
@@ -51,7 +51,7 @@ export function useTeamSlots(allPokemon: Pokemon[]) {
   };
 
   const clearSlot = (slotIndex: number) => {
-    const { id, ...defaults } = createEmptySlot('', 'team');
+    const { id: _id, ...defaults } = createEmptySlot('', 'team');
     updateSlot(slotIndex, defaults);
     toast({
       title: translations.messages.slotCleared,

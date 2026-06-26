@@ -44,7 +44,7 @@ const PublicBoxPanel: React.FC<PublicBoxPanelProps> = ({
         description: translations.messages.teamSavedDesc,
         variant: "default"
       });
-    } catch (error) {
+    } catch {
       toast({
         title: translations.messages.error,
         description: translations.messages.saveError,
@@ -70,7 +70,7 @@ const PublicBoxPanel: React.FC<PublicBoxPanelProps> = ({
           variant: "destructive"
         });
       }
-    } catch (error) {
+    } catch {
       toast({
         title: translations.messages.error,
         description: translations.messages.loadError,

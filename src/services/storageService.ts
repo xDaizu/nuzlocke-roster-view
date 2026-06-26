@@ -20,7 +20,7 @@ const isLocalStorageAvailable = (): boolean => {
     const result = localStorage.getItem(testKey);
     localStorage.removeItem(testKey);
     return result === testKey;
-  } catch (e) {
+  } catch {
     return false;
   }
 };
@@ -47,7 +47,7 @@ const hasEnoughStorageSpace = (dataSize: number): boolean => {
           break;
         }
       }
-    } catch (e) {
+    } catch {
       quotaExceeded = true;
     }
     
@@ -56,7 +56,7 @@ const hasEnoughStorageSpace = (dataSize: number): boolean => {
     
     // If we can store more than the requested size, we have enough space
     return testData.length > dataSize;
-  } catch (e) {
+  } catch {
     return false;
   }
 };
