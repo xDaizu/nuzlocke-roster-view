@@ -10,7 +10,7 @@ interface TeamSlotProps {
   updateSlot: (index: number, updates: Partial<TeamPokemon>) => void;
   getPokemonSpriteUrl: (pokemon: Pokemon, animated: boolean) => string;
   pokeballData: Record<string, { image: string; name: string }>;
-  abilitiesData: Array<{ slug: string; name: string; description: string }>;
+  abilitiesData: Array<{ slug: string; name: string; description: string | null }>;
   placesData: Array<{ id: string; nombre: string }>;
 }
 

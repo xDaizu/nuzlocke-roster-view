@@ -13,7 +13,7 @@ const PlacesPanel: React.FC<PlacesPanelProps> = ({ allSlots, placesData }) => {
   // Get unique places from all Pokemon that have places and Pokemon assigned
   const uniquePlaces = allSlots
     .filter(slot => slot.pokemon && slot.place && slot.place !== '')
-    .map(slot => slot.place)
+    .map(slot => slot.place as string)
     .filter((place, index, array) => array.indexOf(place) === index)
     .sort();
 

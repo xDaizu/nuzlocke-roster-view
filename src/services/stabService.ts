@@ -1,5 +1,12 @@
 import typesData from '@/data/types.json';
 
+type TypeChart = Record<
+  string,
+  { weak_to: string[]; resistant_to: string[]; immune_to: string[] }
+>;
+
+const typeChart = typesData as TypeChart;
+
 export interface StabEffectiveness {
   weak: string[];      // 2x
   resistant: string[]; // 0.5x
@@ -7,7 +14,7 @@ export interface StabEffectiveness {
 }
 
 function calculateDamageModifier(attackingType: string, defendingType: string): number {
-  const defender = typesData[defendingType];
+  const defender = typeChart[defendingType];
   if (!defender) {
     throw new Error(`Unknown defending type: ${defendingType}`);
   }
