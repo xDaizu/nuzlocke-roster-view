@@ -11,6 +11,7 @@
     "typecheck": "tsc -b",
     "format": "prettier --write \"src/**/*.{ts,tsx}\"",
     "format:check": "prettier --check \"src/**/*.{ts,tsx}\"",
+    "gen:places": "node scripts/generate-places.mjs",
     "test": "vitest",
     "preview": "vite preview",
     "postbuild": "cp dist/index.html dist/404.html",

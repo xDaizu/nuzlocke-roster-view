@@ -4,9 +4,10 @@ import PublicBoxPanel from "@/components/PublicBoxPanel";
 import PublicSlotEditor from "@/components/PublicSlotEditor";
 import PlacesPanel from "@/components/PlacesPanel";
 import PanelConfigPanel from "@/components/PanelConfigPanel";
+import AppConfigPanel from "@/components/AppConfigPanel";
 import WeaknessPanel from "@/components/WeaknessPanel";
 import TeamHeader from "@/components/TeamHeader";
-import placesData from "@/data/places_es.json";
+import { DEFAULT_REGION, RegionId, getPlacesForRegion } from "@/data/regions";
 import { translations } from "@/data/translations";
 import { exportTeamToClipboard } from "@/utils/clipboard";
 import { getColSpanClass } from "@/utils/panelLayout";
@@ -31,12 +32,16 @@ const PublicView = () => {
     clearSelectedSlot,
   } = useTeamSlots(allPokemon);
 
+  const [selectedRegion, setSelectedRegion] = useState<RegionId>(DEFAULT_REGION);
+  const placesData = getPlacesForRegion(selectedRegion);
+
   const [panelConfig, setPanelConfig] = useState<PanelConfig>({
     boxPanel: { columns: 2, order: 1 },
     slotEditor: { columns: 2, order: 2 },
     placesPanel: { columns: 2, order: 3 },
     weaknessPanel: { columns: 2, order: 4 },
-    configPanel: { columns: 2, order: 5 }
+    configPanel: { columns: 2, order: 5 },
+    appConfigPanel: { columns: 2, order: 6 }
   });
 
   if (isLoading) {
@@ -59,7 +64,7 @@ const PublicView = () => {
         </button>
       </div>
 
-      <TeamHeader team={team} allSlots={allSlots} updateSlot={updateSlot} />
+      <TeamHeader team={team} allSlots={allSlots} updateSlot={updateSlot} placesData={placesData} />
 
       {/* Main Content with Top Padding */}
       <div className="pt-[170px] p-4">
@@ -98,6 +103,7 @@ const PublicView = () => {
                           selectedSlot={selectedSlot}
                           onUpdate={updateSelectedSlot}
                           onClear={clearSelectedSlot}
+                          placesData={placesData}
                         />
                       </div>
                     );
@@ -125,6 +131,15 @@ const PublicView = () => {
                         <PanelConfigPanel
                           config={panelConfig}
                           onConfigChange={setPanelConfig}
+                        />
+                      </div>
+                    );
+                  case 'appConfigPanel':
+                    return (
+                      <div key={panelKey} className={colSpanClass}>
+                        <AppConfigPanel
+                          region={selectedRegion}
+                          onRegionChange={setSelectedRegion}
                         />
                       </div>
                     );

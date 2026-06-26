@@ -5,7 +5,8 @@ export const translations = {
     slotEditor: "Editor",
     placesPanel: "Lugares con captura",
     weaknessPanel: "Análisis de Tipos",
-    configPanel: "Configuración de Paneles"
+    configPanel: "Configuración de Paneles",
+    appConfigPanel: "Configuración de la app"
   },
 
   // Box types
@@ -94,6 +95,12 @@ export const translations = {
     exceedsColumns: "⚠️ El total excede 6 columnas",
     columnsSingular: "columna",
     columnsPlural: "columnas"
+  },
+
+  // App-wide configuration (region, etc.)
+  appConfig: {
+    region: "Región",
+    regionDescription: "Selecciona la región de tu partida"
   }
 } as const;
 

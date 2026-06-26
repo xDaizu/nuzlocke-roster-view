@@ -47,4 +47,5 @@ export interface PanelConfig {
   placesPanel: { columns: number; order: number };
   weaknessPanel: { columns: number; order: number };
   configPanel: { columns: number; order: number };
+  appConfigPanel: { columns: number; order: number };
 }
