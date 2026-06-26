@@ -5,6 +5,7 @@ export interface Pokemon {
     japanese?: string;
     chinese?: string;
     french?: string;
+    spanish?: string;
   };
   type: string[];
   base: {
@@ -17,6 +18,8 @@ export interface Pokemon {
   };
 }
 
+export type BoxType = 'team' | 'other' | 'graveyard';
+
 export interface TeamPokemon {
   id: string;
   pokemon: Pokemon | null;
@@ -28,7 +31,7 @@ export interface TeamPokemon {
   staticZoom: number; // 1.0 = normal, 1.5 = 150% zoom for static sprites
   animatedZoom: number; // 1.0 = normal, 1.5 = 150% zoom for animated sprites
   place?: string; // Optional, can be empty or 'unknown'
-  box: 'team' | 'other' | 'graveyard';
+  box: BoxType;
 }
 
 export type PokeballType = 'pokeball' | 'superball' | 'sanaball';

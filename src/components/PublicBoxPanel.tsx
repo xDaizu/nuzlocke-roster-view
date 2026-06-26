@@ -8,6 +8,7 @@ import { Save, ArchiveRestore, Package } from "lucide-react";
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 import { useToast } from "@/hooks/use-toast";
 import { translations } from "@/data/translations";
+import { exportTeamToClipboard } from "@/utils/clipboard";
 
 interface PublicBoxPanelProps {
   team: TeamPokemon[];
@@ -74,25 +75,6 @@ const PublicBoxPanel: React.FC<PublicBoxPanelProps> = ({
         title: translations.messages.error,
         description: translations.messages.loadError,
         variant: "destructive"
-      });
-    }
-  };
-
-  // Export team data to clipboard
-  const exportTeamToClipboard = async () => {
-    try {
-      const team = storageService.loadTeam();
-      await navigator.clipboard.writeText(JSON.stringify(team, null, 2));
-      toast({
-        title: 'Exported!',
-        description: 'Team data copied to clipboard.',
-        variant: 'default',
-      });
-    } catch (err) {
-      toast({
-        title: 'Error',
-        description: 'Failed to copy team data to clipboard.',
-        variant: 'destructive',
       });
     }
   };

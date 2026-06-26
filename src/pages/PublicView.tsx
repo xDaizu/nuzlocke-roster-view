@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { TeamPokemon, Pokemon } from "@/types/pokemon";
+import { TeamPokemon, Pokemon, BoxType } from "@/types/pokemon";
 import { fetchPokemonData, getPokemonSpriteUrl, POKEBALL_DATA } from "@/utils/pokemonData";
 import { useToast } from "@/hooks/use-toast";
 import PublicBoxPanel from "@/components/PublicBoxPanel";
@@ -15,6 +15,8 @@ import placesData from "@/data/places_es.json";
 import { pokemonFixtures } from "@/data/fixtures";
 import { translations } from "@/data/translations";
 import { storageService } from "@/services/storageService";
+import { createEmptySlot, normalizeBox } from "@/utils/slots";
+import { exportTeamToClipboard } from "@/utils/clipboard";
 
 interface PanelConfig {
   boxPanel: { columns: number; order: number };
@@ -37,24 +39,12 @@ const PublicView = () => {
     };
     return spanClasses[span] || 'lg:col-span-1';
   };
-  const [allSlots, setAllSlots] = useState<TeamPokemon[]>(() => 
-    Array.from({ length: 6 }, (_, index) => ({
-      id: `slot-${index}`,
-      pokemon: null,
-      nickname: '',
-      level: 1,
-      ability: '',
-      pokeball: 'pokeball' as const,
-      animated: false,
-      staticZoom: 1.5, // Default 1.5x zoom for static sprites
-      animatedZoom: 1.5, // Default 1.5x zoom for animated sprites
-      place: '',
-      box: 'team',
-    }))
+  const [allSlots, setAllSlots] = useState<TeamPokemon[]>(() =>
+    Array.from({ length: 6 }, (_, index) => createEmptySlot(`slot-${index}`, 'team'))
   );
   const [allPokemon, setAllPokemon] = useState<Pokemon[]>([]);
   const [selectedSlot, setSelectedSlot] = useState<number>(0);
-  const [selectedBox, setSelectedBox] = useState<'team' | 'other' | 'graveyard'>('team');
+  const [selectedBox, setSelectedBox] = useState<BoxType>('team');
   const [isLoading, setIsLoading] = useState(true);
   const [panelConfig, setPanelConfig] = useState<PanelConfig>({
     boxPanel: { columns: 2, order: 1 },
@@ -66,9 +56,9 @@ const PublicView = () => {
   const { toast } = useToast();
 
   // Filter slots by box type, defaulting to 'other' if no box is set
-  const team = allSlots.filter(slot => (slot.box || 'other') === 'team');
-  const otherBox = allSlots.filter(slot => (slot.box || 'other') === 'other');
-  const graveyardBox = allSlots.filter(slot => (slot.box || 'other') === 'graveyard');
+  const team = allSlots.filter(slot => normalizeBox(slot.box) === 'team');
+  const otherBox = allSlots.filter(slot => normalizeBox(slot.box) === 'other');
+  const graveyardBox = allSlots.filter(slot => normalizeBox(slot.box) === 'graveyard');
 
   useEffect(() => {
     const initializeData = async () => {
@@ -105,10 +95,6 @@ const PublicView = () => {
     initializeData();
   }, [toast]);
 
-  function normalizeBox(box: any): 'team' | 'other' | 'graveyard' {
-    return box === 'team' || box === 'other' || box === 'graveyard' ? box : 'other';
-  }
-
   const updateSlot = (slotIndex: number, updates: Partial<TeamPokemon>) => {
     if (slotIndex < 0 || slotIndex >= allSlots.length) {
       return;
@@ -122,18 +108,8 @@ const PublicView = () => {
   };
 
   const clearSlot = (slotIndex: number) => {
-    updateSlot(slotIndex, {
-      pokemon: null,
-      nickname: '',
-      level: 1,
-      ability: '',
-      pokeball: 'pokeball',
-      animated: false,
-      staticZoom: 1.5,
-      animatedZoom: 1.5,
-      place: '',
-      box: 'team',
-    });
+    const { id, ...defaults } = createEmptySlot('', 'team');
+    updateSlot(slotIndex, defaults);
     toast({
       title: translations.messages.slotCleared,
       description: `Slot ${slotIndex + 1} ${translations.messages.slotClearedDesc}`
@@ -148,47 +124,19 @@ const PublicView = () => {
     }
 
     // Process all fixtures, not just the first 6
-    const newSlots = fixtures.map((fixture, index) => {
-      const pokemon = allPokemon.find(p => 
+    const newSlots: TeamPokemon[] = fixtures.map((fixture, index) => ({
+      ...createEmptySlot(`fixture-slot-${index}`, normalizeBox(fixture.box || 'team')),
+      pokemon: allPokemon.find(p =>
         p.name.english.toLowerCase() === fixture.name.toLowerCase()
-      );
-      
-              return {
-          id: `fixture-slot-${index}`,
-          pokemon: pokemon || null,
-          nickname: fixture.nickname,
-          level: fixture.level || 1,
-          ability: (fixture as any).ability || '',
-          pokeball: (fixture as any).pokeball || 'pokeball',
-          animated: false,
-          staticZoom: 1.5,
-          animatedZoom: 1.5,
-          place: fixture.place || '',
-          box: fixture.box || 'team',
-        };
-    });
+      ) || null,
+      nickname: fixture.nickname,
+      level: fixture.level || 1,
+      ability: fixture.ability || '',
+      pokeball: fixture.pokeball || 'pokeball',
+      place: fixture.place || '',
+    }));
 
-    const finalSlots = newSlots.map(slot => ({ ...slot, box: (slot.box === 'team' || slot.box === 'other' || slot.box === 'graveyard') ? slot.box : 'other' } as TeamPokemon));
-    setAllSlots(finalSlots);
-  };
-
-  // Export team data to clipboard
-  const exportTeamToClipboard = async () => {
-    try {
-      const team = storageService.loadTeam();
-      await navigator.clipboard.writeText(JSON.stringify(team, null, 2));
-      toast({
-        title: 'Exported!',
-        description: 'Team data copied to clipboard.',
-        variant: 'default',
-      });
-    } catch (err) {
-      toast({
-        title: 'Error',
-        description: 'Failed to copy team data to clipboard.',
-        variant: 'destructive',
-      });
-    }
+    setAllSlots(newSlots);
   };
 
   if (isLoading) {
@@ -216,23 +164,10 @@ const PublicView = () => {
           <div className="h-full p-3">
             <div className="grid grid-cols-6 gap-2 h-full">
               {Array.from({ length: 6 }, (_, index) => {
-                const teamPokemon = allSlots.filter(slot => (slot.box || 'other') === 'team');
-                const slot = teamPokemon[index] || {
-                  id: `team-header-${index}`,
-                  pokemon: null,
-                  nickname: '',
-                  level: 1,
-                  ability: '',
-                  pokeball: 'pokeball' as const,
-                  animated: false,
-                  staticZoom: 1.5,
-                  animatedZoom: 1.5,
-                  place: '',
-                  box: 'team' as const,
-                };
+                const slot = team[index] || createEmptySlot(`team-header-${index}`, 'team');
                 
                 // Find the correct index in allSlots for this team slot
-                const actualSlotIndex = teamPokemon[index] ? allSlots.findIndex(s => s.id === teamPokemon[index].id) : -1;
+                const actualSlotIndex = team[index] ? allSlots.findIndex(s => s.id === team[index].id) : -1;
                 
                 return (
                   <TeamSlot
@@ -294,20 +229,7 @@ const PublicView = () => {
 
                               // If slot doesn't exist, return a default empty slot
                               if (!targetSlot) {
-                                const newSlotId = `${selectedBox}-${selectedSlot}`;
-                                targetSlot = {
-                                  id: newSlotId,
-                                  pokemon: null,
-                                  nickname: '',
-                                  level: 1,
-                                  ability: '',
-                                  pokeball: 'pokeball' as const,
-                                  animated: false,
-                                  staticZoom: 1.5,
-                                  animatedZoom: 1.5,
-                                  place: '',
-                                  box: selectedBox,
-                                };
+                                targetSlot = createEmptySlot(`${selectedBox}-${selectedSlot}`, selectedBox);
                               }
 
                               return targetSlot;
@@ -327,20 +249,9 @@ const PublicView = () => {
                               }
                             } else {
                               // Create a new slot and add it to allSlots
-                              const newSlotId = `${selectedBox}-${Date.now()}-${selectedSlot}`;
-                              const newSlot = {
-                                id: newSlotId,
-                                pokemon: null,
-                                nickname: '',
-                                level: 1,
-                                ability: '',
-                                pokeball: 'pokeball' as const,
-                                animated: false,
-                                staticZoom: 1.5,
-                                animatedZoom: 1.5,
-                                place: '',
-                                box: selectedBox,
-                                ...updates
+                              const newSlot: TeamPokemon = {
+                                ...createEmptySlot(`${selectedBox}-${Date.now()}-${selectedSlot}`, selectedBox),
+                                ...updates,
                               };
                               setAllSlots(prev => [...prev, newSlot]);
                             }

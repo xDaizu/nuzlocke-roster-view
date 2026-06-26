@@ -1,6 +1,7 @@
 import React from "react";
 import { TeamPokemon } from "@/types/pokemon";
 import { getPokemonSpriteUrl } from "@/utils/pokemonData";
+import { createEmptySlot } from "@/utils/slots";
 
 interface PokemonBoxProps {
   title: string;
@@ -51,19 +52,7 @@ const PokemonBox: React.FC<PokemonBoxProps> = ({
   // Fill empty slots
   const filledSlots = [...slots];
   while (filledSlots.length < targetSlotCount) {
-    filledSlots.push({
-      id: `empty-${boxType}-${filledSlots.length}`,
-      pokemon: null,
-      nickname: '',
-      level: 1,
-      ability: '',
-      pokeball: 'pokeball',
-      animated: false,
-      staticZoom: 1.5,
-      animatedZoom: 1.5,
-      place: '',
-      box: boxType,
-    });
+    filledSlots.push(createEmptySlot(`empty-${boxType}-${filledSlots.length}`, boxType));
   }
 
   // Add getGridCols function back
