@@ -1,31 +1,17 @@
-import React, { useState, useMemo } from "react";
+import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Shield, Zap, X } from "lucide-react";
-import typesData from "@/data/types.json";
 import AutocompleteInput from "@/components/AutocompleteInput";
 import { getStabEffectiveness } from '@/services/stabService';
+import { calculateTypeEffectiveness } from "@/services/typeEffectivenessService";
+import { getTypeColor } from "@/data/typeColors";
 import { Pokemon } from "@/types/pokemon";
 import { Translations } from "@/data/translations";
 
 interface WeaknessPanelProps {
   allPokemon: Pokemon[];
   translations: Translations;
-}
-
-type TypeChart = Record<
-  string,
-  { weak_to?: string[]; resistant_to?: string[]; immune_to?: string[] }
->;
-
-interface TypeEffectiveness {
-  veryWeak: string[];      // 4x damage
-  weak: string[];          // 2x damage
-  resistant: string[];     // 0.5x damage
-  veryResistant: string[]; // 0.25x damage
-  immune: string[];        // 0x damage
 }
 
 const WeaknessPanel: React.FC<WeaknessPanelProps> = ({ allPokemon, translations }) => {
@@ -38,112 +24,9 @@ const WeaknessPanel: React.FC<WeaknessPanelProps> = ({ allPokemon, translations 
     searchText: `${pokemon.id} ${pokemon.name.english} ${pokemon.name.spanish || ''}`
   }));
 
-  // Calculate type effectiveness for single or dual type Pokemon
-  const calculateTypeEffectiveness = (types: string[]): TypeEffectiveness => {
-    if (!types || types.length === 0) {
-      return { veryWeak: [], weak: [], resistant: [], veryResistant: [], immune: [] };
-    }
-
-    // Handle Fairy type: filter it out for dual types, or replace with Normal for pure Fairy
-    let filteredTypes = types.filter(type => type !== "Fairy");
-    
-    // If Pokemon only has Fairy type, treat it as Normal type for calculations
-    if (filteredTypes.length === 0 && types.includes("Fairy")) {
-      filteredTypes = ["Normal"];
-    }
-    
-    if (filteredTypes.length === 0) {
-      return { veryWeak: [], weak: [], resistant: [], veryResistant: [], immune: [] };
-    }
-
-    const allTypes = Object.keys(typesData);
-    const effectiveness: { [key: string]: number } = {};
-
-    // Initialize all types with 1x effectiveness
-    allTypes.forEach(type => {
-      effectiveness[type] = 1.0;
-    });
-
-    // Apply effectiveness for each of the Pokemon's types (excluding Fairy)
-    filteredTypes.forEach(pokemonType => {
-      const typeData = (typesData as TypeChart)[pokemonType];
-      if (typeData) {
-        // Apply weaknesses (2x damage)
-        typeData.weak_to?.forEach((attackType: string) => {
-          effectiveness[attackType] *= 2.0;
-        });
-
-        // Apply resistances (0.5x damage)
-        typeData.resistant_to?.forEach((attackType: string) => {
-          effectiveness[attackType] *= 0.5;
-        });
-
-        // Apply immunities (0x damage)
-        typeData.immune_to?.forEach((attackType: string) => {
-          effectiveness[attackType] = 0;
-        });
-      }
-    });
-
-    // Categorize the results into 5 categories
-    const veryWeak: string[] = [];      // 4x damage
-    const weak: string[] = [];          // 2x damage
-    const resistant: string[] = [];     // 0.5x damage
-    const veryResistant: string[] = []; // 0.25x damage
-    const immune: string[] = [];        // 0x damage
-
-    Object.entries(effectiveness).forEach(([type, multiplier]) => {
-      if (multiplier === 0) {
-        immune.push(type);
-      } else if (multiplier === 4) {
-        veryWeak.push(type);
-      } else if (multiplier === 2) {
-        weak.push(type);
-      } else if (multiplier === 0.5) {
-        resistant.push(type);
-      } else if (multiplier === 0.25) {
-        veryResistant.push(type);
-      }
-    });
-
-    return { veryWeak, weak, resistant, veryResistant, immune };
-  };
-
-  const typeEffectiveness = selectedPokemon 
-    ? calculateTypeEffectiveness(selectedPokemon.type) 
+  const typeEffectiveness = selectedPokemon
+    ? calculateTypeEffectiveness(selectedPokemon.type)
     : { veryWeak: [], weak: [], resistant: [], veryResistant: [], immune: [] };
-
-  const getTypeColor = (type: string) => {
-    const colors: { [key: string]: string } = {
-      Normal: "bg-gray-400",
-      Fire: "bg-red-500",
-      Water: "bg-blue-500",
-      Electric: "bg-yellow-400",
-      Grass: "bg-green-500",
-      Ice: "bg-cyan-300",
-      Fighting: "bg-red-700",
-      Poison: "bg-purple-500",
-      Ground: "bg-yellow-600",
-      Flying: "bg-indigo-400",
-      Psychic: "bg-pink-500",
-      Bug: "bg-green-400",
-      Rock: "bg-yellow-800",
-      Ghost: "bg-purple-600",
-      Dragon: "bg-indigo-700",
-      Dark: "bg-gray-800",
-      Steel: "bg-gray-500",
-      Fairy: "bg-gray-300 opacity-50" // Grayed out for Fairy type
-    };
-    return colors[type] || "bg-gray-400";
-  };
-
-  const getMultiplierText = (multiplier: number) => {
-    if (multiplier === 4) return "4x";
-    if (multiplier === 2) return "2x";
-    if (multiplier === 0.5) return "½x";
-    if (multiplier === 0.25) return "¼x";
-    return `${multiplier}x`;
-  };
 
   return (
     <Card className="bg-slate-800/50 border-purple-500/20">
