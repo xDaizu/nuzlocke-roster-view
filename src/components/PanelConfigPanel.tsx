@@ -5,14 +5,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Settings, ChevronUp, ChevronDown } from "lucide-react";
 import { translations } from "@/data/translations";
 import { Button } from "@/components/ui/button";
-
-interface PanelConfig {
-  boxPanel: { columns: number; order: number };
-  slotEditor: { columns: number; order: number };
-  placesPanel: { columns: number; order: number };
-  weaknessPanel: { columns: number; order: number };
-  configPanel: { columns: number; order: number };
-}
+import { PanelConfig } from "@/types/pokemon";
 
 interface PanelConfigPanelProps {
   config: PanelConfig;

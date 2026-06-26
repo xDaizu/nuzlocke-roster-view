@@ -40,3 +40,11 @@ export interface PokeballInfo {
   name: string;
   image: string;
 }
+
+export interface PanelConfig {
+  boxPanel: { columns: number; order: number };
+  slotEditor: { columns: number; order: number };
+  placesPanel: { columns: number; order: number };
+  weaknessPanel: { columns: number; order: number };
+  configPanel: { columns: number; order: number };
+}
