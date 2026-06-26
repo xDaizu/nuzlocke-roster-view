@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { TeamPokemon, Pokemon } from "@/types/pokemon";
 import { fetchPokemonData, getPokemonSpriteUrl, POKEBALL_DATA } from "@/utils/pokemonData";
 import { useToast } from "@/hooks/use-toast";
-import PublicHeader from "@/components/PublicHeader";
 import PublicBoxPanel from "@/components/PublicBoxPanel";
 import PublicSlotEditor from "@/components/PublicSlotEditor";
 import PlacesPanel from "@/components/PlacesPanel";
