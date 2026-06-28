@@ -4,7 +4,9 @@ import { TeamPokemon } from "@/types/pokemon";
 import { getPokemonSpriteUrl, POKEBALL_DATA } from "@/utils/pokemonData";
 import TeamSlot from "@/components/TeamSlot";
 import abilitiesData from "@/data/abilities_es.json";
-import placesData from "@/data/places_es.json";
+import { DEFAULT_REGION, getPlacesForRegion } from "@/data/regions";
+
+const placesData = getPlacesForRegion(DEFAULT_REGION);
 
 interface PublicHeaderProps {
   team: TeamPokemon[];

@@ -12,6 +12,7 @@ interface PanelConfig {
   placesPanel: { columns: number; order: number };
   weaknessPanel: { columns: number; order: number };
   configPanel: { columns: number; order: number };
+  appConfigPanel: { columns: number; order: number };
 }
 
 interface PanelConfigPanelProps {
@@ -49,7 +50,7 @@ const PanelConfigPanel: React.FC<PanelConfigPanelProps> = ({ config, onConfigCha
   const getColumnText = (num: number) => 
     `${num} ${num > 1 ? translations.config.columnsPlural : translations.config.columnsSingular}`;
 
-  const totalColumns = config.boxPanel.columns + config.slotEditor.columns + config.placesPanel.columns + config.weaknessPanel.columns + config.configPanel.columns;
+  const totalColumns = Object.values(config).reduce((sum, panel) => sum + panel.columns, 0);
   const isValidConfig = totalColumns <= 6;
 
   return (

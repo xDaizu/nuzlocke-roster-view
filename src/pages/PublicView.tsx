@@ -7,12 +7,13 @@ import PublicBoxPanel from "@/components/PublicBoxPanel";
 import PublicSlotEditor from "@/components/PublicSlotEditor";
 import PlacesPanel from "@/components/PlacesPanel";
 import PanelConfigPanel from "@/components/PanelConfigPanel";
+import AppConfigPanel from "@/components/AppConfigPanel";
 import WeaknessPanel from "@/components/WeaknessPanel";
 import { Label } from "@/components/ui/label";
 import TeamSlot from "@/components/TeamSlot";
 import React from "react";
 import abilitiesData from "@/data/abilities_es.json";
-import placesData from "@/data/places_es.json";
+import { DEFAULT_REGION, RegionId, getPlacesForRegion } from "@/data/regions";
 import { pokemonFixtures } from "@/data/fixtures";
 import { translations } from "@/data/translations";
 import { storageService } from "@/services/storageService";
@@ -23,6 +24,7 @@ interface PanelConfig {
   placesPanel: { columns: number; order: number };
   weaknessPanel: { columns: number; order: number };
   configPanel: { columns: number; order: number };
+  appConfigPanel: { columns: number; order: number };
 }
 
 const PublicView = () => {
@@ -57,12 +59,15 @@ const PublicView = () => {
   const [selectedSlot, setSelectedSlot] = useState<number>(0);
   const [selectedBox, setSelectedBox] = useState<'team' | 'other' | 'graveyard'>('team');
   const [isLoading, setIsLoading] = useState(true);
+  const [selectedRegion, setSelectedRegion] = useState<RegionId>(DEFAULT_REGION);
+  const placesData = getPlacesForRegion(selectedRegion);
   const [panelConfig, setPanelConfig] = useState<PanelConfig>({
     boxPanel: { columns: 2, order: 1 },
     slotEditor: { columns: 2, order: 2 },
     placesPanel: { columns: 2, order: 3 },
     weaknessPanel: { columns: 2, order: 4 },
-    configPanel: { columns: 2, order: 5 }
+    configPanel: { columns: 2, order: 5 },
+    appConfigPanel: { columns: 2, order: 6 }
   });
   const { toast } = useToast();
 
@@ -380,6 +385,7 @@ const PublicView = () => {
                             }
                             // If slot doesn't exist, there's nothing to clear
                           }}
+                          placesData={placesData}
                         />
                       </div>
                     );
@@ -407,6 +413,15 @@ const PublicView = () => {
                         <PanelConfigPanel
                           config={panelConfig}
                           onConfigChange={setPanelConfig}
+                        />
+                      </div>
+                    );
+                  case 'appConfigPanel':
+                    return (
+                      <div key={panelKey} className={colSpanClass}>
+                        <AppConfigPanel
+                          region={selectedRegion}
+                          onRegionChange={setSelectedRegion}
                         />
                       </div>
                     );

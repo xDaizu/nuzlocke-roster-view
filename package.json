@@ -8,6 +8,7 @@
     "build": "vite build",
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
+    "gen:places": "node scripts/generate-places.mjs",
     "preview": "vite preview",
     "postbuild": "cp dist/index.html dist/404.html",
     "deploy": "gh-pages -d dist"
