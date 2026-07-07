@@ -17,9 +17,13 @@ export const POKEBALL_DATA: Record<PokeballType, PokeballInfo> = {
 
 export const getPokemonSpriteUrl = (pokemon: Pokemon, animated: boolean = false): string => {
   const name = pokemon.name.english.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-').replace(/-$/, '');
-  const extension = animated ? 'gif' : 'png';
-  const folder = animated ? 'anim/normal' : 'normal';
-  return `https://img.pokemondb.net/sprites/black-white/${folder}/${name}.${extension}`;
+  if (animated) {
+    // Black/White animated GIFs only exist up to #649 (Gen V); Gen VI+ (e.g. Froakie)
+    // won't resolve here, which is an accepted tradeoff for animation.
+    return `https://img.pokemondb.net/sprites/black-white/anim/normal/${name}.gif`;
+  }
+  // Pokémon HOME static sprites cover every generation (incl. Gen VI like Froakie).
+  return `https://img.pokemondb.net/sprites/home/normal/${name}.png`;
 };
 
 export const formatPokemonName = (name: string): string => {
