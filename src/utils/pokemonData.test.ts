@@ -19,7 +19,7 @@ const makePokemon = (english: string): Pokemon => ({
 describe('getPokemonSpriteUrl', () => {
   it('builds a static PNG url by default', () => {
     expect(getPokemonSpriteUrl(makePokemon('Bulbasaur'))).toBe(
-      'https://img.pokemondb.net/sprites/black-white/normal/bulbasaur.png'
+      'https://img.pokemondb.net/sprites/home/normal/bulbasaur.png'
     );
   });
 
@@ -31,13 +31,13 @@ describe('getPokemonSpriteUrl', () => {
 
   it('sanitizes names with spaces and punctuation', () => {
     expect(getPokemonSpriteUrl(makePokemon('Mr. Mime'))).toBe(
-      'https://img.pokemondb.net/sprites/black-white/normal/mr-mime.png'
+      'https://img.pokemondb.net/sprites/home/normal/mr-mime.png'
     );
   });
 
   it('strips trailing separators from symbol-only suffixes', () => {
     expect(getPokemonSpriteUrl(makePokemon('Nidoran♀'))).toBe(
-      'https://img.pokemondb.net/sprites/black-white/normal/nidoran.png'
+      'https://img.pokemondb.net/sprites/home/normal/nidoran.png'
     );
   });
 });
