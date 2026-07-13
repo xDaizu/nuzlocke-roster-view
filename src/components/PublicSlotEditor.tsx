@@ -46,7 +46,7 @@ const PublicSlotEditor: React.FC<PublicSlotEditorProps> = ({
               alt={currentSlot.pokemon.name.english}
               className="w-16 h-16"
                                 style={{
-                    transform: `scale(${currentSlot.animated ? currentSlot.animatedZoom : currentSlot.staticZoom})`,
+                    transform: `scale(${currentSlot.animated ? currentSlot.animatedZoom : currentSlot.staticZoom}) translate(${currentSlot.animated ? (currentSlot.animatedTranslateX ?? 0) : (currentSlot.staticTranslateX ?? 0)}px, ${currentSlot.animated ? (currentSlot.animatedTranslateY ?? 0) : (currentSlot.staticTranslateY ?? 0)}px)`,
                     objectPosition: 'center'
                   }}
               onError={(e) => {

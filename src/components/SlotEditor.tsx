@@ -257,6 +257,38 @@ const SlotEditor: React.FC<SlotEditorProps> = ({
                     {slot.staticZoom || 1.5}x
                   </span>
                 </div>
+                {/* Static Translate Controls */}
+                <div className="flex flex-col items-center gap-0.5 mt-1">
+                  <button
+                    type="button"
+                    onClick={() => onUpdate({ staticTranslateY: (slot.staticTranslateY ?? 0) - 1 })}
+                    className="w-6 h-6 flex items-center justify-center rounded bg-slate-700 hover:bg-slate-600 text-slate-300 hover:text-white text-xs leading-none transition-colors"
+                    title="Move sprite up"
+                  >▲</button>
+                  <div className="flex items-center gap-0.5">
+                    <button
+                      type="button"
+                      onClick={() => onUpdate({ staticTranslateX: (slot.staticTranslateX ?? 0) - 1 })}
+                      className="w-6 h-6 flex items-center justify-center rounded bg-slate-700 hover:bg-slate-600 text-slate-300 hover:text-white text-xs leading-none transition-colors"
+                      title="Move sprite left"
+                    >◀</button>
+                    <span className="text-slate-500 text-[9px] w-10 text-center leading-tight">
+                      {slot.staticTranslateX ?? 0},{slot.staticTranslateY ?? 0}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => onUpdate({ staticTranslateX: (slot.staticTranslateX ?? 0) + 1 })}
+                      className="w-6 h-6 flex items-center justify-center rounded bg-slate-700 hover:bg-slate-600 text-slate-300 hover:text-white text-xs leading-none transition-colors"
+                      title="Move sprite right"
+                    >▶</button>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => onUpdate({ staticTranslateY: (slot.staticTranslateY ?? 0) + 1 })}
+                    className="w-6 h-6 flex items-center justify-center rounded bg-slate-700 hover:bg-slate-600 text-slate-300 hover:text-white text-xs leading-none transition-colors"
+                    title="Move sprite down"
+                  >▼</button>
+                </div>
               </div>
               
               {/* Animated Sprite Zoom */}
@@ -275,6 +307,38 @@ const SlotEditor: React.FC<SlotEditorProps> = ({
                   <span className="text-slate-400 text-xs">
                     {slot.animatedZoom || 1.0}x
                   </span>
+                </div>
+                {/* Animated Translate Controls */}
+                <div className="flex flex-col items-center gap-0.5 mt-1">
+                  <button
+                    type="button"
+                    onClick={() => onUpdate({ animatedTranslateY: (slot.animatedTranslateY ?? 0) - 1 })}
+                    className="w-6 h-6 flex items-center justify-center rounded bg-slate-700 hover:bg-slate-600 text-slate-300 hover:text-white text-xs leading-none transition-colors"
+                    title="Move sprite up"
+                  >▲</button>
+                  <div className="flex items-center gap-0.5">
+                    <button
+                      type="button"
+                      onClick={() => onUpdate({ animatedTranslateX: (slot.animatedTranslateX ?? 0) - 1 })}
+                      className="w-6 h-6 flex items-center justify-center rounded bg-slate-700 hover:bg-slate-600 text-slate-300 hover:text-white text-xs leading-none transition-colors"
+                      title="Move sprite left"
+                    >◀</button>
+                    <span className="text-slate-500 text-[9px] w-10 text-center leading-tight">
+                      {slot.animatedTranslateX ?? 0},{slot.animatedTranslateY ?? 0}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => onUpdate({ animatedTranslateX: (slot.animatedTranslateX ?? 0) + 1 })}
+                      className="w-6 h-6 flex items-center justify-center rounded bg-slate-700 hover:bg-slate-600 text-slate-300 hover:text-white text-xs leading-none transition-colors"
+                      title="Move sprite right"
+                    >▶</button>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => onUpdate({ animatedTranslateY: (slot.animatedTranslateY ?? 0) + 1 })}
+                    className="w-6 h-6 flex items-center justify-center rounded bg-slate-700 hover:bg-slate-600 text-slate-300 hover:text-white text-xs leading-none transition-colors"
+                    title="Move sprite down"
+                  >▼</button>
                 </div>
               </div>
             </div>

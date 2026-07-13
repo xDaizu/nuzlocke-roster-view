@@ -27,6 +27,10 @@ export interface TeamPokemon {
   animated: boolean;
   staticZoom: number; // 1.0 = normal, 1.5 = 150% zoom for static sprites
   animatedZoom: number; // 1.0 = normal, 1.5 = 150% zoom for animated sprites
+  staticTranslateX: number; // Horizontal offset in px for static sprite centering
+  staticTranslateY: number; // Vertical offset in px for static sprite centering
+  animatedTranslateX: number; // Horizontal offset in px for animated sprite centering
+  animatedTranslateY: number; // Vertical offset in px for animated sprite centering
   place?: string; // Optional, can be empty or 'unknown'
   box: 'team' | 'other' | 'graveyard';
 }
