@@ -239,8 +239,9 @@ const SlotEditor: React.FC<SlotEditorProps> = ({
 
           {/* Zoom Controls */}
           <div className="mt-4">
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4">
               {/* Static Sprite Zoom */}
+              {!slot.animated && (
               <div className="space-y-1">
                 <Label className="text-slate-300 text-xs">Sprite Zoom (Estático)</Label>
                 <div className="flex items-center space-x-2">
@@ -290,8 +291,10 @@ const SlotEditor: React.FC<SlotEditorProps> = ({
                   >▼</button>
                 </div>
               </div>
-              
+              )}
+
               {/* Animated Sprite Zoom */}
+              {slot.animated && (
               <div className="space-y-1">
                 <Label className="text-slate-300 text-xs">Sprite Zoom (Animado)</Label>
                 <div className="flex items-center space-x-2">
@@ -341,6 +344,7 @@ const SlotEditor: React.FC<SlotEditorProps> = ({
                   >▼</button>
                 </div>
               </div>
+              )}
             </div>
           </div>
         </form>
