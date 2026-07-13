@@ -169,7 +169,7 @@ const TeamSlot: React.FC<TeamSlotProps> = ({
             onPointerCancel={onPointerUp}
           >
             {/* Level badge */}
-            <div className="absolute top-1 left-1 flex flex-col items-start">
+            <div className="absolute top-1 left-1 z-10 flex flex-col items-start">
               {showLevel && slot.pokemon && (
                 <span className="text-xs font-bold text-purple-200 bg-slate-900/80 rounded px-1 mt-0.5">Lv {slot.level}</span>
               )}
@@ -211,7 +211,7 @@ const TeamSlot: React.FC<TeamSlotProps> = ({
 
                 {/* Pokemon name — always on top */}
                 <div className="absolute bottom-0 left-0 right-0 z-10 text-center px-1 pb-1">
-                  <div className="text-md font-bold text-white truncate drop-shadow-[0_1px_3px_rgba(0,0,0,0.9)]">
+                  <div className="inline-block max-w-full text-md font-bold text-white truncate leading-none bg-slate-900/80 rounded px-0.5 py-0">
                     {slot.nickname || slot.pokemon.name.english}
                   </div>
                 </div>
