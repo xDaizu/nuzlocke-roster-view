@@ -29,16 +29,22 @@ const TeamSlot: React.FC<TeamSlotProps> = ({
   };
 
   // ── Drag-to-translate state ──────────────────────────────────────────────
+  const containerRef = useRef<HTMLDivElement>(null);
   const imgRef = useRef<HTMLImageElement>(null);
   const isDragging = useRef(false);
   const dragStart = useRef({ x: 0, y: 0 });
   // Live translate during drag (not committed to state yet)
   const liveTranslate = useRef({ x: 0, y: 0 });
+  // Live zoom during wheel (not committed to state yet)
+  const liveZoom = useRef<number>(slot.animated ? (slot.animatedZoom ?? 1) : (slot.staticZoom ?? 1));
+  const wheelCommitTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const getTranslateKey = () =>
     slot.animated
       ? { x: "animatedTranslateX", y: "animatedTranslateY" }
       : { x: "staticTranslateX", y: "staticTranslateY" };
+
+  const getZoomKey = () => slot.animated ? "animatedZoom" : "staticZoom";
 
   const getBaseTranslate = useCallback(() => ({
     x: slot.animated ? (slot.animatedTranslateX ?? 0) : (slot.staticTranslateX ?? 0),
@@ -46,10 +52,10 @@ const TeamSlot: React.FC<TeamSlotProps> = ({
   }), [slot]);
 
   /** Apply a transform string directly to the img DOM node to avoid re-render lag */
-  const applyLiveTransform = (tx: number, ty: number) => {
+  const applyLiveTransform = (tx: number, ty: number, zoom?: number) => {
     if (!imgRef.current) return;
-    const zoom = slot.animated ? slot.animatedZoom : slot.staticZoom;
-    imgRef.current.style.transform = `scale(${zoom}) translate(${tx}px, ${ty}px)`;
+    const z = zoom ?? liveZoom.current;
+    imgRef.current.style.transform = `scale(${z}) translate(${tx}px, ${ty}px)`;
   };
 
   const onPointerDown = useCallback((e: React.PointerEvent) => {
@@ -90,9 +96,51 @@ const TeamSlot: React.FC<TeamSlotProps> = ({
     updateSlot(index, { [keys.x]: x, [keys.y]: y });
   }, [index, updateSlot, getTranslateKey]);
 
+  // Sync liveZoom ref whenever slot zoom prop changes (e.g. after a commit)
+  useEffect(() => {
+    liveZoom.current = slot.animated ? (slot.animatedZoom ?? 1) : (slot.staticZoom ?? 1);
+  }, [slot.animated, slot.animatedZoom, slot.staticZoom]);
+
+  // ── Wheel-to-zoom (non-passive so we can preventDefault) ─────────────────
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el || !draggable) return;
+
+    const handleWheel = (e: WheelEvent) => {
+      if (!slot.pokemon || index < 0) return;
+      e.preventDefault();
+
+      const STEP = 0.05;
+      const MIN_ZOOM = 0.2;
+      const MAX_ZOOM = 5;
+      const delta = e.deltaY < 0 ? STEP : -STEP;
+      const newZoom = Math.min(MAX_ZOOM, Math.max(MIN_ZOOM,
+        parseFloat((liveZoom.current + delta).toFixed(2))
+      ));
+      liveZoom.current = newZoom;
+
+      const { x, y } = liveTranslate.current;
+      applyLiveTransform(x, y, newZoom);
+
+      // Debounce the state commit so we don't flood on rapid scrolling
+      if (wheelCommitTimer.current) clearTimeout(wheelCommitTimer.current);
+      wheelCommitTimer.current = setTimeout(() => {
+        updateSlot(index, { [getZoomKey()]: newZoom });
+      }, 300);
+    };
+
+    el.addEventListener("wheel", handleWheel, { passive: false });
+    return () => el.removeEventListener("wheel", handleWheel);
+  // Re-attach whenever draggable/slot identity changes
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [draggable, slot.pokemon, slot.animated, index, updateSlot]);
+
   // Reset transition on unmount safety
   useEffect(() => {
-    return () => { isDragging.current = false; };
+    return () => {
+      isDragging.current = false;
+      if (wheelCommitTimer.current) clearTimeout(wheelCommitTimer.current);
+    };
   }, []);
 
   const isDraggableSlot = draggable && !!slot.pokemon;
@@ -103,6 +151,7 @@ const TeamSlot: React.FC<TeamSlotProps> = ({
       <Tooltip>
         <TooltipTrigger asChild>
           <div
+            ref={containerRef}
             className={`bg-slate-800/80 border border-purple-500/20 rounded-lg p-2 flex flex-col items-center justify-between relative overflow-hidden group transition-all duration-300 select-none
               ${isDraggableSlot
                 ? "hover:border-blue-400/60 hover:shadow-[0_0_0_1px_rgba(96,165,250,0.3)] cursor-grab active:cursor-grabbing"
