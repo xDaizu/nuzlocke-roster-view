@@ -65,6 +65,10 @@ const PokemonBox: React.FC<PokemonBoxProps> = ({
       animated: false,
       staticZoom: 1.5,
       animatedZoom: 1.5,
+      staticTranslateX: 0,
+      staticTranslateY: 0,
+      animatedTranslateX: 0,
+      animatedTranslateY: 0,
       place: '',
       box: boxType,
     });

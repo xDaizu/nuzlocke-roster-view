@@ -109,17 +109,33 @@ export const storageService = {
     try {
       const data = localStorage.getItem(KEYS.TEAM);
       if (data) {
-        return JSON.parse(data);
+        const team = JSON.parse(data);
+        return this.migrateTeam(team);
       }
       
       // If no data or parsing error, try loading from backup
       const backup = this.loadFromBackup(KEYS.BACKUP_TEAM);
-      return backup as TeamPokemon[] || [];
+      return this.migrateTeam(backup as TeamPokemon[] || []);
     } catch (error) {
       console.error('Error loading team, trying backup:', error);
       const backup = this.loadFromBackup(KEYS.BACKUP_TEAM);
-      return backup as TeamPokemon[] || [];
+      return this.migrateTeam(backup as TeamPokemon[] || []);
     }
+  },
+
+  /**
+   * Migrate team slots to include any missing fields added in newer versions
+   */
+  migrateTeam(team: TeamPokemon[]): TeamPokemon[] {
+    return team.map((slot: any) => ({
+      ...slot,
+      staticZoom: slot.staticZoom ?? 1.5,
+      animatedZoom: slot.animatedZoom ?? 1.5,
+      staticTranslateX: slot.staticTranslateX ?? 0,
+      staticTranslateY: slot.staticTranslateY ?? 0,
+      animatedTranslateX: slot.animatedTranslateX ?? 0,
+      animatedTranslateY: slot.animatedTranslateY ?? 0,
+    }));
   },
 
   /**

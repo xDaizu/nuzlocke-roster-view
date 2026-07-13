@@ -51,6 +51,10 @@ const PublicView = () => {
       animated: false,
       staticZoom: 1.5, // Default 1.5x zoom for static sprites
       animatedZoom: 1.5, // Default 1.5x zoom for animated sprites
+      staticTranslateX: 0,
+      staticTranslateY: 0,
+      animatedTranslateX: 0,
+      animatedTranslateY: 0,
       place: '',
       box: 'team',
     }))
@@ -144,6 +148,10 @@ const PublicView = () => {
       animated: false,
       staticZoom: 1.5,
       animatedZoom: 1.5,
+      staticTranslateX: 0,
+      staticTranslateY: 0,
+      animatedTranslateX: 0,
+      animatedTranslateY: 0,
       place: '',
       box: 'team',
     });
@@ -178,6 +186,10 @@ const PublicView = () => {
           animated: false,
           staticZoom: 1.5,
           animatedZoom: 1.5,
+          staticTranslateX: 0,
+          staticTranslateY: 0,
+          animatedTranslateX: 0,
+          animatedTranslateY: 0,
           place: fixture.place || '',
           box: fixture.box || 'team',
         };
@@ -243,6 +255,10 @@ const PublicView = () => {
                   animated: false,
                   staticZoom: 1.5,
                   animatedZoom: 1.5,
+                  staticTranslateX: 0,
+                  staticTranslateY: 0,
+                  animatedTranslateX: 0,
+                  animatedTranslateY: 0,
                   place: '',
                   box: 'team' as const,
                 };

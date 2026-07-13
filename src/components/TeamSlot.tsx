@@ -53,7 +53,7 @@ const TeamSlot: React.FC<TeamSlotProps> = ({
                       width: '80%',
                       maxWidth: '80%',
                       // Apply appropriate zoom for both static and animated sprites
-                      transform: `scale(${slot.animated ? slot.animatedZoom : slot.staticZoom})`,
+                      transform: `scale(${slot.animated ? slot.animatedZoom : slot.staticZoom}) translate(${slot.animated ? (slot.animatedTranslateX ?? 0) : (slot.staticTranslateX ?? 0)}px, ${slot.animated ? (slot.animatedTranslateY ?? 0) : (slot.staticTranslateY ?? 0)}px)`,
                       objectPosition: 'center'
                     }}
                     onError={(e) => {

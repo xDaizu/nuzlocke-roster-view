@@ -19,10 +19,16 @@ export const loadTeam = (): TeamPokemon[] => {
       const team = JSON.parse(saved);
       console.log('Team loaded from localStorage:', team);
       
-      // Migrate old teams to include zoom field
+      // Migrate old teams to include zoom and translate fields
       return team.map((slot: any) => ({
         ...slot,
-        zoom: slot.zoom || 1.5 // Default zoom for existing teams
+        zoom: slot.zoom || 1.5, // legacy field
+        staticZoom: slot.staticZoom ?? 1.5,
+        animatedZoom: slot.animatedZoom ?? 1.5,
+        staticTranslateX: slot.staticTranslateX ?? 0,
+        staticTranslateY: slot.staticTranslateY ?? 0,
+        animatedTranslateX: slot.animatedTranslateX ?? 0,
+        animatedTranslateY: slot.animatedTranslateY ?? 0,
       }));
     }
   } catch (error) {
@@ -38,6 +44,13 @@ export const loadTeam = (): TeamPokemon[] => {
     ability: '',
     pokeball: 'pokeball' as const,
     animated: false,
-    zoom: 1.5
+    zoom: 1.5,
+    staticZoom: 1.5,
+    animatedZoom: 1.5,
+    staticTranslateX: 0,
+    staticTranslateY: 0,
+    animatedTranslateX: 0,
+    animatedTranslateY: 0,
+    box: 'team' as const,
   }));
 };
