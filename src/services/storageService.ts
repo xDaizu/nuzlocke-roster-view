@@ -4,7 +4,9 @@ import { TeamPokemon } from '../types/pokemon';
 const KEYS = {
   TEAM: 'nuzlocke-roster:team',
   BACKUP_TEAM: 'nuzlocke-roster:team-backup',
-  LAST_BACKUP: 'nuzlocke-roster:last-backup'
+  LAST_BACKUP: 'nuzlocke-roster:last-backup',
+  APP_CONFIG: 'nuzlocke-roster:app-config',
+  PANEL_CONFIG: 'nuzlocke-roster:panel-config',
 };
 
 // Maximum backup versions to keep
@@ -238,5 +240,55 @@ export const storageService = {
   getLastBackupTime(): Date | null {
     const timestamp = localStorage.getItem(KEYS.LAST_BACKUP);
     return timestamp ? new Date(parseInt(timestamp)) : null;
-  }
+  },
+
+  /**
+   * Save arbitrary app-wide config (region, etc.) to localStorage.
+   */
+  saveAppConfig(config: Record<string, unknown>): void {
+    try {
+      localStorage.setItem(KEYS.APP_CONFIG, JSON.stringify(config));
+    } catch (error) {
+      console.error('Error saving app config:', error);
+    }
+  },
+
+  /**
+   * Load app-wide config from localStorage.
+   * Returns null when nothing has been saved yet.
+   */
+  loadAppConfig(): Record<string, unknown> | null {
+    try {
+      const data = localStorage.getItem(KEYS.APP_CONFIG);
+      return data ? (JSON.parse(data) as Record<string, unknown>) : null;
+    } catch (error) {
+      console.error('Error loading app config:', error);
+      return null;
+    }
+  },
+
+  /**
+   * Save panel layout config to localStorage.
+   */
+  savePanelConfig(config: Record<string, unknown>): void {
+    try {
+      localStorage.setItem(KEYS.PANEL_CONFIG, JSON.stringify(config));
+    } catch (error) {
+      console.error('Error saving panel config:', error);
+    }
+  },
+
+  /**
+   * Load panel layout config from localStorage.
+   * Returns null when nothing has been saved yet.
+   */
+  loadPanelConfig(): Record<string, unknown> | null {
+    try {
+      const data = localStorage.getItem(KEYS.PANEL_CONFIG);
+      return data ? (JSON.parse(data) as Record<string, unknown>) : null;
+    } catch (error) {
+      console.error('Error loading panel config:', error);
+      return null;
+    }
+  },
 }; 

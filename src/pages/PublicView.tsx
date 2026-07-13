@@ -27,6 +27,15 @@ interface PanelConfig {
   appConfigPanel: { columns: number; order: number };
 }
 
+const DEFAULT_PANEL_CONFIG: PanelConfig = {
+  boxPanel: { columns: 2, order: 1 },
+  slotEditor: { columns: 2, order: 2 },
+  placesPanel: { columns: 2, order: 3 },
+  weaknessPanel: { columns: 2, order: 4 },
+  configPanel: { columns: 2, order: 5 },
+  appConfigPanel: { columns: 2, order: 6 },
+};
+
 const PublicView = () => {
   // Column span class mapping to ensure Tailwind includes all classes
   const getColSpanClass = (span: number): string => {
@@ -63,17 +72,37 @@ const PublicView = () => {
   const [selectedSlot, setSelectedSlot] = useState<number>(0);
   const [selectedBox, setSelectedBox] = useState<'team' | 'other' | 'graveyard'>('team');
   const [isLoading, setIsLoading] = useState(true);
-  const [selectedRegion, setSelectedRegion] = useState<RegionId>(DEFAULT_REGION);
+
+  const [selectedRegion, setSelectedRegion] = useState<RegionId>(() => {
+    const saved = storageService.loadAppConfig();
+    return (saved?.region as RegionId) ?? DEFAULT_REGION;
+  });
   const placesData = getPlacesForRegion(selectedRegion);
-  const [panelConfig, setPanelConfig] = useState<PanelConfig>({
-    boxPanel: { columns: 2, order: 1 },
-    slotEditor: { columns: 2, order: 2 },
-    placesPanel: { columns: 2, order: 3 },
-    weaknessPanel: { columns: 2, order: 4 },
-    configPanel: { columns: 2, order: 5 },
-    appConfigPanel: { columns: 2, order: 6 }
+  const [panelConfig, setPanelConfig] = useState<PanelConfig>(() => {
+    const saved = storageService.loadPanelConfig();
+    if (saved) {
+      // Merge saved values with defaults to handle new panels added in future versions
+      const merged: PanelConfig = { ...DEFAULT_PANEL_CONFIG };
+      for (const key of Object.keys(DEFAULT_PANEL_CONFIG) as (keyof PanelConfig)[]) {
+        if (saved[key] && typeof saved[key] === 'object') {
+          merged[key] = saved[key] as { columns: number; order: number };
+        }
+      }
+      return merged;
+    }
+    return DEFAULT_PANEL_CONFIG;
   });
   const { toast } = useToast();
+
+  // Persist app-wide settings (region, …) whenever they change
+  useEffect(() => {
+    storageService.saveAppConfig({ region: selectedRegion });
+  }, [selectedRegion]);
+
+  // Persist panel layout config whenever it changes
+  useEffect(() => {
+    storageService.savePanelConfig(panelConfig as unknown as Record<string, unknown>);
+  }, [panelConfig]);
 
   // Filter slots by box type, defaulting to 'other' if no box is set
   const team = allSlots.filter(slot => (slot.box || 'other') === 'team');
