@@ -12,15 +12,44 @@ interface AppConfigPanelProps {
   onRegionChange: (region: RegionId) => void;
   autosave: boolean;
   onAutosaveChange: (value: boolean) => void;
+  showLevel: boolean;
+  onShowLevelChange: (value: boolean) => void;
+  showPokeball: boolean;
+  onShowPokeballChange: (value: boolean) => void;
 }
 
-/** App-wide settings (region, autosave, …; designed to grow). */
+/** App-wide settings (region, autosave, display toggles; designed to grow). */
 const AppConfigPanel: React.FC<AppConfigPanelProps> = ({
   region,
   onRegionChange,
   autosave,
   onAutosaveChange,
+  showLevel,
+  onShowLevelChange,
+  showPokeball,
+  onShowPokeballChange,
 }) => {
+  const toggleRow = (
+    label: string,
+    description: string,
+    checked: boolean,
+    onChange: (v: boolean) => void,
+  ) => (
+    <div className="p-3 bg-slate-700/30 rounded-lg border border-slate-600/50">
+      <div className="flex items-center justify-between">
+        <div className="space-y-1">
+          <Label className="text-white text-sm">{label}</Label>
+          <p className="text-xs text-slate-400">{description}</p>
+        </div>
+        <Switch
+          checked={checked}
+          onCheckedChange={onChange}
+          className="data-[state=checked]:bg-purple-500"
+        />
+      </div>
+    </div>
+  );
+
   return (
     <Card className="bg-slate-800/90 border-purple-500/30">
       <CardHeader>
@@ -48,20 +77,26 @@ const AppConfigPanel: React.FC<AppConfigPanelProps> = ({
           <p className="text-xs text-slate-400">{translations.appConfig.regionDescription}</p>
         </div>
 
-        {/* Autosave toggle */}
-        <div className="p-3 bg-slate-700/30 rounded-lg border border-slate-600/50">
-          <div className="flex items-center justify-between">
-            <div className="space-y-1">
-              <Label className="text-white text-sm">{translations.appConfig.autosave}</Label>
-              <p className="text-xs text-slate-400">{translations.appConfig.autosaveDescription}</p>
-            </div>
-            <Switch
-              checked={autosave}
-              onCheckedChange={onAutosaveChange}
-              className="data-[state=checked]:bg-purple-500"
-            />
-          </div>
-        </div>
+        {toggleRow(
+          translations.appConfig.autosave,
+          translations.appConfig.autosaveDescription,
+          autosave,
+          onAutosaveChange,
+        )}
+
+        {toggleRow(
+          translations.appConfig.showLevel,
+          translations.appConfig.showLevelDescription,
+          showLevel,
+          onShowLevelChange,
+        )}
+
+        {toggleRow(
+          translations.appConfig.showPokeball,
+          translations.appConfig.showPokeballDescription,
+          showPokeball,
+          onShowPokeballChange,
+        )}
       </CardContent>
     </Card>
   );

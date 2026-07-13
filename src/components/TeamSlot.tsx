@@ -12,6 +12,10 @@ interface TeamSlotProps {
   placesData: Array<{ id: string; nombre: string }>;
   /** When true, the sprite can be dragged to adjust its translate offset */
   draggable?: boolean;
+  /** Show the level badge on the slot (default true) */
+  showLevel?: boolean;
+  /** Show the pokeball icon on the slot (default true) */
+  showPokeball?: boolean;
 }
 
 const TeamSlot: React.FC<TeamSlotProps> = ({
@@ -23,6 +27,8 @@ const TeamSlot: React.FC<TeamSlotProps> = ({
   abilitiesData,
   placesData,
   draggable = false,
+  showLevel = true,
+  showPokeball = true,
 }) => {
   const getAbilityData = (slug: string) => {
     return abilitiesData.find((a) => a.slug === slug);
@@ -162,9 +168,9 @@ const TeamSlot: React.FC<TeamSlotProps> = ({
             onPointerUp={onPointerUp}
             onPointerCancel={onPointerUp}
           >
-            {/* Slot number and level indicator */}
+            {/* Level badge */}
             <div className="absolute top-1 left-1 flex flex-col items-start">
-              {slot.pokemon && (
+              {showLevel && slot.pokemon && (
                 <span className="text-xs font-bold text-purple-200 bg-slate-900/80 rounded px-1 mt-0.5">Lv {slot.level}</span>
               )}
             </div>
@@ -192,14 +198,16 @@ const TeamSlot: React.FC<TeamSlotProps> = ({
                 />
 
                 {/* Pokeball indicator */}
-                <div className="absolute top-0 right-0 pointer-events-none z-10">
-                  <img
-                    src={pokeballData[slot.pokeball].image}
-                    alt={pokeballData[slot.pokeball].name}
-                    className="w-6 h-6 drop-shadow-md"
-                    draggable={false}
-                  />
-                </div>
+                {showPokeball && (
+                  <div className="absolute top-0 right-0 pointer-events-none z-10">
+                    <img
+                      src={pokeballData[slot.pokeball].image}
+                      alt={pokeballData[slot.pokeball].name}
+                      className="w-6 h-6 drop-shadow-md"
+                      draggable={false}
+                    />
+                  </div>
+                )}
 
                 {/* Pokemon name — always on top */}
                 <div className="absolute bottom-0 left-0 right-0 z-10 text-center px-1 pb-1">
