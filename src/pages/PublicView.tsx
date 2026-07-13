@@ -161,6 +161,59 @@ const PublicView = () => {
     });
   };
 
+  const movePokemon = (
+    sourceBox: 'team' | 'other' | 'graveyard',
+    sourceIndex: number,
+    targetBox: 'team' | 'other' | 'graveyard',
+    targetIndex: number
+  ) => {
+    const sourceSlots = allSlots.filter(s => (s.box || 'other') === sourceBox);
+    const targetSlots = allSlots.filter(s => (s.box || 'other') === targetBox);
+
+    const sourceSlot = sourceSlots[sourceIndex];
+    // For target, it could be a filled slot or an empty virtual slot
+    const targetSlot = targetSlots[targetIndex];
+
+    if (!sourceSlot) return;
+
+    setAllSlots(prev => {
+      const next = [...prev];
+      const srcIdx = next.findIndex(s => s.id === sourceSlot.id);
+
+      if (sourceBox === targetBox) {
+        // Same box: simple swap
+        if (!targetSlot) return prev;
+        const tgtIdx = next.findIndex(s => s.id === targetSlot.id);
+        if (srcIdx === -1 || tgtIdx === -1 || srcIdx === tgtIdx) return prev;
+        [next[srcIdx], next[tgtIdx]] = [next[tgtIdx], next[srcIdx]];
+      } else {
+        // Cross-box move
+        if (targetSlot && targetSlot.pokemon) {
+          // Swap: move source to target box position, target to source box position
+          const tgtIdx = next.findIndex(s => s.id === targetSlot.id);
+          const srcPokemonData = { pokemon: next[srcIdx].pokemon, nickname: next[srcIdx].nickname, level: next[srcIdx].level, ability: next[srcIdx].ability, pokeball: next[srcIdx].pokeball, animated: next[srcIdx].animated, staticZoom: next[srcIdx].staticZoom, animatedZoom: next[srcIdx].animatedZoom, staticTranslateX: next[srcIdx].staticTranslateX, staticTranslateY: next[srcIdx].staticTranslateY, animatedTranslateX: next[srcIdx].animatedTranslateX, animatedTranslateY: next[srcIdx].animatedTranslateY, place: next[srcIdx].place };
+          const tgtPokemonData = { pokemon: next[tgtIdx].pokemon, nickname: next[tgtIdx].nickname, level: next[tgtIdx].level, ability: next[tgtIdx].ability, pokeball: next[tgtIdx].pokeball, animated: next[tgtIdx].animated, staticZoom: next[tgtIdx].staticZoom, animatedZoom: next[tgtIdx].animatedZoom, staticTranslateX: next[tgtIdx].staticTranslateX, staticTranslateY: next[tgtIdx].staticTranslateY, animatedTranslateX: next[tgtIdx].animatedTranslateX, animatedTranslateY: next[tgtIdx].animatedTranslateY, place: next[tgtIdx].place };
+          next[srcIdx] = { ...next[srcIdx], ...tgtPokemonData, box: sourceBox };
+          next[tgtIdx] = { ...next[tgtIdx], ...srcPokemonData, box: targetBox };
+        } else {
+          // Move source pokemon into the target empty slot (change its box)
+          // If target is a virtual empty slot, just change the source slot's box
+          if (targetSlot) {
+            const tgtIdx = next.findIndex(s => s.id === targetSlot.id);
+            // Move source data into the target real slot, clear the original source slot
+            next[tgtIdx] = { ...next[tgtIdx], pokemon: next[srcIdx].pokemon, nickname: next[srcIdx].nickname, level: next[srcIdx].level, ability: next[srcIdx].ability, pokeball: next[srcIdx].pokeball, animated: next[srcIdx].animated, staticZoom: next[srcIdx].staticZoom, animatedZoom: next[srcIdx].animatedZoom, staticTranslateX: next[srcIdx].staticTranslateX, staticTranslateY: next[srcIdx].staticTranslateY, animatedTranslateX: next[srcIdx].animatedTranslateX, animatedTranslateY: next[srcIdx].animatedTranslateY, place: next[srcIdx].place, box: targetBox };
+            next[srcIdx] = { ...next[srcIdx], pokemon: null, nickname: '', level: 1, ability: '', pokeball: 'pokeball', animated: false, staticZoom: 1.5, animatedZoom: 1.5, staticTranslateX: 0, staticTranslateY: 0, animatedTranslateX: 0, animatedTranslateY: 0, place: '' };
+          } else {
+            // Virtual empty slot in another box: just change this slot's box
+            next[srcIdx] = { ...next[srcIdx], box: targetBox };
+          }
+        }
+      }
+      return next;
+    });
+  };
+
+
   const addFixtures = () => {
     console.log('Loading fixtures...');
     const fixtures = pokemonFixtures;
@@ -314,6 +367,7 @@ const PublicView = () => {
                           onAddFixtures={addFixtures}
                           setTeam={setAllSlots}
                           allSlots={allSlots}
+                          onMovePokemon={movePokemon}
                         />
                       </div>
                     );

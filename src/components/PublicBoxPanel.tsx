@@ -20,6 +20,7 @@ interface PublicBoxPanelProps {
   setTeam: (team: TeamPokemon[]) => void;
   columnSpan?: number;
   allSlots: TeamPokemon[]; // Add allSlots for proper save/load
+  onMovePokemon: (sourceBox: 'team' | 'other' | 'graveyard', sourceIndex: number, targetBox: 'team' | 'other' | 'graveyard', targetIndex: number) => void;
 }
 
 const PublicBoxPanel: React.FC<PublicBoxPanelProps> = ({
@@ -32,6 +33,7 @@ const PublicBoxPanel: React.FC<PublicBoxPanelProps> = ({
   onAddFixtures,
   setTeam,
   allSlots,
+  onMovePokemon,
 }) => {
   const { toast } = useToast();
 
@@ -143,6 +145,8 @@ const PublicBoxPanel: React.FC<PublicBoxPanelProps> = ({
           onSlotClick={(index) => onSlotClick('team', index)}
           selectedSlot={selectedBox === 'team' ? selectedSlot : undefined}
           boxType="team"
+          onDragDrop={(from, to) => onMovePokemon('team', from, 'team', to)}
+          onDragDropExternal={(sourceBox, sourceIndex, targetIndex) => onMovePokemon(sourceBox, sourceIndex, 'team', targetIndex)}
         />
         
         <PokemonBox
@@ -151,6 +155,8 @@ const PublicBoxPanel: React.FC<PublicBoxPanelProps> = ({
           onSlotClick={(index) => onSlotClick('other', index)}
           selectedSlot={selectedBox === 'other' ? selectedSlot : undefined}
           boxType="other"
+          onDragDrop={(from, to) => onMovePokemon('other', from, 'other', to)}
+          onDragDropExternal={(sourceBox, sourceIndex, targetIndex) => onMovePokemon(sourceBox, sourceIndex, 'other', targetIndex)}
         />
         
         <PokemonBox
@@ -159,6 +165,8 @@ const PublicBoxPanel: React.FC<PublicBoxPanelProps> = ({
           onSlotClick={(index) => onSlotClick('graveyard', index)}
           selectedSlot={selectedBox === 'graveyard' ? selectedSlot : undefined}
           boxType="graveyard"
+          onDragDrop={(from, to) => onMovePokemon('graveyard', from, 'graveyard', to)}
+          onDragDropExternal={(sourceBox, sourceIndex, targetIndex) => onMovePokemon(sourceBox, sourceIndex, 'graveyard', targetIndex)}
         />
       </CardContent>
       <CardFooter>
