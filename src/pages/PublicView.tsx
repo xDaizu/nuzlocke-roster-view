@@ -364,25 +364,6 @@ const PublicView = () => {
     console.log('Fixtures loaded successfully!', finalSlots);
   };
 
-  // Export team data to clipboard
-  const exportTeamToClipboard = async () => {
-    try {
-      const team = storageService.loadTeam();
-      await navigator.clipboard.writeText(JSON.stringify(team, null, 2));
-      toast({
-        title: 'Exported!',
-        description: 'Team data copied to clipboard.',
-        variant: 'default',
-      });
-    } catch (err) {
-      toast({
-        title: 'Error',
-        description: 'Failed to copy team data to clipboard.',
-        variant: 'destructive',
-      });
-    }
-  };
-
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-purple-900 via-slate-900 to-red-900 flex items-center justify-center">
@@ -393,20 +374,11 @@ const PublicView = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-900 via-slate-900 to-red-900">
-      {/* Export Button */}
-      <div className="flex justify-end p-4">
-        <button
-          onClick={exportTeamToClipboard}
-          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow"
-        >
-          Export Team to Clipboard
-        </button>
-      </div>
       {/* Team Box Header */}
       <div className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-br from-purple-900 via-slate-900 to-red-900 p-4 border-b border-purple-500/30 relative">
         {/* PC preview slot — absolutely positioned so toggling it never shifts the team box */}
         {pcSlotSeconds > 0 && (
-          <div className="absolute left-4 top-1/2 -translate-y-1/2 w-[123px] h-[106px] grid">
+          <div className="absolute left-4 top-1/2 -translate-y-1/2 w-[123px] h-[106px] grid overflow-hidden">
             <TeamSlot
               slot={pcSlotDisplay}
               index={-1}
@@ -418,6 +390,8 @@ const PublicView = () => {
               draggable={false}
               showLevel={showLevel}
               showPokeball={showPokeball}
+              contentKey={pcSlotDisplay.id}
+              slideDirection="right"
             />
           </div>
         )}
@@ -436,6 +410,7 @@ const PublicView = () => {
               showLevel={showLevel}
               showPokeball={showPokeball}
               contentKey={graveyardSlotDisplay.id}
+              grayscale={true}
             />
           </div>
         )}

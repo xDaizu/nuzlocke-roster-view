@@ -16,8 +16,12 @@ interface TeamSlotProps {
   showLevel?: boolean;
   /** Show the pokeball icon on the slot (default true) */
   showPokeball?: boolean;
-  /** When this value changes, the sprite/name/pokeball content slides up into place while the slot's box stays put */
+  /** When this value changes, the sprite/name/pokeball content slides into place while the slot's box stays put */
   contentKey?: string | number;
+  /** Direction the content slides in/out when contentKey changes (default "up") */
+  slideDirection?: 'up' | 'right';
+  /** Renders the sprite/pokeball with a desaturated, aged "in memoriam" look */
+  grayscale?: boolean;
 }
 
 const TeamSlot: React.FC<TeamSlotProps> = ({
@@ -32,6 +36,8 @@ const TeamSlot: React.FC<TeamSlotProps> = ({
   showLevel = true,
   showPokeball = true,
   contentKey,
+  slideDirection = 'up',
+  grayscale = false,
 }) => {
   const getAbilityData = (slug: string) => {
     return abilitiesData.find((a) => a.slug === slug);
@@ -187,7 +193,7 @@ const TeamSlot: React.FC<TeamSlotProps> = ({
           ref={interactive ? imgRef : undefined}
           src={getPokemonSpriteUrl(s.pokemon, s.animated)}
           alt={s.pokemon.name.english}
-          className="absolute inset-0 w-full h-full object-contain drop-shadow-lg pointer-events-none"
+          className={`absolute inset-0 w-full h-full object-contain drop-shadow-lg pointer-events-none${grayscale ? " grayscale contrast-125 sepia-[.15] brightness-95" : ""}`}
           style={{
             transform: `scale(${s.animated ? s.animatedZoom : s.staticZoom}) translate(${s.animated ? (s.animatedTranslateX ?? 0) : (s.staticTranslateX ?? 0)}px, ${s.animated ? (s.animatedTranslateY ?? 0) : (s.staticTranslateY ?? 0)}px)`,
             userSelect: 'none',
@@ -208,7 +214,7 @@ const TeamSlot: React.FC<TeamSlotProps> = ({
             <img
               src={pokeballData[s.pokeball].image}
               alt={pokeballData[s.pokeball].name}
-              className="w-6 h-6 drop-shadow-md"
+              className={`w-6 h-6 drop-shadow-md${grayscale ? " grayscale contrast-125" : ""}`}
               draggable={false}
             />
           </div>
@@ -256,11 +262,11 @@ const TeamSlot: React.FC<TeamSlotProps> = ({
               )}
             </div>
 
-            {/* Outgoing content: slides up and out while the new content slides up and in */}
+            {/* Outgoing content: slides out while the new content slides in, same direction */}
             {contentKey !== undefined && leaving && (
               <div
                 key={`leaving-${leaving.key}`}
-                className="absolute inset-0 animate-slide-up-out pointer-events-none"
+                className={`absolute inset-0 pointer-events-none ${slideDirection === 'right' ? 'animate-slide-right-out' : 'animate-slide-up-out'}`}
                 style={{ animationFillMode: 'forwards' }}
               >
                 {renderSlotContent(leaving.slot, false)}
@@ -269,7 +275,7 @@ const TeamSlot: React.FC<TeamSlotProps> = ({
 
             <div
               key={contentKey}
-              className={contentKey !== undefined ? "absolute inset-0 animate-slide-up-in" : "contents"}
+              className={contentKey !== undefined ? `absolute inset-0 ${slideDirection === 'right' ? 'animate-slide-right-in' : 'animate-slide-up-in'}` : "contents"}
               style={contentKey !== undefined ? { animationFillMode: 'forwards' } : undefined}
             >
               {renderSlotContent(slot, true)}
