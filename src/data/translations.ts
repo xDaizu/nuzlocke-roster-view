@@ -80,7 +80,11 @@ export const translations = {
     region: "Región",
     regionDescription: "Selecciona la región de tu partida",
     autosave: "Guardado automático",
-    autosaveDescription: "Guarda los cambios automáticamente"
+    autosaveDescription: "Guarda los cambios automáticamente",
+    showLevel: "Mostrar nivel",
+    showLevelDescription: "Muestra el nivel del Pokémon en la ficha",
+    showPokeball: "Mostrar Pokéball",
+    showPokeballDescription: "Muestra la Pokéball usada en la captura"
   }
 } as const;
 

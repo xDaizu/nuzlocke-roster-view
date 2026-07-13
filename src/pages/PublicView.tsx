@@ -97,14 +97,22 @@ const PublicView = () => {
     // Default to true; only disable if explicitly saved as false
     return saved?.autosave !== false;
   });
+  const [showLevel, setShowLevel] = useState<boolean>(() => {
+    const saved = storageService.loadAppConfig();
+    return saved?.showLevel !== false;
+  });
+  const [showPokeball, setShowPokeball] = useState<boolean>(() => {
+    const saved = storageService.loadAppConfig();
+    return saved?.showPokeball !== false;
+  });
   // Ref to skip autosave during the initial data-load phase
   const isInitialLoad = React.useRef(true);
   const { toast } = useToast();
 
-  // Persist app-wide settings (region, autosave, …) whenever they change
+  // Persist app-wide settings (region, autosave, display toggles, …) whenever they change
   useEffect(() => {
-    storageService.saveAppConfig({ region: selectedRegion, autosave });
-  }, [selectedRegion, autosave]);
+    storageService.saveAppConfig({ region: selectedRegion, autosave, showLevel, showPokeball });
+  }, [selectedRegion, autosave, showLevel, showPokeball]);
 
   // Persist panel layout config whenever it changes
   useEffect(() => {
@@ -376,6 +384,8 @@ const PublicView = () => {
                     abilitiesData={abilitiesData}
                     placesData={placesData}
                     draggable={true}
+                    showLevel={showLevel}
+                    showPokeball={showPokeball}
                   />
                 );
               })}
@@ -541,6 +551,10 @@ const PublicView = () => {
                           onRegionChange={setSelectedRegion}
                           autosave={autosave}
                           onAutosaveChange={setAutosave}
+                          showLevel={showLevel}
+                          onShowLevelChange={setShowLevel}
+                          showPokeball={showPokeball}
+                          onShowPokeballChange={setShowPokeball}
                         />
                       </div>
                     );
