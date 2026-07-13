@@ -16,6 +16,8 @@ interface TeamSlotProps {
   showLevel?: boolean;
   /** Show the pokeball icon on the slot (default true) */
   showPokeball?: boolean;
+  /** When this value changes, the sprite/name/pokeball content slides up into place while the slot's box stays put */
+  contentKey?: string | number;
 }
 
 const TeamSlot: React.FC<TeamSlotProps> = ({
@@ -29,6 +31,7 @@ const TeamSlot: React.FC<TeamSlotProps> = ({
   draggable = false,
   showLevel = true,
   showPokeball = true,
+  contentKey,
 }) => {
   const getAbilityData = (slug: string) => {
     return abilitiesData.find((a) => a.slug === slug);
@@ -152,6 +155,84 @@ const TeamSlot: React.FC<TeamSlotProps> = ({
   const isDraggableSlot = draggable && !!slot.pokemon;
   const cursorClass = isDraggableSlot ? "cursor-grab active:cursor-grabbing" : "";
 
+  // ── Outgoing-content snapshot, so the previous sprite/name/pokeball can slide out
+  // while the new one slides in, instead of just vanishing (only when contentKey is used) ──
+  const prevKeyRef = useRef(contentKey);
+  const prevSlotRef = useRef(slot);
+  const [leaving, setLeaving] = React.useState<{ key: string | number; slot: any } | null>(null);
+  const leaveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  if (contentKey !== undefined && contentKey !== prevKeyRef.current) {
+    if (prevKeyRef.current !== undefined) {
+      setLeaving({ key: prevKeyRef.current, slot: prevSlotRef.current });
+    }
+    prevKeyRef.current = contentKey;
+  }
+  prevSlotRef.current = slot;
+
+  useEffect(() => {
+    if (!leaving) return;
+    if (leaveTimeoutRef.current) clearTimeout(leaveTimeoutRef.current);
+    leaveTimeoutRef.current = setTimeout(() => setLeaving(null), 650);
+    return () => {
+      if (leaveTimeoutRef.current) clearTimeout(leaveTimeoutRef.current);
+    };
+  }, [leaving]);
+
+  const renderSlotContent = (s: any, interactive: boolean) =>
+    s.pokemon ? (
+      <>
+        {/* Pokemon sprite — absolutely positioned behind everything */}
+        <img
+          ref={interactive ? imgRef : undefined}
+          src={getPokemonSpriteUrl(s.pokemon, s.animated)}
+          alt={s.pokemon.name.english}
+          className="absolute inset-0 w-full h-full object-contain drop-shadow-lg pointer-events-none"
+          style={{
+            transform: `scale(${s.animated ? s.animatedZoom : s.staticZoom}) translate(${s.animated ? (s.animatedTranslateX ?? 0) : (s.staticTranslateX ?? 0)}px, ${s.animated ? (s.animatedTranslateY ?? 0) : (s.staticTranslateY ?? 0)}px)`,
+            userSelect: 'none',
+            WebkitUserDrag: 'none',
+          } as React.CSSProperties}
+          onError={(e) => {
+            if (s.animated) {
+              const target = e.target as HTMLImageElement;
+              target.src = getPokemonSpriteUrl(s.pokemon!, false);
+            }
+          }}
+          draggable={false}
+        />
+
+        {/* Pokeball indicator */}
+        {showPokeball && (
+          <div className="absolute top-0 right-0 pointer-events-none z-10">
+            <img
+              src={pokeballData[s.pokeball].image}
+              alt={pokeballData[s.pokeball].name}
+              className="w-6 h-6 drop-shadow-md"
+              draggable={false}
+            />
+          </div>
+        )}
+
+        {/* Pokemon name — always on top */}
+        <div className="absolute bottom-0 left-0 right-0 z-10 text-center px-1 pb-1">
+          <div className="inline-block max-w-full text-md font-bold text-white truncate leading-none bg-slate-900/80 rounded px-0.5 py-0">
+            {s.nickname || s.pokemon.name.english}
+          </div>
+        </div>
+      </>
+    ) : (
+      // Empty slot
+      <div className="flex-1 flex items-center justify-center text-slate-500">
+        <div className="text-center">
+          <div className="w-16 h-16 bg-slate-700/50 rounded-full mb-1 mx-auto flex items-center justify-center">
+            <span className="text-2xl">?</span>
+          </div>
+          <div className="text-sm">Vacío</div>
+        </div>
+      </div>
+    );
+
   return (
     <TooltipProvider>
       <Tooltip>
@@ -175,58 +256,24 @@ const TeamSlot: React.FC<TeamSlotProps> = ({
               )}
             </div>
 
-            {slot.pokemon ? (
-              <>
-                {/* Pokemon sprite — absolutely positioned behind everything */}
-                <img
-                  ref={imgRef}
-                  src={getPokemonSpriteUrl(slot.pokemon, slot.animated)}
-                  alt={slot.pokemon.name.english}
-                  className="absolute inset-0 w-full h-full object-contain drop-shadow-lg pointer-events-none"
-                  style={{
-                    transform: `scale(${slot.animated ? slot.animatedZoom : slot.staticZoom}) translate(${slot.animated ? (slot.animatedTranslateX ?? 0) : (slot.staticTranslateX ?? 0)}px, ${slot.animated ? (slot.animatedTranslateY ?? 0) : (slot.staticTranslateY ?? 0)}px)`,
-                    userSelect: 'none',
-                    WebkitUserDrag: 'none',
-                  } as React.CSSProperties}
-                  onError={(e) => {
-                    if (slot.animated) {
-                      const target = e.target as HTMLImageElement;
-                      target.src = getPokemonSpriteUrl(slot.pokemon!, false);
-                    }
-                  }}
-                  draggable={false}
-                />
-
-                {/* Pokeball indicator */}
-                {showPokeball && (
-                  <div className="absolute top-0 right-0 pointer-events-none z-10">
-                    <img
-                      src={pokeballData[slot.pokeball].image}
-                      alt={pokeballData[slot.pokeball].name}
-                      className="w-6 h-6 drop-shadow-md"
-                      draggable={false}
-                    />
-                  </div>
-                )}
-
-                {/* Pokemon name — always on top */}
-                <div className="absolute bottom-0 left-0 right-0 z-10 text-center px-1 pb-1">
-                  <div className="inline-block max-w-full text-md font-bold text-white truncate leading-none bg-slate-900/80 rounded px-0.5 py-0">
-                    {slot.nickname || slot.pokemon.name.english}
-                  </div>
-                </div>
-              </>
-            ) : (
-              // Empty slot
-              <div className="flex-1 flex items-center justify-center text-slate-500">
-                <div className="text-center">
-                  <div className="w-16 h-16 bg-slate-700/50 rounded-full mb-1 mx-auto flex items-center justify-center">
-                    <span className="text-2xl">?</span>
-                  </div>
-                  <div className="text-sm">Vacío</div>
-                </div>
+            {/* Outgoing content: slides up and out while the new content slides up and in */}
+            {contentKey !== undefined && leaving && (
+              <div
+                key={`leaving-${leaving.key}`}
+                className="absolute inset-0 animate-slide-up-out pointer-events-none"
+                style={{ animationFillMode: 'forwards' }}
+              >
+                {renderSlotContent(leaving.slot, false)}
               </div>
             )}
+
+            <div
+              key={contentKey}
+              className={contentKey !== undefined ? "absolute inset-0 animate-slide-up-in" : "contents"}
+              style={contentKey !== undefined ? { animationFillMode: 'forwards' } : undefined}
+            >
+              {renderSlotContent(slot, true)}
+            </div>
           </div>
         </TooltipTrigger>
           <TooltipContent className="text-sm max-w-xs">

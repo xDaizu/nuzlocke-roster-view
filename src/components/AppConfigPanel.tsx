@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
+import { Input } from "@/components/ui/input";
 import { Globe } from "lucide-react";
 import { translations } from "@/data/translations";
 import { REGION_LIST, RegionId } from "@/data/regions";
@@ -16,6 +17,12 @@ interface AppConfigPanelProps {
   onShowLevelChange: (value: boolean) => void;
   showPokeball: boolean;
   onShowPokeballChange: (value: boolean) => void;
+  /** Seconds between swaps for the header's PC preview slot. 0 disables it. */
+  pcSlotSeconds: number;
+  onPcSlotSecondsChange: (value: number) => void;
+  /** Seconds between swaps for the header's graveyard/heaven preview slot. 0 disables it. */
+  graveyardSlotSeconds: number;
+  onGraveyardSlotSecondsChange: (value: number) => void;
 }
 
 /** App-wide settings (region, autosave, display toggles; designed to grow). */
@@ -28,7 +35,34 @@ const AppConfigPanel: React.FC<AppConfigPanelProps> = ({
   onShowLevelChange,
   showPokeball,
   onShowPokeballChange,
+  pcSlotSeconds,
+  onPcSlotSecondsChange,
+  graveyardSlotSeconds,
+  onGraveyardSlotSecondsChange,
 }) => {
+  const cycleSecondsRow = (
+    label: string,
+    description: string,
+    value: number,
+    onChange: (v: number) => void,
+  ) => (
+    <div className="space-y-2 p-3 bg-slate-700/30 rounded-lg border border-slate-600/50">
+      <Label className="text-white text-sm">{label}</Label>
+      <Input
+        type="number"
+        min={0}
+        step={1}
+        value={value}
+        onChange={(e) => {
+          const parsed = Number(e.target.value);
+          onChange(Number.isFinite(parsed) && parsed > 0 ? parsed : 0);
+        }}
+        className="bg-slate-700 border-slate-600 text-white"
+      />
+      <p className="text-xs text-slate-400">{description}</p>
+    </div>
+  );
+
   const toggleRow = (
     label: string,
     description: string,
@@ -96,6 +130,20 @@ const AppConfigPanel: React.FC<AppConfigPanelProps> = ({
           translations.appConfig.showPokeballDescription,
           showPokeball,
           onShowPokeballChange,
+        )}
+
+        {cycleSecondsRow(
+          translations.appConfig.pcSlotSeconds,
+          translations.appConfig.pcSlotSecondsDescription,
+          pcSlotSeconds,
+          onPcSlotSecondsChange,
+        )}
+
+        {cycleSecondsRow(
+          translations.appConfig.graveyardSlotSeconds,
+          translations.appConfig.graveyardSlotSecondsDescription,
+          graveyardSlotSeconds,
+          onGraveyardSlotSecondsChange,
         )}
       </CardContent>
     </Card>
