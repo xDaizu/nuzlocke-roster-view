@@ -375,7 +375,7 @@ const PublicView = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-900 via-slate-900 to-red-900">
       {/* Team Box Header */}
-      <div className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-br from-purple-900 via-slate-900 to-red-900 p-4 border-b border-purple-500/30 relative">
+      <div className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-br from-purple-900 via-slate-900 to-red-900 p-4 border-b border-purple-500/30">
         {/* PC preview slot — absolutely positioned so toggling it never shifts the team box */}
         {pcSlotSeconds > 0 && (
           <div className="absolute left-4 top-1/2 -translate-y-1/2 w-[123px] h-[106px] grid overflow-hidden">
