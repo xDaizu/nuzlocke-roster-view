@@ -17,6 +17,7 @@ import { DEFAULT_REGION, RegionId, getPlacesForRegion } from "@/data/regions";
 import { pokemonFixtures } from "@/data/fixtures";
 import { translations } from "@/data/translations";
 import { storageService } from "@/services/storageService";
+import { useCyclingSlot } from "@/hooks/useCyclingSlot";
 
 interface PanelConfig {
   boxPanel: { columns: number; order: number };
@@ -105,14 +106,30 @@ const PublicView = () => {
     const saved = storageService.loadAppConfig();
     return saved?.showPokeball !== false;
   });
+  // Cycle interval (seconds) for the header's PC/graveyard preview slots. 0 = disabled.
+  const [pcSlotSeconds, setPcSlotSeconds] = useState<number>(() => {
+    const saved = storageService.loadAppConfig();
+    return typeof saved?.pcSlotSeconds === 'number' ? saved.pcSlotSeconds : 0;
+  });
+  const [graveyardSlotSeconds, setGraveyardSlotSeconds] = useState<number>(() => {
+    const saved = storageService.loadAppConfig();
+    return typeof saved?.graveyardSlotSeconds === 'number' ? saved.graveyardSlotSeconds : 0;
+  });
   // Ref to skip autosave during the initial data-load phase
   const isInitialLoad = React.useRef(true);
   const { toast } = useToast();
 
   // Persist app-wide settings (region, autosave, display toggles, …) whenever they change
   useEffect(() => {
-    storageService.saveAppConfig({ region: selectedRegion, autosave, showLevel, showPokeball });
-  }, [selectedRegion, autosave, showLevel, showPokeball]);
+    storageService.saveAppConfig({
+      region: selectedRegion,
+      autosave,
+      showLevel,
+      showPokeball,
+      pcSlotSeconds,
+      graveyardSlotSeconds,
+    });
+  }, [selectedRegion, autosave, showLevel, showPokeball, pcSlotSeconds, graveyardSlotSeconds]);
 
   // Persist panel layout config whenever it changes
   useEffect(() => {
@@ -131,6 +148,46 @@ const PublicView = () => {
   const team = allSlots.filter(slot => (slot.box || 'other') === 'team');
   const otherBox = allSlots.filter(slot => (slot.box || 'other') === 'other');
   const graveyardBox = allSlots.filter(slot => (slot.box || 'other') === 'graveyard');
+
+  // Header preview slots: cycle through the Pokémon actually present in each box
+  const pcCycleItems = otherBox.filter(slot => slot.pokemon);
+  const graveyardCycleItems = graveyardBox.filter(slot => slot.pokemon);
+  const pcSlotPokemon = useCyclingSlot(pcCycleItems, pcSlotSeconds);
+  const graveyardSlotPokemon = useCyclingSlot(graveyardCycleItems, graveyardSlotSeconds);
+  const pcSlotDisplay: TeamPokemon = pcSlotPokemon || {
+    id: 'pc-header-slot',
+    pokemon: null,
+    nickname: '',
+    level: 1,
+    ability: '',
+    pokeball: 'pokeball',
+    animated: false,
+    staticZoom: 1.5,
+    animatedZoom: 1.5,
+    staticTranslateX: 0,
+    staticTranslateY: 0,
+    animatedTranslateX: 0,
+    animatedTranslateY: 0,
+    place: '',
+    box: 'other',
+  };
+  const graveyardSlotDisplay: TeamPokemon = graveyardSlotPokemon || {
+    id: 'graveyard-header-slot',
+    pokemon: null,
+    nickname: '',
+    level: 1,
+    ability: '',
+    pokeball: 'pokeball',
+    animated: false,
+    staticZoom: 1.5,
+    animatedZoom: 1.5,
+    staticTranslateX: 0,
+    staticTranslateY: 0,
+    animatedTranslateX: 0,
+    animatedTranslateY: 0,
+    place: '',
+    box: 'graveyard',
+  };
 
   useEffect(() => {
     const initializeData = async () => {
@@ -346,7 +403,42 @@ const PublicView = () => {
         </button>
       </div>
       {/* Team Box Header */}
-      <div className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-br from-purple-900 via-slate-900 to-red-900 p-4 border-b border-purple-500/30">
+      <div className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-br from-purple-900 via-slate-900 to-red-900 p-4 border-b border-purple-500/30 relative">
+        {/* PC preview slot — absolutely positioned so toggling it never shifts the team box */}
+        {pcSlotSeconds > 0 && (
+          <div className="absolute left-4 top-1/2 -translate-y-1/2 w-[123px] h-[106px] grid">
+            <TeamSlot
+              slot={pcSlotDisplay}
+              index={-1}
+              updateSlot={updateSlot}
+              getPokemonSpriteUrl={getPokemonSpriteUrl}
+              pokeballData={POKEBALL_DATA}
+              abilitiesData={abilitiesData}
+              placesData={placesData}
+              draggable={false}
+              showLevel={showLevel}
+              showPokeball={showPokeball}
+            />
+          </div>
+        )}
+        {/* Graveyard/heaven preview slot — content slides up in place each time it cycles */}
+        {graveyardSlotSeconds > 0 && (
+          <div className="absolute right-4 top-1/2 -translate-y-1/2 w-[123px] h-[106px] grid overflow-hidden">
+            <TeamSlot
+              slot={graveyardSlotDisplay}
+              index={-1}
+              updateSlot={updateSlot}
+              getPokemonSpriteUrl={getPokemonSpriteUrl}
+              pokeballData={POKEBALL_DATA}
+              abilitiesData={abilitiesData}
+              placesData={placesData}
+              draggable={false}
+              showLevel={showLevel}
+              showPokeball={showPokeball}
+              contentKey={graveyardSlotDisplay.id}
+            />
+          </div>
+        )}
         <div className="w-[800px] h-[130px] bg-gradient-to-r from-slate-900 via-purple-900/20 to-slate-900 border-2 border-purple-500/30 rounded-lg overflow-hidden mx-auto">
           <div className="h-full p-3">
             <div className="grid grid-cols-6 gap-2 h-full">
@@ -555,6 +647,10 @@ const PublicView = () => {
                           onShowLevelChange={setShowLevel}
                           showPokeball={showPokeball}
                           onShowPokeballChange={setShowPokeball}
+                          pcSlotSeconds={pcSlotSeconds}
+                          onPcSlotSecondsChange={setPcSlotSeconds}
+                          graveyardSlotSeconds={graveyardSlotSeconds}
+                          onGraveyardSlotSecondsChange={setGraveyardSlotSeconds}
                         />
                       </div>
                     );

@@ -84,7 +84,11 @@ export const translations = {
     showLevel: "Mostrar nivel",
     showLevelDescription: "Muestra el nivel del Pokémon en la ficha",
     showPokeball: "Mostrar Pokéball",
-    showPokeballDescription: "Muestra la Pokéball usada en la captura"
+    showPokeballDescription: "Muestra la Pokéball usada en la captura",
+    pcSlotSeconds: "Ciclo del PC (segundos)",
+    pcSlotSecondsDescription: "Muestra un Pokémon del PC en la cabecera, cambiando cada N segundos. 0 desactiva esta ranura.",
+    graveyardSlotSeconds: "Ciclo del cielo (segundos)",
+    graveyardSlotSecondsDescription: "Muestra un Pokémon del cielo en la cabecera, cambiando cada N segundos. 0 desactiva esta ranura."
   }
 } as const;
 
