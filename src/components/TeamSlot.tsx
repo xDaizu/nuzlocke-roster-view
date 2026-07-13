@@ -122,44 +122,39 @@ const TeamSlot: React.FC<TeamSlotProps> = ({
 
             {slot.pokemon ? (
               <>
-                {/* Pokemon sprite */}
-                <div className="relative flex-1 flex items-center justify-center min-h-0 w-full">
+                {/* Pokemon sprite — absolutely positioned behind everything */}
+                <img
+                  ref={imgRef}
+                  src={getPokemonSpriteUrl(slot.pokemon, slot.animated)}
+                  alt={slot.pokemon.name.english}
+                  className="absolute inset-0 w-full h-full object-contain drop-shadow-lg pointer-events-none"
+                  style={{
+                    transform: `scale(${slot.animated ? slot.animatedZoom : slot.staticZoom}) translate(${slot.animated ? (slot.animatedTranslateX ?? 0) : (slot.staticTranslateX ?? 0)}px, ${slot.animated ? (slot.animatedTranslateY ?? 0) : (slot.staticTranslateY ?? 0)}px)`,
+                    userSelect: 'none',
+                    WebkitUserDrag: 'none',
+                  } as React.CSSProperties}
+                  onError={(e) => {
+                    if (slot.animated) {
+                      const target = e.target as HTMLImageElement;
+                      target.src = getPokemonSpriteUrl(slot.pokemon!, false);
+                    }
+                  }}
+                  draggable={false}
+                />
+
+                {/* Pokeball indicator */}
+                <div className="absolute top-0 right-0 pointer-events-none z-10">
                   <img
-                    ref={imgRef}
-                    src={getPokemonSpriteUrl(slot.pokemon, slot.animated)}
-                    alt={slot.pokemon.name.english}
-                    className="object-contain drop-shadow-lg pointer-events-none"
-                    style={{
-                      maxHeight: '140px',
-                      width: '80%',
-                      maxWidth: '80%',
-                      transform: `scale(${slot.animated ? slot.animatedZoom : slot.staticZoom}) translate(${slot.animated ? (slot.animatedTranslateX ?? 0) : (slot.staticTranslateX ?? 0)}px, ${slot.animated ? (slot.animatedTranslateY ?? 0) : (slot.staticTranslateY ?? 0)}px)`,
-                      objectPosition: 'center',
-                      userSelect: 'none',
-                      WebkitUserDrag: 'none',
-                    } as React.CSSProperties}
-                    onError={(e) => {
-                      if (slot.animated) {
-                        const target = e.target as HTMLImageElement;
-                        target.src = getPokemonSpriteUrl(slot.pokemon!, false);
-                      }
-                    }}
+                    src={pokeballData[slot.pokeball].image}
+                    alt={pokeballData[slot.pokeball].name}
+                    className="w-6 h-6 drop-shadow-md"
                     draggable={false}
                   />
-                  {/* Pokeball indicator */}
-                  <div className="absolute -top-1 -right-1">
-                    <img
-                      src={pokeballData[slot.pokeball].image}
-                      alt={pokeballData[slot.pokeball].name}
-                      className="w-6 h-6 drop-shadow-md pointer-events-none"
-                      draggable={false}
-                    />
-                  </div>
                 </div>
 
-                {/* Pokemon info */}
-                <div className="w-full text-center mt-1">
-                  <div className="text-md font-bold text-white truncate">
+                {/* Pokemon name — always on top */}
+                <div className="absolute bottom-0 left-0 right-0 z-10 text-center px-1 pb-1">
+                  <div className="text-md font-bold text-white truncate drop-shadow-[0_1px_3px_rgba(0,0,0,0.9)]">
                     {slot.nickname || slot.pokemon.name.english}
                   </div>
                 </div>
