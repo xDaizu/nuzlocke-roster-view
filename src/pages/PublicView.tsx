@@ -92,17 +92,32 @@ const PublicView = () => {
     }
     return DEFAULT_PANEL_CONFIG;
   });
+  const [autosave, setAutosave] = useState<boolean>(() => {
+    const saved = storageService.loadAppConfig();
+    // Default to true; only disable if explicitly saved as false
+    return saved?.autosave !== false;
+  });
+  // Ref to skip autosave during the initial data-load phase
+  const isInitialLoad = React.useRef(true);
   const { toast } = useToast();
 
-  // Persist app-wide settings (region, …) whenever they change
+  // Persist app-wide settings (region, autosave, …) whenever they change
   useEffect(() => {
-    storageService.saveAppConfig({ region: selectedRegion });
-  }, [selectedRegion]);
+    storageService.saveAppConfig({ region: selectedRegion, autosave });
+  }, [selectedRegion, autosave]);
 
   // Persist panel layout config whenever it changes
   useEffect(() => {
     storageService.savePanelConfig(panelConfig as unknown as Record<string, unknown>);
   }, [panelConfig]);
+
+  // Autosave: persist team slots on every change (skip the initial load)
+  useEffect(() => {
+    if (isInitialLoad.current) return;
+    if (autosave) {
+      storageService.saveTeam(allSlots);
+    }
+  }, [allSlots, autosave]);
 
   // Filter slots by box type, defaulting to 'other' if no box is set
   const team = allSlots.filter(slot => (slot.box || 'other') === 'team');
@@ -144,6 +159,8 @@ const PublicView = () => {
         });
       } finally {
         setIsLoading(false);
+        // Mark initial load complete so autosave kicks in for subsequent changes
+        isInitialLoad.current = false;
       }
     };
 
@@ -522,6 +539,8 @@ const PublicView = () => {
                         <AppConfigPanel
                           region={selectedRegion}
                           onRegionChange={setSelectedRegion}
+                          autosave={autosave}
+                          onAutosaveChange={setAutosave}
                         />
                       </div>
                     );

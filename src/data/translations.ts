@@ -78,7 +78,9 @@ export const translations = {
   // App-wide configuration (region, etc.)
   appConfig: {
     region: "Región",
-    regionDescription: "Selecciona la región de tu partida"
+    regionDescription: "Selecciona la región de tu partida",
+    autosave: "Guardado automático",
+    autosaveDescription: "Guarda los cambios automáticamente"
   }
 } as const;
 
