@@ -276,6 +276,7 @@ const PublicView = () => {
                     pokeballData={POKEBALL_DATA}
                     abilitiesData={abilitiesData}
                     placesData={placesData}
+                    draggable={true}
                   />
                 );
               })}
