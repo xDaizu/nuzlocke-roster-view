@@ -132,6 +132,7 @@ const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
 
   // Handle focus and blur
   const handleFocus = () => {
+    setInputValue("");
     setOpen(true);
   };
 
