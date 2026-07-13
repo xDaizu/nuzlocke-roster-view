@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { TeamPokemon } from "@/types/pokemon";
 import { getPokemonSpriteUrl } from "@/utils/pokemonData";
 
@@ -25,6 +25,7 @@ const PokemonBox: React.FC<PokemonBoxProps> = ({
   boxType,
   columnSpan = 2,
 }) => {
+  const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
   // Dynamic sizing logic
   const isDynamicBox = boxType === 'other' || boxType === 'graveyard';
   const isTeamBox = boxType === 'team';
@@ -84,13 +85,22 @@ const PokemonBox: React.FC<PokemonBoxProps> = ({
     e.dataTransfer.effectAllowed = 'move';
   };
 
-  const handleDragOver = (e: React.DragEvent) => {
+  const handleDragOver = (e: React.DragEvent, index: number) => {
     e.preventDefault();
     e.dataTransfer.dropEffect = 'move';
+    setDragOverIndex(index);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    // Only clear if leaving the slot entirely (not moving to a child)
+    if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+      setDragOverIndex(null);
+    }
   };
 
   const handleDrop = (e: React.DragEvent, targetIndex: number) => {
     e.preventDefault();
+    setDragOverIndex(null);
     
     try {
       const dragData = JSON.parse(e.dataTransfer.getData('application/json'));
@@ -139,10 +149,13 @@ const PokemonBox: React.FC<PokemonBoxProps> = ({
             onClick={() => onSlotClick?.(index)}
             draggable={slot.pokemon !== null}
             onDragStart={(e) => handleDragStart(e, index)}
-            onDragOver={handleDragOver}
+            onDragOver={(e) => handleDragOver(e, index)}
+            onDragLeave={handleDragLeave}
             onDrop={(e) => handleDrop(e, index)}
             className={`p-2 rounded border-2 transition-all ${
-              selectedSlot === index
+              dragOverIndex === index
+                ? 'border-purple-400 bg-purple-500/30 scale-105 shadow-lg shadow-purple-500/30'
+                : selectedSlot === index
                 ? 'border-purple-400 bg-purple-500/20'
                 : 'border-slate-600 bg-slate-800/50 hover:border-purple-500/50'
             } ${slot.pokemon ? 'cursor-grab active:cursor-grabbing' : ''}`}
