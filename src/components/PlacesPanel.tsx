@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { TeamPokemon } from "@/types/pokemon";
 import { MapPin } from "lucide-react";
 import { translations } from "@/data/translations";
+import { getAllPlaces } from "@/data/regions";
 
 interface PlacesPanelProps {
   allSlots: TeamPokemon[];
@@ -20,7 +21,7 @@ const PlacesPanel: React.FC<PlacesPanelProps> = ({ allSlots, placesData }) => {
   // Get place names from placesData
   const getPlaceName = (placeId: string) => {
     if (placeId === 'unknown') return translations.placeholders.unknown;
-    const place = placesData.find(p => p.id === placeId);
+    const place = placesData.find(p => p.id === placeId) ?? getAllPlaces().find(p => p.id === placeId);
     return place ? place.nombre : placeId;
   };
 

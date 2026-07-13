@@ -30,3 +30,7 @@ export const REGION_LIST: Region[] = Object.values(REGIONS);
 
 export const getPlacesForRegion = (region: RegionId): Place[] =>
   REGIONS[region].places;
+
+/** All places across every region — used to translate a place caught in a region other than the one currently selected. */
+export const getAllPlaces = (): Place[] =>
+  REGION_LIST.flatMap(region => region.places);
