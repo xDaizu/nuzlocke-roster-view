@@ -23,6 +23,8 @@ interface AppConfigPanelProps {
   /** Seconds between swaps for the header's graveyard/heaven preview slot. 0 disables it. */
   graveyardSlotSeconds: number;
   onGraveyardSlotSecondsChange: (value: number) => void;
+  placesDisplay: 'panel' | 'sidebar';
+  onPlacesDisplayChange: (value: 'panel' | 'sidebar') => void;
 }
 
 /** App-wide settings (region, autosave, display toggles; designed to grow). */
@@ -39,6 +41,8 @@ const AppConfigPanel: React.FC<AppConfigPanelProps> = ({
   onPcSlotSecondsChange,
   graveyardSlotSeconds,
   onGraveyardSlotSecondsChange,
+  placesDisplay,
+  onPlacesDisplayChange,
 }) => {
   const cycleSecondsRow = (
     label: string,
@@ -145,6 +149,25 @@ const AppConfigPanel: React.FC<AppConfigPanelProps> = ({
           graveyardSlotSeconds,
           onGraveyardSlotSecondsChange,
         )}
+
+        {/* Places display mode selector */}
+        <div className="space-y-2 p-3 bg-slate-700/30 rounded-lg border border-slate-600/50">
+          <Label className="text-white text-sm">{translations.appConfig.placesDisplay}</Label>
+          <Select value={placesDisplay} onValueChange={(value) => onPlacesDisplayChange(value as 'panel' | 'sidebar')}>
+            <SelectTrigger className="bg-slate-700 border-slate-600 text-white">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent className="bg-slate-700 border-slate-600">
+              <SelectItem value="panel" className="text-white focus:bg-slate-600">
+                {translations.appConfig.placesDisplayPanel}
+              </SelectItem>
+              <SelectItem value="sidebar" className="text-white focus:bg-slate-600">
+                {translations.appConfig.placesDisplaySidebar}
+              </SelectItem>
+            </SelectContent>
+          </Select>
+          <p className="text-xs text-slate-400">{translations.appConfig.placesDisplayDescription}</p>
+        </div>
       </CardContent>
     </Card>
   );

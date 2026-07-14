@@ -6,12 +6,14 @@ import PublicHeader from "@/components/PublicHeader";
 import PublicBoxPanel from "@/components/PublicBoxPanel";
 import PublicSlotEditor from "@/components/PublicSlotEditor";
 import PlacesPanel from "@/components/PlacesPanel";
+import PlacesSidebar from "@/components/PlacesSidebar";
 import PanelConfigPanel from "@/components/PanelConfigPanel";
 import AppConfigPanel from "@/components/AppConfigPanel";
 import WeaknessPanel from "@/components/WeaknessPanel";
 import { Label } from "@/components/ui/label";
 import TeamSlot from "@/components/TeamSlot";
 import React from "react";
+import { Menu } from "lucide-react";
 import abilitiesData from "@/data/abilities_es.json";
 import { DEFAULT_REGION, RegionId, getPlacesForRegion } from "@/data/regions";
 import { pokemonFixtures } from "@/data/fixtures";
@@ -115,6 +117,11 @@ const PublicView = () => {
     const saved = storageService.loadAppConfig();
     return typeof saved?.graveyardSlotSeconds === 'number' ? saved.graveyardSlotSeconds : 0;
   });
+  const [placesDisplay, setPlacesDisplay] = useState<'panel' | 'sidebar'>(() => {
+    const saved = storageService.loadAppConfig();
+    return saved?.placesDisplay === 'sidebar' ? 'sidebar' : 'panel';
+  });
+  const [isPlacesSidebarOpen, setIsPlacesSidebarOpen] = useState(false);
   // Ref to skip autosave during the initial data-load phase
   const isInitialLoad = React.useRef(true);
   const { toast } = useToast();
@@ -128,8 +135,16 @@ const PublicView = () => {
       showPokeball,
       pcSlotSeconds,
       graveyardSlotSeconds,
+      placesDisplay,
     });
-  }, [selectedRegion, autosave, showLevel, showPokeball, pcSlotSeconds, graveyardSlotSeconds]);
+  }, [selectedRegion, autosave, showLevel, showPokeball, pcSlotSeconds, graveyardSlotSeconds, placesDisplay]);
+
+  // Close the sidebar if the display mode is switched away from it
+  useEffect(() => {
+    if (placesDisplay !== 'sidebar') {
+      setIsPlacesSidebarOpen(false);
+    }
+  }, [placesDisplay]);
 
   // Persist panel layout config whenever it changes
   useEffect(() => {
@@ -414,6 +429,16 @@ const PublicView = () => {
             />
           </div>
         )}
+        <div className="relative w-[800px] mx-auto">
+          {placesDisplay === 'sidebar' && (
+            <button
+              onClick={() => setIsPlacesSidebarOpen(open => !open)}
+              aria-label="Alternar barra lateral de lugares"
+              className="absolute -right-14 top-1/2 -translate-y-1/2 z-10 p-2 rounded-md bg-slate-800/80 border border-purple-500/30 text-purple-300 hover:bg-slate-700 hover:text-white transition-colors"
+            >
+              <Menu className="w-5 h-5" />
+            </button>
+          )}
         <div className="w-[800px] h-[130px] bg-gradient-to-r from-slate-900 via-purple-900/20 to-slate-900 border-2 border-purple-500/30 rounded-lg overflow-hidden mx-auto">
           <div className="h-full p-3">
             <div className="grid grid-cols-6 gap-2 h-full">
@@ -458,6 +483,7 @@ const PublicView = () => {
               })}
             </div>
           </div>
+        </div>
         </div>
       </div>
 
@@ -584,6 +610,7 @@ const PublicView = () => {
                       </div>
                     );
                   case 'placesPanel':
+                    if (placesDisplay === 'sidebar') return null;
                     return (
                       <div key={panelKey} className={colSpanClass}>
                         <PlacesPanel
@@ -626,6 +653,8 @@ const PublicView = () => {
                           onPcSlotSecondsChange={setPcSlotSeconds}
                           graveyardSlotSeconds={graveyardSlotSeconds}
                           onGraveyardSlotSecondsChange={setGraveyardSlotSeconds}
+                          placesDisplay={placesDisplay}
+                          onPlacesDisplayChange={setPlacesDisplay}
                         />
                       </div>
                     );
@@ -636,6 +665,16 @@ const PublicView = () => {
           </div>
         </div>
       </div>
+
+      {placesDisplay === 'sidebar' && (
+        <PlacesSidebar
+          isOpen={isPlacesSidebarOpen}
+          onClose={() => setIsPlacesSidebarOpen(false)}
+          allSlots={allSlots}
+          placesData={placesData}
+          topOffset={170}
+        />
+      )}
     </div>
   );
 };

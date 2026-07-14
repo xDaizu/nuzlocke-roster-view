@@ -88,7 +88,11 @@ export const translations = {
     pcSlotSeconds: "Ciclo del PC (segundos)",
     pcSlotSecondsDescription: "Muestra un Pokémon del PC en la cabecera, cambiando cada N segundos. 0 desactiva esta ranura.",
     graveyardSlotSeconds: "Ciclo del cielo (segundos)",
-    graveyardSlotSecondsDescription: "Muestra un Pokémon del cielo en la cabecera, cambiando cada N segundos. 0 desactiva esta ranura."
+    graveyardSlotSecondsDescription: "Muestra un Pokémon del cielo en la cabecera, cambiando cada N segundos. 0 desactiva esta ranura.",
+    placesDisplay: "Lugares",
+    placesDisplayDescription: "Muestra el panel de lugares como un panel fijo o como una barra lateral desplegable",
+    placesDisplayPanel: "Panel",
+    placesDisplaySidebar: "Barra lateral"
   }
 } as const;
 
