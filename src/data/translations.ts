@@ -3,7 +3,7 @@ export const translations = {
   panels: {
     boxPanel: "Panel de Cajas",
     slotEditor: "Editor",
-    placesPanel: "Lugares con captura",
+    placesPanel: "Progreso de captura",
     weaknessPanel: "Análisis de Tipos",
     configPanel: "Configuración de Paneles",
     appConfigPanel: "Configuración de la app"
@@ -46,6 +46,7 @@ export const translations = {
     loading: "Loading Pokemon data...",
     noPlaces: "No hay lugares registrados",
     assignPlaces: "Asigna lugares a tus Pokémon para verlos aquí",
+    trackerUnavailable: "El progreso de captura no está disponible todavía para esta región",
     teamSaved: "Team Saved",
     teamSavedDesc: "Your team has been saved to localStorage.",
     teamLoaded: "Team Loaded", 

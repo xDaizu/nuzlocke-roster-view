@@ -5,7 +5,7 @@ import { useToast } from "@/hooks/use-toast";
 import PublicHeader from "@/components/PublicHeader";
 import PublicBoxPanel from "@/components/PublicBoxPanel";
 import PublicSlotEditor from "@/components/PublicSlotEditor";
-import PlacesPanel from "@/components/PlacesPanel";
+import TrackerPanel from "@/components/TrackerPanel";
 import PlacesSidebar from "@/components/PlacesSidebar";
 import PanelConfigPanel from "@/components/PanelConfigPanel";
 import AppConfigPanel from "@/components/AppConfigPanel";
@@ -15,7 +15,7 @@ import TeamSlot from "@/components/TeamSlot";
 import React from "react";
 import { Menu } from "lucide-react";
 import abilitiesData from "@/data/abilities_es.json";
-import { DEFAULT_REGION, RegionId, getPlacesForRegion } from "@/data/regions";
+import { DEFAULT_REGION, RegionId, getPlacesForRegion, getTrackerEntriesForRegion } from "@/data/regions";
 import { pokemonFixtures } from "@/data/fixtures";
 import { translations } from "@/data/translations";
 import { storageService } from "@/services/storageService";
@@ -613,8 +613,9 @@ const PublicView = () => {
                     if (placesDisplay === 'sidebar') return null;
                     return (
                       <div key={panelKey} className={colSpanClass}>
-                        <PlacesPanel
+                        <TrackerPanel
                           allSlots={allSlots}
+                          trackerEntries={getTrackerEntriesForRegion(selectedRegion)}
                           placesData={placesData}
                         />
                       </div>
