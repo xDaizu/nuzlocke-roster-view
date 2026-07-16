@@ -1,6 +1,7 @@
 import React, { useRef, useCallback, useEffect } from "react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { MapPin } from "lucide-react";
+import { getCustomSpriteUrl } from "@/data/customSprites";
 
 interface TeamSlotProps {
   slot: any;
@@ -185,22 +186,32 @@ const TeamSlot: React.FC<TeamSlotProps> = ({
     };
   }, [leaving]);
 
-  const renderSlotContent = (s: any, interactive: boolean) =>
-    s.pokemon ? (
+  const renderSlotContent = (s: any, interactive: boolean) => {
+    const customUrl = s.pokemon && s.customSprite
+      ? getCustomSpriteUrl(s.pokemon.id, s.customSprite)
+      : undefined;
+    const spriteUrl = s.pokemon
+      ? (customUrl ?? getPokemonSpriteUrl(s.pokemon, s.animated))
+      : '';
+    const zoom = s.animated && !customUrl ? s.animatedZoom : s.staticZoom;
+    const tx = s.animated && !customUrl ? (s.animatedTranslateX ?? 0) : (s.staticTranslateX ?? 0);
+    const ty = s.animated && !customUrl ? (s.animatedTranslateY ?? 0) : (s.staticTranslateY ?? 0);
+
+    return s.pokemon ? (
       <>
         {/* Pokemon sprite — absolutely positioned behind everything */}
         <img
           ref={interactive ? imgRef : undefined}
-          src={getPokemonSpriteUrl(s.pokemon, s.animated)}
+          src={spriteUrl}
           alt={s.pokemon.name.english}
           className={`absolute inset-0 w-full h-full object-contain drop-shadow-lg pointer-events-none${grayscale ? " grayscale contrast-125 sepia-[.15] brightness-95" : ""}`}
           style={{
-            transform: `scale(${s.animated ? s.animatedZoom : s.staticZoom}) translate(${s.animated ? (s.animatedTranslateX ?? 0) : (s.staticTranslateX ?? 0)}px, ${s.animated ? (s.animatedTranslateY ?? 0) : (s.staticTranslateY ?? 0)}px)`,
+            transform: `scale(${zoom}) translate(${tx}px, ${ty}px)`,
             userSelect: 'none',
             WebkitUserDrag: 'none',
           } as React.CSSProperties}
           onError={(e) => {
-            if (s.animated) {
+            if (s.animated && !customUrl) {
               const target = e.target as HTMLImageElement;
               target.src = getPokemonSpriteUrl(s.pokemon!, false);
             }
@@ -238,6 +249,7 @@ const TeamSlot: React.FC<TeamSlotProps> = ({
         </div>
       </div>
     );
+  };
 
   return (
     <TooltipProvider>

@@ -12,6 +12,7 @@ import { cn } from "@/lib/utils";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { translations } from "@/data/translations";
 import AutocompleteInput from "@/components/AutocompleteInput";
+import { getCustomSpritesForPokemon } from "@/data/customSprites";
 
 interface SlotEditorProps {
   slot: TeamPokemon;
@@ -227,15 +228,81 @@ const SlotEditor: React.FC<SlotEditorProps> = ({
             />
           </div>
 
-          {/* Animated Toggle */}
-          <div className="flex items-center space-x-2 mt-4">
-            <Switch
-              id="animated"
-              checked={slot.animated}
-              onCheckedChange={(checked) => onUpdate({ animated: checked })}
-            />
-            <Label htmlFor="animated" className="text-slate-300 text-xs">Usar GIF animado</Label>
-          </div>
+          {/* Sprite mode: Official / Custom */}
+          {(() => {
+            const customSprites = slot.pokemon
+              ? getCustomSpritesForPokemon(slot.pokemon.id)
+              : [];
+            const hasCustom = customSprites.length > 0;
+            const isCustom = hasCustom && !!slot.customSprite;
+            const selectedCustom = isCustom
+              ? customSprites.find((s) => s.key === slot.customSprite) ?? customSprites[0]
+              : null;
+
+            return (
+              <div className="mt-4 space-y-2">
+                {/* Official / Custom switch */}
+                <div className="flex items-center space-x-2">
+                  <Switch
+                    id="sprite-mode"
+                    checked={isCustom}
+                    disabled={!hasCustom}
+                    onCheckedChange={(checked) => {
+                      if (checked) {
+                        onUpdate({ customSprite: customSprites[0].key, animated: false });
+                      } else {
+                        onUpdate({ customSprite: undefined });
+                      }
+                    }}
+                    className="data-[state=checked]:bg-purple-500"
+                  />
+                  <Label
+                    htmlFor="sprite-mode"
+                    className={`text-xs ${hasCustom ? 'text-slate-300' : 'text-slate-500'}`}
+                  >
+                    {isCustom ? 'Custom' : 'Oficial'}
+                  </Label>
+                </div>
+
+                {/* Dropdown: static/gif (official) or custom sprite list (custom) */}
+                {!isCustom ? (
+                  <Select
+                    value={slot.animated ? 'gif' : 'static'}
+                    onValueChange={(v) => onUpdate({ animated: v === 'gif' })}
+                  >
+                    <SelectTrigger className="bg-slate-700 border-slate-600 h-8 text-xs">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent className="bg-slate-700 border-slate-600 text-xs">
+                      <SelectItem value="static" className="text-xs">Sprite estático</SelectItem>
+                      <SelectItem value="gif" className="text-xs">GIF animado</SelectItem>
+                    </SelectContent>
+                  </Select>
+                ) : (
+                  <div className="space-y-1">
+                    <Select
+                      value={slot.customSprite ?? customSprites[0]?.key}
+                      onValueChange={(v) => onUpdate({ customSprite: v })}
+                    >
+                      <SelectTrigger className="bg-slate-700 border-slate-600 h-8 text-xs">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent className="bg-slate-700 border-slate-600 text-xs">
+                        {customSprites.map((s) => (
+                          <SelectItem key={s.key} value={s.key} className="text-xs">
+                            {s.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    {selectedCustom && (
+                      <p className="text-[10px] text-slate-400">By {selectedCustom.artist}</p>
+                    )}
+                  </div>
+                )}
+              </div>
+            );
+          })()}
 
           {/* Zoom Controls */}
           <div className="mt-4">

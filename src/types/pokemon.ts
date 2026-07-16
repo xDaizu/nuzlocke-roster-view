@@ -33,6 +33,8 @@ export interface TeamPokemon {
   animatedTranslateY: number; // Vertical offset in px for animated sprite centering
   place?: string; // Optional, can be empty or 'unknown'
   box: 'team' | 'other' | 'graveyard';
+  /** Key of the selected custom sprite (from CUSTOM_SPRITES_BY_POKEMON). Undefined = use official sprite. */
+  customSprite?: string;
 }
 
 export type PokeballType = 'pokeball' | 'superball' | 'sanaball';
