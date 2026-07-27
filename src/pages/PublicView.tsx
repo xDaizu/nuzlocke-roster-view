@@ -473,6 +473,7 @@ const PublicView = () => {
                     showLevel={showLevel}
                     showPokeball={showPokeball}
                     showGender={showGender}
+                    enableStatsToggle={true}
                   />
                 );
               })}
