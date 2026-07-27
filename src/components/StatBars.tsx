@@ -39,18 +39,19 @@ const StatBars: React.FC<StatBarsProps> = ({ base, nature }) => {
       )}
       <div className="flex items-end justify-between gap-0.5 flex-1">
         {STAT_CONFIG.map(({ key, label }) => {
-          const value = base[key];
+          const isIncreased = natureData?.increase === key;
+          const isDecreased = natureData?.decrease === key;
+          const value = Math.round(base[key] * (isIncreased ? 1.1 : isDecreased ? 0.9 : 1));
           const pct = Math.min(100, (value / MAX_STAT_REFERENCE) * 100);
           const color = getStatColor(value);
-          const labelColor =
-            natureData?.increase === key
-              ? "text-red-400"
-              : natureData?.decrease === key
-              ? "text-blue-400"
-              : "text-slate-300";
+          const natureColor = isIncreased ? "text-red-400" : isDecreased ? "text-blue-400" : "";
+          const labelColor = natureColor || "text-slate-300";
           return (
             <div key={key} className="flex flex-col items-center flex-1 h-full justify-end">
-              <span className="text-[8px] leading-none font-bold text-white mb-0.5">{value}</span>
+              <span className={`text-[7px] leading-none font-bold h-[7px] ${natureColor}`}>
+                {isIncreased ? "+" : isDecreased ? "−" : ""}
+              </span>
+              <span className={`text-[8px] leading-none font-bold mb-0.5 ${natureColor || "text-white"}`}>{value}</span>
               <div className="w-2 flex-1 max-h-[48px] bg-slate-700/80 rounded-sm flex items-end overflow-hidden">
                 <div
                   className="w-full rounded-sm"
