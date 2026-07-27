@@ -93,6 +93,8 @@ export const translations = {
     showPokeballDescription: "Muestra la Pokéball usada en la captura",
     showGender: "Mostrar género",
     showGenderDescription: "Muestra el icono de género del Pokémon en la ficha",
+    statsTwoRowLayout: "Estadísticas en dos filas",
+    statsTwoRowLayoutDescription: "Muestra las barras de estadísticas en dos filas de 3 con la naturaleza en el medio, en vez de una fila de 6",
     pcSlotSeconds: "Ciclo del PC (segundos)",
     pcSlotSecondsDescription: "Muestra un Pokémon del PC en la cabecera, cambiando cada N segundos. 0 desactiva esta ranura.",
     graveyardSlotSeconds: "Ciclo del cielo (segundos)",

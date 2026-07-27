@@ -46,6 +46,8 @@ interface TeamSlotProps {
   grayscale?: boolean;
   /** When true, a single click toggles a compact base-stats overlay in place of the sprite */
   enableStatsToggle?: boolean;
+  /** Renders the stats overlay as two rows of 3 bars with the nature in between, instead of one row of 6 */
+  statsTwoRowLayout?: boolean;
 }
 
 const TeamSlot: React.FC<TeamSlotProps> = ({
@@ -64,6 +66,7 @@ const TeamSlot: React.FC<TeamSlotProps> = ({
   slideDirection = 'up',
   grayscale = false,
   enableStatsToggle = false,
+  statsTwoRowLayout = false,
 }) => {
   const getAbilityData = (slug: string) => {
     return abilitiesData.find((a) => a.slug === slug);
@@ -357,7 +360,11 @@ const TeamSlot: React.FC<TeamSlotProps> = ({
             </div>
 
             {enableStatsToggle && showStats && slot.pokemon && (
-              <StatBars base={slot.pokemon.base} nature={slot.nature} />
+              <StatBars
+                base={slot.pokemon.base}
+                nature={slot.nature}
+                layout={statsTwoRowLayout ? "two-row" : "single-row"}
+              />
             )}
           </div>
         </TooltipTrigger>
