@@ -710,6 +710,8 @@ const PublicView = () => {
           onClose={() => setIsPlacesSidebarOpen(false)}
           allSlots={allSlots}
           placesData={placesData}
+          trackerEntries={getTrackerEntriesForRegion(selectedRegion)}
+          onSelectEncounter={handleSelectEncounter}
           topOffset={170}
         />
       )}

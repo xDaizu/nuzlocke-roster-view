@@ -1,19 +1,23 @@
 import React from "react";
 import { TeamPokemon } from "@/types/pokemon";
+import { TrackerEntry } from "@/types/tracker";
+import { Place } from "@/data/regions";
 import { MapPin, X } from "lucide-react";
 import { translations } from "@/data/translations";
-import PlacesList from "@/components/PlacesList";
+import TrackerList from "@/components/TrackerList";
 
 interface PlacesSidebarProps {
   isOpen: boolean;
   onClose: () => void;
   allSlots: TeamPokemon[];
-  placesData: Array<{ id: string; nombre: string }>;
+  placesData: Place[];
+  trackerEntries: TrackerEntry[] | undefined;
+  onSelectEncounter?: (entry: TrackerEntry) => void;
   /** Height of the fixed public header bar, so the sidebar starts right below it. */
   topOffset: number;
 }
 
-const PlacesSidebar: React.FC<PlacesSidebarProps> = ({ isOpen, onClose, allSlots, placesData, topOffset }) => {
+const PlacesSidebar: React.FC<PlacesSidebarProps> = ({ isOpen, onClose, allSlots, placesData, trackerEntries, onSelectEncounter, topOffset }) => {
   return (
     <aside
       className={`fixed right-0 bottom-0 z-40 w-80 max-w-[85vw] bg-slate-800/95 border-l border-purple-500/30 overflow-y-auto overscroll-contain transition-transform duration-300 ${
@@ -36,7 +40,12 @@ const PlacesSidebar: React.FC<PlacesSidebarProps> = ({ isOpen, onClose, allSlots
         </button>
       </div>
       <div className="p-4">
-        <PlacesList allSlots={allSlots} placesData={placesData} />
+        <TrackerList
+          allSlots={allSlots}
+          trackerEntries={trackerEntries}
+          placesData={placesData}
+          onSelectEncounter={onSelectEncounter}
+        />
       </div>
     </aside>
   );
