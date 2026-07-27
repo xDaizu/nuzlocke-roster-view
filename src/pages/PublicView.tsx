@@ -67,6 +67,7 @@ const PublicView = () => {
       animatedTranslateY: 0,
       place: '',
       box: 'team',
+      gender: 'genderless' as const,
     }))
   );
   const [allPokemon, setAllPokemon] = useState<Pokemon[]>([]);
@@ -170,6 +171,7 @@ const PublicView = () => {
     animatedTranslateY: 0,
     place: '',
     box: 'other',
+    gender: 'genderless',
   };
   const graveyardSlotDisplay: TeamPokemon = graveyardSlotPokemon || {
     id: 'graveyard-header-slot',
@@ -187,6 +189,7 @@ const PublicView = () => {
     animatedTranslateY: 0,
     place: '',
     box: 'graveyard',
+    gender: 'genderless',
   };
 
   useEffect(() => {
@@ -265,6 +268,7 @@ const PublicView = () => {
       animatedTranslateY: 0,
       place: '',
       box: 'team',
+      gender: 'genderless',
     });
     toast({
       title: translations.messages.slotCleared,
@@ -302,8 +306,8 @@ const PublicView = () => {
         if (targetSlot && targetSlot.pokemon) {
           // Swap: move source to target box position, target to source box position
           const tgtIdx = next.findIndex(s => s.id === targetSlot.id);
-          const srcPokemonData = { pokemon: next[srcIdx].pokemon, nickname: next[srcIdx].nickname, level: next[srcIdx].level, ability: next[srcIdx].ability, pokeball: next[srcIdx].pokeball, animated: next[srcIdx].animated, staticZoom: next[srcIdx].staticZoom, animatedZoom: next[srcIdx].animatedZoom, staticTranslateX: next[srcIdx].staticTranslateX, staticTranslateY: next[srcIdx].staticTranslateY, animatedTranslateX: next[srcIdx].animatedTranslateX, animatedTranslateY: next[srcIdx].animatedTranslateY, place: next[srcIdx].place };
-          const tgtPokemonData = { pokemon: next[tgtIdx].pokemon, nickname: next[tgtIdx].nickname, level: next[tgtIdx].level, ability: next[tgtIdx].ability, pokeball: next[tgtIdx].pokeball, animated: next[tgtIdx].animated, staticZoom: next[tgtIdx].staticZoom, animatedZoom: next[tgtIdx].animatedZoom, staticTranslateX: next[tgtIdx].staticTranslateX, staticTranslateY: next[tgtIdx].staticTranslateY, animatedTranslateX: next[tgtIdx].animatedTranslateX, animatedTranslateY: next[tgtIdx].animatedTranslateY, place: next[tgtIdx].place };
+          const srcPokemonData = { pokemon: next[srcIdx].pokemon, nickname: next[srcIdx].nickname, level: next[srcIdx].level, ability: next[srcIdx].ability, pokeball: next[srcIdx].pokeball, animated: next[srcIdx].animated, staticZoom: next[srcIdx].staticZoom, animatedZoom: next[srcIdx].animatedZoom, staticTranslateX: next[srcIdx].staticTranslateX, staticTranslateY: next[srcIdx].staticTranslateY, animatedTranslateX: next[srcIdx].animatedTranslateX, animatedTranslateY: next[srcIdx].animatedTranslateY, place: next[srcIdx].place, gender: next[srcIdx].gender };
+          const tgtPokemonData = { pokemon: next[tgtIdx].pokemon, nickname: next[tgtIdx].nickname, level: next[tgtIdx].level, ability: next[tgtIdx].ability, pokeball: next[tgtIdx].pokeball, animated: next[tgtIdx].animated, staticZoom: next[tgtIdx].staticZoom, animatedZoom: next[tgtIdx].animatedZoom, staticTranslateX: next[tgtIdx].staticTranslateX, staticTranslateY: next[tgtIdx].staticTranslateY, animatedTranslateX: next[tgtIdx].animatedTranslateX, animatedTranslateY: next[tgtIdx].animatedTranslateY, place: next[tgtIdx].place, gender: next[tgtIdx].gender };
           next[srcIdx] = { ...next[srcIdx], ...tgtPokemonData, box: sourceBox };
           next[tgtIdx] = { ...next[tgtIdx], ...srcPokemonData, box: targetBox };
         } else {
@@ -312,8 +316,8 @@ const PublicView = () => {
           if (targetSlot) {
             const tgtIdx = next.findIndex(s => s.id === targetSlot.id);
             // Move source data into the target real slot, clear the original source slot
-            next[tgtIdx] = { ...next[tgtIdx], pokemon: next[srcIdx].pokemon, nickname: next[srcIdx].nickname, level: next[srcIdx].level, ability: next[srcIdx].ability, pokeball: next[srcIdx].pokeball, animated: next[srcIdx].animated, staticZoom: next[srcIdx].staticZoom, animatedZoom: next[srcIdx].animatedZoom, staticTranslateX: next[srcIdx].staticTranslateX, staticTranslateY: next[srcIdx].staticTranslateY, animatedTranslateX: next[srcIdx].animatedTranslateX, animatedTranslateY: next[srcIdx].animatedTranslateY, place: next[srcIdx].place, box: targetBox };
-            next[srcIdx] = { ...next[srcIdx], pokemon: null, nickname: '', level: 1, ability: '', pokeball: 'pokeball', animated: false, staticZoom: 1.5, animatedZoom: 1.5, staticTranslateX: 0, staticTranslateY: 0, animatedTranslateX: 0, animatedTranslateY: 0, place: '' };
+            next[tgtIdx] = { ...next[tgtIdx], pokemon: next[srcIdx].pokemon, nickname: next[srcIdx].nickname, level: next[srcIdx].level, ability: next[srcIdx].ability, pokeball: next[srcIdx].pokeball, animated: next[srcIdx].animated, staticZoom: next[srcIdx].staticZoom, animatedZoom: next[srcIdx].animatedZoom, staticTranslateX: next[srcIdx].staticTranslateX, staticTranslateY: next[srcIdx].staticTranslateY, animatedTranslateX: next[srcIdx].animatedTranslateX, animatedTranslateY: next[srcIdx].animatedTranslateY, place: next[srcIdx].place, gender: next[srcIdx].gender, box: targetBox };
+            next[srcIdx] = { ...next[srcIdx], pokemon: null, nickname: '', level: 1, ability: '', pokeball: 'pokeball', animated: false, staticZoom: 1.5, animatedZoom: 1.5, staticTranslateX: 0, staticTranslateY: 0, animatedTranslateX: 0, animatedTranslateY: 0, place: '', gender: 'genderless' };
           } else {
             // Virtual empty slot in another box: just change this slot's box
             next[srcIdx] = { ...next[srcIdx], box: targetBox };
@@ -356,6 +360,7 @@ const PublicView = () => {
           animatedTranslateY: 0,
           place: fixture.place || '',
           box: fixture.box || 'team',
+          gender: 'genderless',
         };
     });
 
@@ -435,6 +440,7 @@ const PublicView = () => {
                   animatedTranslateY: 0,
                   place: '',
                   box: 'team' as const,
+                  gender: 'genderless' as const,
                 };
                 
                 // Find the correct index in allSlots for this team slot
