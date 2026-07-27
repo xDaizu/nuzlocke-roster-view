@@ -357,7 +357,7 @@ const TeamSlot: React.FC<TeamSlotProps> = ({
             </div>
 
             {enableStatsToggle && showStats && slot.pokemon && (
-              <StatBars base={slot.pokemon.base} />
+              <StatBars base={slot.pokemon.base} nature={slot.nature} />
             )}
           </div>
         </TooltipTrigger>

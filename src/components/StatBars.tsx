@@ -1,7 +1,9 @@
 import type { Pokemon } from "@/types/pokemon";
+import naturesData from "@/data/natures_es.json";
 
 interface StatBarsProps {
   base: Pokemon["base"];
+  nature?: string;
 }
 
 const STAT_CONFIG: Array<{ key: keyof Pokemon["base"]; label: string }> = [
@@ -25,26 +27,43 @@ function getStatColor(value: number): string {
   return "#06b6d4"; // cyan-500
 }
 
-const StatBars: React.FC<StatBarsProps> = ({ base }) => (
-  <div className="absolute inset-0 z-10 flex items-end justify-between gap-0.5 px-1 pb-1 pt-1.5 bg-slate-900/90 rounded-lg">
-    {STAT_CONFIG.map(({ key, label }) => {
-      const value = base[key];
-      const pct = Math.min(100, (value / MAX_STAT_REFERENCE) * 100);
-      const color = getStatColor(value);
-      return (
-        <div key={key} className="flex flex-col items-center flex-1 h-full justify-end">
-          <span className="text-[8px] leading-none font-bold text-white mb-0.5">{value}</span>
-          <div className="w-2 flex-1 max-h-[48px] bg-slate-700/80 rounded-sm flex items-end overflow-hidden">
-            <div
-              className="w-full rounded-sm"
-              style={{ height: `${pct}%`, backgroundColor: color }}
-            />
-          </div>
-          <span className="text-[7px] leading-none text-slate-300 mt-0.5 font-semibold">{label}</span>
+const StatBars: React.FC<StatBarsProps> = ({ base, nature }) => {
+  const natureData = naturesData.find((n) => n.slug === nature);
+
+  return (
+    <div className="absolute inset-0 z-10 flex flex-col bg-slate-900/90 rounded-lg px-1 pb-1 pt-1">
+      {natureData && (
+        <div className="text-[8px] leading-none font-bold text-white/90 text-center mb-1">
+          {natureData.name}
         </div>
-      );
-    })}
-  </div>
-);
+      )}
+      <div className="flex items-end justify-between gap-0.5 flex-1">
+        {STAT_CONFIG.map(({ key, label }) => {
+          const value = base[key];
+          const pct = Math.min(100, (value / MAX_STAT_REFERENCE) * 100);
+          const color = getStatColor(value);
+          const labelColor =
+            natureData?.increase === key
+              ? "text-red-400"
+              : natureData?.decrease === key
+              ? "text-blue-400"
+              : "text-slate-300";
+          return (
+            <div key={key} className="flex flex-col items-center flex-1 h-full justify-end">
+              <span className="text-[8px] leading-none font-bold text-white mb-0.5">{value}</span>
+              <div className="w-2 flex-1 max-h-[48px] bg-slate-700/80 rounded-sm flex items-end overflow-hidden">
+                <div
+                  className="w-full rounded-sm"
+                  style={{ height: `${pct}%`, backgroundColor: color }}
+                />
+              </div>
+              <span className={`text-[7px] leading-none mt-0.5 font-semibold ${labelColor}`}>{label}</span>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+};
 
 export default StatBars;
