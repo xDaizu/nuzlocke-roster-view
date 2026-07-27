@@ -4,7 +4,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Switch } from "@/components/ui/switch";
 import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { TeamPokemon, Pokemon, PokeballType } from "@/types/pokemon";
+import { TeamPokemon, Pokemon, PokeballType, PokemonGender } from "@/types/pokemon";
 import React, { useState } from "react";
 import abilitiesData from "@/data/abilities_es.json";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -226,6 +226,24 @@ const SlotEditor: React.FC<SlotEditorProps> = ({
               placeholder={translations.forms.selectPlace}
               emptyMessage="No places found"
             />
+          </div>
+
+          {/* Gender (Select) */}
+          <div className="space-y-1">
+            <Label className="text-slate-300 text-xs">{translations.forms.gender}</Label>
+            <Select
+              value={slot.gender ?? 'genderless'}
+              onValueChange={(value: PokemonGender) => onUpdate({ gender: value })}
+            >
+              <SelectTrigger className="bg-slate-700 border-slate-600 h-8 text-xs">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent className="bg-slate-700 border-slate-600 text-xs">
+                <SelectItem value="genderless" className="text-xs">{translations.forms.genderless}</SelectItem>
+                <SelectItem value="male" className="text-xs">{translations.forms.genderMale}</SelectItem>
+                <SelectItem value="female" className="text-xs">{translations.forms.genderFemale}</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
 
           {/* Sprite mode: Official / Custom */}

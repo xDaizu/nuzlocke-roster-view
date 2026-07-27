@@ -137,6 +137,7 @@ export const storageService = {
       staticTranslateY: slot.staticTranslateY ?? 0,
       animatedTranslateX: slot.animatedTranslateX ?? 0,
       animatedTranslateY: slot.animatedTranslateY ?? 0,
+      gender: slot.gender ?? 'genderless',
     }));
   },
 

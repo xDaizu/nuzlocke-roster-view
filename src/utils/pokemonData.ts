@@ -1,4 +1,4 @@
-import { Pokemon, PokeballInfo, PokeballType } from "@/types/pokemon";
+import { Pokemon, PokeballInfo, PokeballType, PokemonGender } from "@/types/pokemon";
 
 export const POKEBALL_DATA: Record<PokeballType, PokeballInfo> = {
   pokeball: {
@@ -15,15 +15,19 @@ export const POKEBALL_DATA: Record<PokeballType, PokeballInfo> = {
   }
 };
 
-export const getPokemonSpriteUrl = (pokemon: Pokemon, animated: boolean = false): string => {
+export const getPokemonSpriteUrl = (pokemon: Pokemon, animated: boolean = false, gender: PokemonGender = 'genderless'): string => {
   const name = pokemon.name.english.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-').replace(/-$/, '');
+  // pokemondb.net suffixes the slug with "-f" for the female variant of species with
+  // visible gender differences (e.g. unfezant-f.png). Species without a female variant
+  // 404 on this URL, so callers fall back to the base (male/genderless) sprite on error.
+  const suffix = gender === 'female' ? '-f' : '';
   if (animated) {
     // Black/White animated GIFs only exist up to #649 (Gen V); Gen VI+ (e.g. Froakie)
     // won't resolve here, which is an accepted tradeoff for animation.
-    return `https://img.pokemondb.net/sprites/black-white/anim/normal/${name}.gif`;
+    return `https://img.pokemondb.net/sprites/black-white/anim/normal/${name}${suffix}.gif`;
   }
   // Pokémon HOME static sprites cover every generation (incl. Gen VI like Froakie).
-  return `https://img.pokemondb.net/sprites/home/normal/${name}.png`;
+  return `https://img.pokemondb.net/sprites/home/normal/${name}${suffix}.png`;
 };
 
 export const formatPokemonName = (name: string): string => {

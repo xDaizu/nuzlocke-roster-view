@@ -35,7 +35,10 @@ export interface TeamPokemon {
   box: 'team' | 'other' | 'graveyard';
   /** Key of the selected custom sprite (from CUSTOM_SPRITES_BY_POKEMON). Undefined = use official sprite. */
   customSprite?: string;
+  gender: PokemonGender;
 }
+
+export type PokemonGender = 'male' | 'female' | 'genderless';
 
 export type PokeballType = 'pokeball' | 'superball' | 'sanaball';
 

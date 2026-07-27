@@ -38,7 +38,11 @@ export const translations = {
     selectPokemon: "Seleccionar Pokémon",
     selectAbility: "Seleccionar habilidad",
     selectPlace: "Seleccionar lugar",
-    selectBox: "Seleccionar caja"
+    selectBox: "Seleccionar caja",
+    gender: "Género",
+    genderMale: "Macho",
+    genderFemale: "Hembra",
+    genderless: "Sin género"
   },
 
   // Status messages

@@ -7,7 +7,7 @@ interface TeamSlotProps {
   slot: any;
   index: number;
   updateSlot: (index: number, updates: Partial<any>) => void;
-  getPokemonSpriteUrl: (pokemon: any, animated: boolean) => string;
+  getPokemonSpriteUrl: (pokemon: any, animated: boolean, gender?: any) => string;
   pokeballData: Record<string, { image: string; name: string }>;
   abilitiesData: Array<{ slug: string; name: string; description: string }>;
   placesData: Array<{ id: string; nombre: string }>;
@@ -191,8 +191,15 @@ const TeamSlot: React.FC<TeamSlotProps> = ({
       ? getCustomSpriteUrl(s.pokemon.id, s.customSprite)
       : undefined;
     const spriteUrl = s.pokemon
-      ? (customUrl ?? getPokemonSpriteUrl(s.pokemon, s.animated))
+      ? (customUrl ?? getPokemonSpriteUrl(s.pokemon, s.animated, s.gender))
       : '';
+    // Ordered fallback chain when the gendered/animated sprite 404s: drop animation
+    // first, then drop the female suffix (not every species has a female sprite).
+    const fallbackUrls: string[] = [];
+    if (s.pokemon && !customUrl) {
+      if (s.animated) fallbackUrls.push(getPokemonSpriteUrl(s.pokemon, false, s.gender));
+      if (s.gender === 'female') fallbackUrls.push(getPokemonSpriteUrl(s.pokemon, false, 'genderless'));
+    }
     const zoom = s.animated && !customUrl ? s.animatedZoom : s.staticZoom;
     const tx = s.animated && !customUrl ? (s.animatedTranslateX ?? 0) : (s.staticTranslateX ?? 0);
     const ty = s.animated && !customUrl ? (s.animatedTranslateY ?? 0) : (s.staticTranslateY ?? 0);
@@ -211,9 +218,12 @@ const TeamSlot: React.FC<TeamSlotProps> = ({
             WebkitUserDrag: 'none',
           } as React.CSSProperties}
           onError={(e) => {
-            if (s.animated && !customUrl) {
-              const target = e.target as HTMLImageElement;
-              target.src = getPokemonSpriteUrl(s.pokemon!, false);
+            const target = e.target as HTMLImageElement;
+            const idx = parseInt(target.dataset.fallbackIdx || '0', 10);
+            const next = fallbackUrls[idx];
+            if (next) {
+              target.dataset.fallbackIdx = String(idx + 1);
+              target.src = next;
             }
           }}
           draggable={false}

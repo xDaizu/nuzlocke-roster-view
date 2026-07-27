@@ -46,10 +46,15 @@ const PublicSlotEditor: React.FC<PublicSlotEditorProps> = ({
               const customUrl = currentSlot.customSprite
                 ? getCustomSpriteUrl(currentSlot.pokemon!.id, currentSlot.customSprite)
                 : undefined;
-              const previewSrc = customUrl ?? getPokemonSpriteUrl(currentSlot.pokemon!, currentSlot.animated);
+              const previewSrc = customUrl ?? getPokemonSpriteUrl(currentSlot.pokemon!, currentSlot.animated, currentSlot.gender);
               const zoom = currentSlot.animated && !customUrl ? currentSlot.animatedZoom : currentSlot.staticZoom;
               const tx = currentSlot.animated && !customUrl ? (currentSlot.animatedTranslateX ?? 0) : (currentSlot.staticTranslateX ?? 0);
               const ty = currentSlot.animated && !customUrl ? (currentSlot.animatedTranslateY ?? 0) : (currentSlot.staticTranslateY ?? 0);
+              const fallbackUrls: string[] = [];
+              if (!customUrl) {
+                if (currentSlot.animated) fallbackUrls.push(getPokemonSpriteUrl(currentSlot.pokemon!, false, currentSlot.gender));
+                if (currentSlot.gender === 'female') fallbackUrls.push(getPokemonSpriteUrl(currentSlot.pokemon!, false, 'genderless'));
+              }
               return (
                 <img
                   src={previewSrc}
@@ -57,8 +62,12 @@ const PublicSlotEditor: React.FC<PublicSlotEditorProps> = ({
                   className="w-16 h-16"
                   style={{ transform: `scale(${zoom}) translate(${tx}px, ${ty}px)`, objectPosition: 'center' }}
                   onError={(e) => {
-                    if (currentSlot.animated && !customUrl) {
-                      (e.target as HTMLImageElement).src = getPokemonSpriteUrl(currentSlot.pokemon!, false);
+                    const target = e.target as HTMLImageElement;
+                    const idx = parseInt(target.dataset.fallbackIdx || '0', 10);
+                    const next = fallbackUrls[idx];
+                    if (next) {
+                      target.dataset.fallbackIdx = String(idx + 1);
+                      target.src = next;
                     }
                   }}
                 />

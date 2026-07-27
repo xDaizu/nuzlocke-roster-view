@@ -72,6 +72,7 @@ const PokemonBox: React.FC<PokemonBoxProps> = ({
       animatedTranslateY: 0,
       place: '',
       box: boxType,
+      gender: 'genderless',
     });
   }
 
@@ -163,7 +164,7 @@ const PokemonBox: React.FC<PokemonBoxProps> = ({
             {slot.pokemon ? (
               <div className="text-center">
                 <img
-                  src={getPokemonSpriteUrl(slot.pokemon, false)}
+                  src={getPokemonSpriteUrl(slot.pokemon, false, slot.gender)}
                   alt={slot.pokemon.name.english}
                   className="w-8 h-8 mx-auto mb-1 pointer-events-none"
                                         style={{
@@ -172,6 +173,11 @@ const PokemonBox: React.FC<PokemonBoxProps> = ({
                       }}
                   onError={(e) => {
                     const target = e.target as HTMLImageElement;
+                    if (slot.gender === 'female' && !target.dataset.fallenBack) {
+                      target.dataset.fallenBack = 'true';
+                      target.src = getPokemonSpriteUrl(slot.pokemon!, false, 'genderless');
+                      return;
+                    }
                     target.style.display = 'none';
                   }}
                 />
