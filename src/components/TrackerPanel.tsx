@@ -12,9 +12,11 @@ interface TrackerPanelProps {
   trackerEntries: TrackerEntry[] | undefined;
   placesData: Place[];
   onSelectEncounter?: (entry: TrackerEntry) => void;
+  missedPlaceIds?: string[];
+  onToggleMissed?: (entry: TrackerEntry) => void;
 }
 
-const TrackerPanel: React.FC<TrackerPanelProps> = ({ allSlots, trackerEntries, placesData, onSelectEncounter }) => {
+const TrackerPanel: React.FC<TrackerPanelProps> = ({ allSlots, trackerEntries, placesData, onSelectEncounter, missedPlaceIds, onToggleMissed }) => {
   return (
     <Card className="bg-slate-800/90 border-purple-500/30 col-span-1">
       <CardHeader>
@@ -29,6 +31,8 @@ const TrackerPanel: React.FC<TrackerPanelProps> = ({ allSlots, trackerEntries, p
           trackerEntries={trackerEntries}
           placesData={placesData}
           onSelectEncounter={onSelectEncounter}
+          missedPlaceIds={missedPlaceIds}
+          onToggleMissed={onToggleMissed}
           className="max-h-[32rem] overflow-y-auto pr-1"
         />
       </CardContent>

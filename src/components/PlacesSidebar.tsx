@@ -13,11 +13,13 @@ interface PlacesSidebarProps {
   placesData: Place[];
   trackerEntries: TrackerEntry[] | undefined;
   onSelectEncounter?: (entry: TrackerEntry) => void;
+  missedPlaceIds?: string[];
+  onToggleMissed?: (entry: TrackerEntry) => void;
   /** Height of the fixed public header bar, so the sidebar starts right below it. */
   topOffset: number;
 }
 
-const PlacesSidebar: React.FC<PlacesSidebarProps> = ({ isOpen, onClose, allSlots, placesData, trackerEntries, onSelectEncounter, topOffset }) => {
+const PlacesSidebar: React.FC<PlacesSidebarProps> = ({ isOpen, onClose, allSlots, placesData, trackerEntries, onSelectEncounter, missedPlaceIds, onToggleMissed, topOffset }) => {
   return (
     <aside
       className={`fixed right-0 bottom-0 z-40 w-80 max-w-[85vw] bg-slate-800/95 border-l border-purple-500/30 overflow-y-auto overscroll-contain transition-transform duration-300 ${
@@ -45,6 +47,8 @@ const PlacesSidebar: React.FC<PlacesSidebarProps> = ({ isOpen, onClose, allSlots
           trackerEntries={trackerEntries}
           placesData={placesData}
           onSelectEncounter={onSelectEncounter}
+          missedPlaceIds={missedPlaceIds}
+          onToggleMissed={onToggleMissed}
         />
       </div>
     </aside>

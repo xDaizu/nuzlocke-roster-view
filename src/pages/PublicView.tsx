@@ -123,6 +123,10 @@ const PublicView = () => {
     return saved?.placesDisplay === 'sidebar' ? 'sidebar' : 'panel';
   });
   const [isPlacesSidebarOpen, setIsPlacesSidebarOpen] = useState(false);
+  // Tracker encounters the user has marked as missed (no longer catchable), keyed by region id
+  const [missedEncounters, setMissedEncounters] = useState<Record<string, string[]>>(() => {
+    return storageService.loadMissedEncounters() ?? {};
+  });
   // Ref to skip autosave during the initial data-load phase
   const isInitialLoad = React.useRef(true);
   const { toast } = useToast();
@@ -151,6 +155,11 @@ const PublicView = () => {
   useEffect(() => {
     storageService.savePanelConfig(panelConfig as unknown as Record<string, unknown>);
   }, [panelConfig]);
+
+  // Persist missed-encounter markers whenever they change
+  useEffect(() => {
+    storageService.saveMissedEncounters(missedEncounters);
+  }, [missedEncounters]);
 
   // Autosave: persist team slots on every change (skip the initial load)
   useEffect(() => {
@@ -321,6 +330,19 @@ const PublicView = () => {
     setAllSlots(prev => [...prev, newSlot]);
     setSelectedBox('other');
     setSelectedSlot(otherBox.length);
+  };
+
+  // Tracker missed-encounter toggle: mark/unmark a catch opportunity as no longer available
+  const handleToggleMissed = (entry: TrackerEntry) => {
+    if (!entry.placeId) return;
+    const placeId = entry.placeId;
+    setMissedEncounters(prev => {
+      const current = prev[selectedRegion] ?? [];
+      const next = current.includes(placeId)
+        ? current.filter(id => id !== placeId)
+        : [...current, placeId];
+      return { ...prev, [selectedRegion]: next };
+    });
   };
 
   const movePokemon = (
@@ -654,6 +676,8 @@ const PublicView = () => {
                           trackerEntries={getTrackerEntriesForRegion(selectedRegion)}
                           placesData={placesData}
                           onSelectEncounter={handleSelectEncounter}
+                          missedPlaceIds={missedEncounters[selectedRegion]}
+                          onToggleMissed={handleToggleMissed}
                         />
                       </div>
                     );
@@ -712,6 +736,8 @@ const PublicView = () => {
           placesData={placesData}
           trackerEntries={getTrackerEntriesForRegion(selectedRegion)}
           onSelectEncounter={handleSelectEncounter}
+          missedPlaceIds={missedEncounters[selectedRegion]}
+          onToggleMissed={handleToggleMissed}
           topOffset={170}
         />
       )}

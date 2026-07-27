@@ -81,7 +81,10 @@ export const translations = {
     gift: "Regalo",
     static: "Encuentro fijo",
     fossil: "Fósil",
-    createHere: "Crear Pokémon capturado aquí"
+    createHere: "Crear Pokémon capturado aquí",
+    missed: "Perdido",
+    markMissed: "Marcar oportunidad como perdida",
+    unmarkMissed: "Quitar marca de oportunidad perdida"
   },
 
   // App-wide configuration (region, etc.)

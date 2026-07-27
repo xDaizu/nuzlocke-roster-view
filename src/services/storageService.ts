@@ -7,6 +7,7 @@ const KEYS = {
   LAST_BACKUP: 'nuzlocke-roster:last-backup',
   APP_CONFIG: 'nuzlocke-roster:app-config',
   PANEL_CONFIG: 'nuzlocke-roster:panel-config',
+  MISSED_ENCOUNTERS: 'nuzlocke-roster:missed-encounters',
 };
 
 // Maximum backup versions to keep
@@ -288,6 +289,31 @@ export const storageService = {
       return data ? (JSON.parse(data) as Record<string, unknown>) : null;
     } catch (error) {
       console.error('Error loading panel config:', error);
+      return null;
+    }
+  },
+
+  /**
+   * Save tracker encounters the user has marked as missed, keyed by region id.
+   */
+  saveMissedEncounters(missed: Record<string, string[]>): void {
+    try {
+      localStorage.setItem(KEYS.MISSED_ENCOUNTERS, JSON.stringify(missed));
+    } catch (error) {
+      console.error('Error saving missed encounters:', error);
+    }
+  },
+
+  /**
+   * Load tracker encounters marked as missed, keyed by region id.
+   * Returns null when nothing has been saved yet.
+   */
+  loadMissedEncounters(): Record<string, string[]> | null {
+    try {
+      const data = localStorage.getItem(KEYS.MISSED_ENCOUNTERS);
+      return data ? (JSON.parse(data) as Record<string, string[]>) : null;
+    } catch (error) {
+      console.error('Error loading missed encounters:', error);
       return null;
     }
   },
