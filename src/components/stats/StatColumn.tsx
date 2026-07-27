@@ -5,7 +5,7 @@ interface StatColumnProps {
   maxBarPx: number;
 }
 
-/** A single stat's number, +/- sign, vertical bar, and acronym label. Shared visual atom used by every stat layout strategy. */
+/** A single stat's number, +/- sign, vertical bar, and acronym label, stacked top to bottom. */
 const StatColumn: React.FC<StatColumnProps> = ({ entry, maxBarPx }) => (
   <div className="flex flex-col items-center flex-1 h-full justify-end">
     <span className={`text-[7px] leading-none font-bold h-[7px] ${entry.natureColorClass}`}>
