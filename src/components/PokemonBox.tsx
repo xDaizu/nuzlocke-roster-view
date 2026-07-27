@@ -73,6 +73,7 @@ const PokemonBox: React.FC<PokemonBoxProps> = ({
       place: '',
       box: boxType,
       gender: 'genderless',
+      nature: 'hardy',
     });
   }
 

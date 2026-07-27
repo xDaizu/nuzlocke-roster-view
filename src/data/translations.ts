@@ -42,7 +42,9 @@ export const translations = {
     gender: "Género",
     genderMale: "Macho",
     genderFemale: "Hembra",
-    genderless: "Sin género"
+    genderless: "Sin género",
+    nature: "Naturaleza",
+    selectNature: "Seleccionar naturaleza"
   },
 
   // Status messages

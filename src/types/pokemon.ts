@@ -36,9 +36,12 @@ export interface TeamPokemon {
   /** Key of the selected custom sprite (from CUSTOM_SPRITES_BY_POKEMON). Undefined = use official sprite. */
   customSprite?: string;
   gender: PokemonGender;
+  nature: string;
 }
 
 export type PokemonGender = 'male' | 'female' | 'genderless';
+
+export type NatureStat = 'Attack' | 'Defense' | 'Sp. Attack' | 'Sp. Defense' | 'Speed';
 
 export type PokeballType = 'pokeball' | 'superball' | 'sanaball';
 
