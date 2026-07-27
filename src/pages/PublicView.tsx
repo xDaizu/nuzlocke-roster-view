@@ -107,6 +107,10 @@ const PublicView = () => {
     const saved = storageService.loadAppConfig();
     return saved?.showPokeball !== false;
   });
+  const [showGender, setShowGender] = useState<boolean>(() => {
+    const saved = storageService.loadAppConfig();
+    return saved?.showGender !== false;
+  });
   // Cycle interval (seconds) for the header's PC/graveyard preview slots. 0 = disabled.
   const [pcSlotSeconds, setPcSlotSeconds] = useState<number>(() => {
     const saved = storageService.loadAppConfig();
@@ -127,10 +131,11 @@ const PublicView = () => {
       autosave,
       showLevel,
       showPokeball,
+      showGender,
       pcSlotSeconds,
       graveyardSlotSeconds,
     });
-  }, [selectedRegion, autosave, showLevel, showPokeball, pcSlotSeconds, graveyardSlotSeconds]);
+  }, [selectedRegion, autosave, showLevel, showPokeball, showGender, pcSlotSeconds, graveyardSlotSeconds]);
 
   // Persist panel layout config whenever it changes
   useEffect(() => {
@@ -360,7 +365,7 @@ const PublicView = () => {
           animatedTranslateY: 0,
           place: fixture.place || '',
           box: fixture.box || 'team',
-          gender: 'genderless',
+          gender: (fixture as any).gender || 'genderless',
         };
     });
 
@@ -395,6 +400,7 @@ const PublicView = () => {
               draggable={false}
               showLevel={showLevel}
               showPokeball={showPokeball}
+              showGender={showGender}
               contentKey={pcSlotDisplay.id}
               slideDirection="right"
             />
@@ -414,6 +420,7 @@ const PublicView = () => {
               draggable={false}
               showLevel={showLevel}
               showPokeball={showPokeball}
+              showGender={showGender}
               contentKey={graveyardSlotDisplay.id}
               grayscale={true}
             />
@@ -459,6 +466,7 @@ const PublicView = () => {
                     draggable={true}
                     showLevel={showLevel}
                     showPokeball={showPokeball}
+                    showGender={showGender}
                   />
                 );
               })}
@@ -628,6 +636,8 @@ const PublicView = () => {
                           onShowLevelChange={setShowLevel}
                           showPokeball={showPokeball}
                           onShowPokeballChange={setShowPokeball}
+                          showGender={showGender}
+                          onShowGenderChange={setShowGender}
                           pcSlotSeconds={pcSlotSeconds}
                           onPcSlotSecondsChange={setPcSlotSeconds}
                           graveyardSlotSeconds={graveyardSlotSeconds}
