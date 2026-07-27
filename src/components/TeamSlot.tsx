@@ -2,6 +2,7 @@ import React, { useRef, useCallback, useEffect } from "react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { MapPin, Circle } from "lucide-react";
 import { getCustomSpriteUrl } from "@/data/customSprites";
+import StatBars from "@/components/StatBars";
 
 // lucide-react has no Mars/Venus glyphs; drawn to match its 24x24 stroke style so they
 // center reliably in a flex box (text glyphs like ♂/♀ don't align consistently across fonts).
@@ -43,6 +44,8 @@ interface TeamSlotProps {
   slideDirection?: 'up' | 'right';
   /** Renders the sprite/pokeball with a desaturated, aged "in memoriam" look */
   grayscale?: boolean;
+  /** When true, a single click toggles a compact base-stats overlay in place of the sprite */
+  enableStatsToggle?: boolean;
 }
 
 const TeamSlot: React.FC<TeamSlotProps> = ({
@@ -60,6 +63,7 @@ const TeamSlot: React.FC<TeamSlotProps> = ({
   contentKey,
   slideDirection = 'up',
   grayscale = false,
+  enableStatsToggle = false,
 }) => {
   const getAbilityData = (slug: string) => {
     return abilitiesData.find((a) => a.slug === slug);
@@ -75,6 +79,12 @@ const TeamSlot: React.FC<TeamSlotProps> = ({
   // Live zoom during wheel (not committed to state yet)
   const liveZoom = useRef<number>(slot.animated ? (slot.animatedZoom ?? 1) : (slot.staticZoom ?? 1));
   const wheelCommitTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // ── Click-to-toggle stat view ────────────────────────────────────────────
+  const [showStats, setShowStats] = React.useState(false);
+  // Tracks whether the current pointer down/up pair moved enough to count as a
+  // sprite drag, so a real drag doesn't also toggle the stat view on release.
+  const dragMoved = useRef(false);
 
   const getTranslateKey = () =>
     slot.animated
@@ -96,7 +106,8 @@ const TeamSlot: React.FC<TeamSlotProps> = ({
   };
 
   const onPointerDown = useCallback((e: React.PointerEvent) => {
-    if (!draggable || !slot.pokemon || index < 0) return;
+    dragMoved.current = false;
+    if (!draggable || !slot.pokemon || index < 0 || showStats) return;
     e.preventDefault();
     e.currentTarget.setPointerCapture(e.pointerId);
     isDragging.current = true;
@@ -106,7 +117,7 @@ const TeamSlot: React.FC<TeamSlotProps> = ({
     if (imgRef.current) {
       imgRef.current.style.transition = "none";
     }
-  }, [draggable, slot, index, getBaseTranslate]);
+  }, [draggable, slot, index, showStats, getBaseTranslate]);
 
   const onPointerMove = useCallback((e: React.PointerEvent) => {
     if (!isDragging.current) return;
@@ -114,6 +125,7 @@ const TeamSlot: React.FC<TeamSlotProps> = ({
     const base = getBaseTranslate();
     const dx = e.clientX - dragStart.current.x;
     const dy = e.clientY - dragStart.current.y;
+    if (Math.hypot(dx, dy) > 3) dragMoved.current = true;
     // Divide by zoom so 1px of mouse movement = 1px of sprite offset regardless of scale
     const zoom = slot.animated ? slot.animatedZoom : slot.staticZoom;
     const tx = Math.round(base.x + dx / zoom);
@@ -132,6 +144,15 @@ const TeamSlot: React.FC<TeamSlotProps> = ({
     const keys = getTranslateKey();
     updateSlot(index, { [keys.x]: x, [keys.y]: y });
   }, [index, updateSlot, getTranslateKey]);
+
+  const handleCardClick = useCallback(() => {
+    if (!enableStatsToggle || !slot.pokemon) return;
+    if (dragMoved.current) {
+      dragMoved.current = false;
+      return;
+    }
+    setShowStats((v) => !v);
+  }, [enableStatsToggle, slot]);
 
   // Sync liveZoom ref whenever slot zoom prop changes (e.g. after a commit)
   useEffect(() => {
@@ -307,6 +328,7 @@ const TeamSlot: React.FC<TeamSlotProps> = ({
             onPointerMove={onPointerMove}
             onPointerUp={onPointerUp}
             onPointerCancel={onPointerUp}
+            onClick={handleCardClick}
           >
             {/* Level badge */}
             <div className="absolute top-1 left-1 z-10 flex flex-col items-start">
@@ -333,6 +355,10 @@ const TeamSlot: React.FC<TeamSlotProps> = ({
             >
               {renderSlotContent(slot, true)}
             </div>
+
+            {enableStatsToggle && showStats && slot.pokemon && (
+              <StatBars base={slot.pokemon.base} />
+            )}
           </div>
         </TooltipTrigger>
           <TooltipContent className="text-sm max-w-xs">
