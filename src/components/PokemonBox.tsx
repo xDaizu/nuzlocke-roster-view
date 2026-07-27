@@ -26,6 +26,7 @@ const PokemonBox: React.FC<PokemonBoxProps> = ({
   columnSpan = 2,
 }) => {
   const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
+  const [isBoxDragOver, setIsBoxDragOver] = useState(false);
   // Dynamic sizing logic
   const isDynamicBox = boxType === 'other' || boxType === 'graveyard';
   const isTeamBox = boxType === 'team';
@@ -89,7 +90,9 @@ const PokemonBox: React.FC<PokemonBoxProps> = ({
 
   const handleDragOver = (e: React.DragEvent, index: number) => {
     e.preventDefault();
+    e.stopPropagation();
     e.dataTransfer.dropEffect = 'move';
+    setIsBoxDragOver(false);
     setDragOverIndex(index);
   };
 
@@ -102,17 +105,55 @@ const PokemonBox: React.FC<PokemonBoxProps> = ({
 
   const handleDrop = (e: React.DragEvent, targetIndex: number) => {
     e.preventDefault();
+    e.stopPropagation();
     setDragOverIndex(null);
-    
+
     try {
       const dragData = JSON.parse(e.dataTransfer.getData('application/json'));
       const { boxType: sourceBoxType, index: sourceIndex } = dragData;
-      
+
       if (sourceBoxType === boxType) {
         // Same box - use internal drag drop
         onDragDrop?.(sourceIndex, targetIndex);
       } else {
         // Different box - use external drag drop
+        onDragDropExternal?.(sourceBoxType, sourceIndex, targetIndex);
+      }
+    } catch (error) {
+      console.error('Error handling drop:', error);
+    }
+  };
+
+  // Dropping anywhere in the box that isn't a specific slot (e.g. gaps,
+  // padding, title) is a shortcut for "move to the first empty slot",
+  // so the target slot doesn't need to be scrolled into view while dragging.
+  const handleBoxDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    setIsBoxDragOver(true);
+  };
+
+  const handleBoxDragLeave = (e: React.DragEvent) => {
+    // Only clear if leaving the box entirely (not moving to a child slot)
+    if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+      setIsBoxDragOver(false);
+    }
+  };
+
+  const handleBoxDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setDragOverIndex(null);
+    setIsBoxDragOver(false);
+
+    try {
+      const dragData = JSON.parse(e.dataTransfer.getData('application/json'));
+      const { boxType: sourceBoxType, index: sourceIndex } = dragData;
+      const targetIndex = filledSlots.findIndex((slot) => slot.pokemon === null);
+      if (targetIndex === -1) return;
+
+      if (sourceBoxType === boxType) {
+        onDragDrop?.(sourceIndex, targetIndex);
+      } else {
         onDragDropExternal?.(sourceBoxType, sourceIndex, targetIndex);
       }
     } catch (error) {
@@ -137,7 +178,16 @@ const PokemonBox: React.FC<PokemonBoxProps> = ({
   };
 
   return (
-    <div className="bg-slate-700/50 rounded-lg p-3">
+    <div
+      className={`rounded-lg p-3 border-2 transition-colors ${
+        isBoxDragOver
+          ? 'border-purple-400 bg-purple-500/10'
+          : 'border-transparent bg-slate-700/50'
+      }`}
+      onDragOver={handleBoxDragOver}
+      onDragLeave={handleBoxDragLeave}
+      onDrop={handleBoxDrop}
+    >
       <h3 className="text-purple-300 font-medium mb-3 text-sm">{title}</h3>
       {targetSlotCount === 0 ? (
         <div className="text-center text-slate-400 py-4 text-xs">
