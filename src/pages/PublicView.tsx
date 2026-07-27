@@ -112,6 +112,10 @@ const PublicView = () => {
     const saved = storageService.loadAppConfig();
     return saved?.showGender !== false;
   });
+  const [statsTwoRowLayout, setStatsTwoRowLayout] = useState<boolean>(() => {
+    const saved = storageService.loadAppConfig();
+    return saved?.statsTwoRowLayout === true;
+  });
   // Cycle interval (seconds) for the header's PC/graveyard preview slots. 0 = disabled.
   const [pcSlotSeconds, setPcSlotSeconds] = useState<number>(() => {
     const saved = storageService.loadAppConfig();
@@ -133,10 +137,11 @@ const PublicView = () => {
       showLevel,
       showPokeball,
       showGender,
+      statsTwoRowLayout,
       pcSlotSeconds,
       graveyardSlotSeconds,
     });
-  }, [selectedRegion, autosave, showLevel, showPokeball, showGender, pcSlotSeconds, graveyardSlotSeconds]);
+  }, [selectedRegion, autosave, showLevel, showPokeball, showGender, statsTwoRowLayout, pcSlotSeconds, graveyardSlotSeconds]);
 
   // Persist panel layout config whenever it changes
   useEffect(() => {
@@ -474,6 +479,7 @@ const PublicView = () => {
                     showPokeball={showPokeball}
                     showGender={showGender}
                     enableStatsToggle={true}
+                    statsTwoRowLayout={statsTwoRowLayout}
                   />
                 );
               })}
@@ -645,6 +651,8 @@ const PublicView = () => {
                           onShowPokeballChange={setShowPokeball}
                           showGender={showGender}
                           onShowGenderChange={setShowGender}
+                          statsTwoRowLayout={statsTwoRowLayout}
+                          onStatsTwoRowLayoutChange={setStatsTwoRowLayout}
                           pcSlotSeconds={pcSlotSeconds}
                           onPcSlotSecondsChange={setPcSlotSeconds}
                           graveyardSlotSeconds={graveyardSlotSeconds}

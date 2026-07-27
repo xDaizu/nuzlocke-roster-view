@@ -19,6 +19,8 @@ interface AppConfigPanelProps {
   onShowPokeballChange: (value: boolean) => void;
   showGender: boolean;
   onShowGenderChange: (value: boolean) => void;
+  statsTwoRowLayout: boolean;
+  onStatsTwoRowLayoutChange: (value: boolean) => void;
   /** Seconds between swaps for the header's PC preview slot. 0 disables it. */
   pcSlotSeconds: number;
   onPcSlotSecondsChange: (value: number) => void;
@@ -39,6 +41,8 @@ const AppConfigPanel: React.FC<AppConfigPanelProps> = ({
   onShowPokeballChange,
   showGender,
   onShowGenderChange,
+  statsTwoRowLayout,
+  onStatsTwoRowLayoutChange,
   pcSlotSeconds,
   onPcSlotSecondsChange,
   graveyardSlotSeconds,
@@ -141,6 +145,13 @@ const AppConfigPanel: React.FC<AppConfigPanelProps> = ({
           translations.appConfig.showGenderDescription,
           showGender,
           onShowGenderChange,
+        )}
+
+        {toggleRow(
+          translations.appConfig.statsTwoRowLayout,
+          translations.appConfig.statsTwoRowLayoutDescription,
+          statsTwoRowLayout,
+          onStatsTwoRowLayoutChange,
         )}
 
         {cycleSecondsRow(
