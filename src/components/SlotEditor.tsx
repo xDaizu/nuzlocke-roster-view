@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { TeamPokemon, Pokemon, PokeballType, PokemonGender } from "@/types/pokemon";
 import React, { useState } from "react";
 import abilitiesData from "@/data/abilities_es.json";
+import naturesData from "@/data/natures_es.json";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
@@ -65,6 +66,12 @@ const SlotEditor: React.FC<SlotEditorProps> = ({
       searchText: `${ability.name} ${ability.description}`
     }))
   ];
+
+  const natureOptions = naturesData.map((nature: any) => ({
+    value: nature.slug,
+    label: nature.name,
+    searchText: `${nature.name} ${nature.nameEn}`
+  }));
 
   const placeOptions = [
     { value: "", label: "Sin lugar" },
@@ -244,6 +251,18 @@ const SlotEditor: React.FC<SlotEditorProps> = ({
                 <SelectItem value="female" className="text-xs">{translations.forms.genderFemale}</SelectItem>
               </SelectContent>
             </Select>
+          </div>
+
+          {/* Nature */}
+          <div className="space-y-1">
+            <Label className="text-slate-300 text-xs">{translations.forms.nature}</Label>
+            <AutocompleteInput
+              value={slot.nature || ""}
+              onChange={(value) => onUpdate({ nature: value })}
+              options={natureOptions}
+              placeholder={translations.forms.selectNature}
+              emptyMessage="No natures found"
+            />
           </div>
 
           {/* Sprite mode: Official / Custom */}

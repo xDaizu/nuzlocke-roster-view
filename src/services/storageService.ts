@@ -138,6 +138,7 @@ export const storageService = {
       animatedTranslateX: slot.animatedTranslateX ?? 0,
       animatedTranslateY: slot.animatedTranslateY ?? 0,
       gender: slot.gender ?? 'genderless',
+      nature: slot.nature ?? 'hardy',
     }));
   },
 
