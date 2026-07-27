@@ -16,6 +16,7 @@ import React from "react";
 import { Menu } from "lucide-react";
 import abilitiesData from "@/data/abilities_es.json";
 import { DEFAULT_REGION, RegionId, getPlacesForRegion, getTrackerEntriesForRegion } from "@/data/regions";
+import { TrackerEntry } from "@/types/tracker";
 import { pokemonFixtures } from "@/data/fixtures";
 import { translations } from "@/data/translations";
 import { storageService } from "@/services/storageService";
@@ -285,6 +286,41 @@ const PublicView = () => {
       title: translations.messages.slotCleared,
       description: `Slot ${slotIndex + 1} ${translations.messages.slotClearedDesc}`
     });
+  };
+
+  // Tracker click-to-prefill: land a new Pokemon in the PC (otherBox) at the clicked encounter's place
+  const handleSelectEncounter = (entry: TrackerEntry) => {
+    const place = entry.placeId ?? '';
+    const emptyIndex = otherBox.findIndex(slot => !slot.pokemon);
+
+    if (emptyIndex !== -1) {
+      const actualIndex = allSlots.findIndex(s => s.id === otherBox[emptyIndex].id);
+      updateSlot(actualIndex, { place });
+      setSelectedBox('other');
+      setSelectedSlot(emptyIndex);
+      return;
+    }
+
+    const newSlot: TeamPokemon = {
+      id: `encounter-slot-${Date.now()}`,
+      pokemon: null,
+      nickname: '',
+      level: 1,
+      ability: '',
+      pokeball: 'pokeball',
+      animated: false,
+      staticZoom: 1.5,
+      animatedZoom: 1.5,
+      staticTranslateX: 0,
+      staticTranslateY: 0,
+      animatedTranslateX: 0,
+      animatedTranslateY: 0,
+      place,
+      box: 'other',
+    };
+    setAllSlots(prev => [...prev, newSlot]);
+    setSelectedBox('other');
+    setSelectedSlot(otherBox.length);
   };
 
   const movePokemon = (
@@ -617,6 +653,7 @@ const PublicView = () => {
                           allSlots={allSlots}
                           trackerEntries={getTrackerEntriesForRegion(selectedRegion)}
                           placesData={placesData}
+                          onSelectEncounter={handleSelectEncounter}
                         />
                       </div>
                     );

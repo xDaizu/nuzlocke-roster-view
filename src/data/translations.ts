@@ -76,6 +76,14 @@ export const translations = {
     columnsPlural: "columnas"
   },
 
+  // Tracker panel (ordered catch-opportunity list)
+  tracker: {
+    gift: "Regalo",
+    static: "Encuentro fijo",
+    fossil: "Fósil",
+    createHere: "Crear Pokémon capturado aquí"
+  },
+
   // App-wide configuration (region, etc.)
   appConfig: {
     region: "Región",

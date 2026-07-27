@@ -108,5 +108,9 @@
     {"id":"mossdeep-space-center","nombre":"Mossdeep Space Center"},
     {"id":"hoenn-pokemart","nombre":"Hoenn Pokemart"},
     {"id":"hoenn-pokecenter","nombre":"Hoenn Pokecenter"},
-    {"id":"mirage-island","nombre":"Mirage Island"}
+    {"id":"mirage-island","nombre":"Mirage Island"},
+    {"id":"lavaridge-egg","nombre":"Pueblo Lavacalda (Huevo)"},
+    {"id":"weather-institute","nombre":"Instituto Meteorológico"},
+    {"id":"steven-house","nombre":"Casa de Steven"},
+    {"id":"sky-pillar-summit","nombre":"Cima del Pilar Celeste"}
 ]

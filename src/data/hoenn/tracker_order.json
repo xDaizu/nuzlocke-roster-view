@@ -134,7 +134,7 @@
   },
   {
     "order": 9,
-    "type": "route",
+    "type": "static",
     "name": "Rustboro City",
     "placeId": "rustboro-city",
     "encounters": [
@@ -150,7 +150,8 @@
       "archen",
       "tyrunt",
       "amaura"
-    ]
+    ],
+    "method": "fossil"
   },
   {
     "order": 10,
@@ -172,14 +173,23 @@
       "wingull",
       "pelipper",
       "wailmer",
-      "regice",
-      "regigigas",
       "frillish",
       "skrelp"
     ]
   },
   {
     "order": 12,
+    "type": "static",
+    "name": "Island Cave",
+    "placeId": "island-cave",
+    "encounters": [
+      "regice",
+      "regigigas"
+    ],
+    "method": "static"
+  },
+  {
+    "order": 13,
     "type": "route",
     "name": "Route 116",
     "placeId": "hoenn-route-116",
@@ -195,7 +205,7 @@
     ]
   },
   {
-    "order": 13,
+    "order": 14,
     "type": "route",
     "name": "Rusturf Tunnel",
     "placeId": "rusturf-tunnel",
@@ -205,7 +215,7 @@
     ]
   },
   {
-    "order": 14,
+    "order": 15,
     "type": "route",
     "name": "Dewford Town",
     "placeId": "dewford-town",
@@ -218,7 +228,7 @@
     ]
   },
   {
-    "order": 15,
+    "order": 16,
     "type": "gym",
     "name": "Dewford Gym",
     "group": "gym-leader",
@@ -226,7 +236,7 @@
     "value": "2"
   },
   {
-    "order": 16,
+    "order": 17,
     "type": "route",
     "name": "Route 106",
     "placeId": "hoenn-route-106",
@@ -242,7 +252,7 @@
     ]
   },
   {
-    "order": 17,
+    "order": 18,
     "type": "route",
     "name": "Granite Cave",
     "placeId": "granite-cave",
@@ -260,7 +270,7 @@
     ]
   },
   {
-    "order": 18,
+    "order": 19,
     "type": "route",
     "name": "Route 107",
     "placeId": "hoenn-route-107",
@@ -280,7 +290,7 @@
     ]
   },
   {
-    "order": 19,
+    "order": 20,
     "type": "route",
     "name": "Slateport City",
     "placeId": "slateport-city",
@@ -298,7 +308,7 @@
     ]
   },
   {
-    "order": 20,
+    "order": 21,
     "type": "route",
     "name": "Route 110",
     "placeId": "hoenn-route-110",
@@ -322,7 +332,7 @@
     ]
   },
   {
-    "order": 21,
+    "order": 22,
     "type": "gym",
     "name": "Route 110",
     "group": "rival",
@@ -330,7 +340,7 @@
     "value": "r2"
   },
   {
-    "order": 22,
+    "order": 23,
     "type": "route",
     "name": "New Mauville",
     "placeId": "new-mauville",
@@ -340,7 +350,7 @@
     ]
   },
   {
-    "order": 23,
+    "order": 24,
     "type": "gym",
     "name": "Mauville City",
     "group": "rival",
@@ -348,7 +358,7 @@
     "value": "w1"
   },
   {
-    "order": 24,
+    "order": 25,
     "type": "gym",
     "name": "Mauville Gym",
     "group": "gym-leader",
@@ -356,7 +366,7 @@
     "value": "3"
   },
   {
-    "order": 25,
+    "order": 26,
     "type": "route",
     "name": "Route 117",
     "placeId": "hoenn-route-117",
@@ -380,7 +390,7 @@
     ]
   },
   {
-    "order": 26,
+    "order": 27,
     "type": "route",
     "name": "Verdanturf Town",
     "placeId": "verdanturf-town",
@@ -393,7 +403,7 @@
     ]
   },
   {
-    "order": 27,
+    "order": 28,
     "type": "route",
     "name": "Route 111",
     "placeId": "hoenn-route-111",
@@ -410,14 +420,23 @@
       "cacnea",
       "barboach",
       "baltoy",
-      "regirock",
       "gible",
       "sandile",
       "dwebble"
     ]
   },
   {
-    "order": 28,
+    "order": 29,
+    "type": "static",
+    "name": "Desert Ruins",
+    "placeId": "desert-ruins",
+    "encounters": [
+      "regirock"
+    ],
+    "method": "static"
+  },
+  {
+    "order": 30,
     "type": "route",
     "name": "Route 112",
     "placeId": "hoenn-route-112",
@@ -430,7 +449,7 @@
     ]
   },
   {
-    "order": 29,
+    "order": 31,
     "type": "route",
     "name": "Fiery Path",
     "placeId": "fiery-path",
@@ -447,7 +466,7 @@
     ]
   },
   {
-    "order": 30,
+    "order": 32,
     "type": "route",
     "name": "Route 113",
     "placeId": "hoenn-route-113",
@@ -461,7 +480,7 @@
     ]
   },
   {
-    "order": 31,
+    "order": 33,
     "type": "route",
     "name": "Fallarbor Town",
     "placeId": "fallarbor-town",
@@ -474,7 +493,7 @@
     ]
   },
   {
-    "order": 32,
+    "order": 34,
     "type": "route",
     "name": "Route 114",
     "placeId": "hoenn-route-114",
@@ -497,7 +516,7 @@
     ]
   },
   {
-    "order": 33,
+    "order": 35,
     "type": "route",
     "name": "Meteor Falls",
     "placeId": "meteor-falls",
@@ -516,7 +535,7 @@
     ]
   },
   {
-    "order": 34,
+    "order": 36,
     "type": "gym",
     "name": "Meteor Falls",
     "group": "evil-team",
@@ -524,7 +543,7 @@
     "value": "ruby1"
   },
   {
-    "order": 35,
+    "order": 37,
     "type": "route",
     "name": "Route 115",
     "placeId": "hoenn-route-115",
@@ -543,7 +562,7 @@
     ]
   },
   {
-    "order": 36,
+    "order": 38,
     "type": "gym",
     "name": "Mt. Chimney",
     "group": "evil-team",
@@ -551,7 +570,7 @@
     "value": "ruby2"
   },
   {
-    "order": 37,
+    "order": 39,
     "type": "gym",
     "name": "Mt. Chimney",
     "group": "evil-team",
@@ -559,7 +578,7 @@
     "value": "max1"
   },
   {
-    "order": 38,
+    "order": 40,
     "type": "route",
     "name": "Jagged Pass",
     "placeId": "jagged-pass",
@@ -573,18 +592,27 @@
     ]
   },
   {
-    "order": 39,
+    "order": 41,
     "type": "route",
     "name": "Lavaridge Town",
     "placeId": "lavaridge-town",
     "encounters": [
       "togepi",
-      "wynaut",
       "kecleon"
     ]
   },
   {
-    "order": 40,
+    "order": 42,
+    "type": "static",
+    "name": "Lavaridge Town",
+    "placeId": "lavaridge-egg",
+    "encounters": [
+      "wynaut"
+    ],
+    "method": "gift"
+  },
+  {
+    "order": 43,
     "type": "gym",
     "name": "Lavaridge Gym",
     "group": "gym-leader",
@@ -592,7 +620,7 @@
     "value": "4"
   },
   {
-    "order": 41,
+    "order": 44,
     "type": "gym",
     "name": "Petalburg Gym",
     "group": "gym-leader",
@@ -600,7 +628,7 @@
     "value": "5"
   },
   {
-    "order": 42,
+    "order": 45,
     "type": "route",
     "name": "Route 118",
     "placeId": "hoenn-route-118",
@@ -620,17 +648,18 @@
     ]
   },
   {
-    "order": 43,
-    "type": "route",
+    "order": 46,
+    "type": "static",
     "name": "Southern Island",
     "placeId": "southern-island",
     "encounters": [
       "latias",
       "latios"
-    ]
+    ],
+    "method": "static"
   },
   {
-    "order": 44,
+    "order": 47,
     "type": "gym",
     "name": "Southern Island",
     "group": "evil-team",
@@ -638,7 +667,7 @@
     "value": "ruby3"
   },
   {
-    "order": 45,
+    "order": 48,
     "type": "route",
     "name": "Route 119",
     "placeId": "hoenn-route-119",
@@ -653,13 +682,22 @@
       "carvanha",
       "sharpedo",
       "feebas",
-      "castform",
       "kecleon",
       "tropius"
     ]
   },
   {
-    "order": 46,
+    "order": 49,
+    "type": "static",
+    "name": "Weather Institute",
+    "placeId": "weather-institute",
+    "encounters": [
+      "castform"
+    ],
+    "method": "gift"
+  },
+  {
+    "order": 50,
     "type": "gym",
     "name": "Weather Institute",
     "group": "evil-team",
@@ -667,7 +705,7 @@
     "value": "ruby4"
   },
   {
-    "order": 47,
+    "order": 51,
     "type": "gym",
     "name": "Route 119",
     "group": "rival",
@@ -675,7 +713,7 @@
     "value": "r3"
   },
   {
-    "order": 48,
+    "order": 52,
     "type": "route",
     "name": "Fortree City",
     "placeId": "fortree-city",
@@ -684,7 +722,7 @@
     ]
   },
   {
-    "order": 49,
+    "order": 53,
     "type": "gym",
     "name": "Fortree City",
     "group": "rival",
@@ -692,7 +730,7 @@
     "value": "aarune"
   },
   {
-    "order": 50,
+    "order": 54,
     "type": "gym",
     "name": "Fortree Gym",
     "group": "gym-leader",
@@ -700,7 +738,7 @@
     "value": "6"
   },
   {
-    "order": 51,
+    "order": 55,
     "type": "route",
     "name": "Route 120",
     "placeId": "hoenn-route-120",
@@ -718,12 +756,21 @@
       "barboach",
       "kecleon",
       "tropius",
-      "absol",
-      "registeel"
+      "absol"
     ]
   },
   {
-    "order": 52,
+    "order": 56,
+    "type": "static",
+    "name": "Ancient Tomb",
+    "placeId": "ancient-tomb",
+    "encounters": [
+      "registeel"
+    ],
+    "method": "static"
+  },
+  {
+    "order": 57,
     "type": "route",
     "name": "Scorched Slab",
     "placeId": "scorched-slab",
@@ -737,7 +784,7 @@
     ]
   },
   {
-    "order": 53,
+    "order": 58,
     "type": "route",
     "name": "Route 121",
     "placeId": "hoenn-route-121",
@@ -754,7 +801,7 @@
     ]
   },
   {
-    "order": 54,
+    "order": 59,
     "type": "route",
     "name": "Route 122",
     "placeId": "hoenn-route-122",
@@ -770,7 +817,7 @@
     ]
   },
   {
-    "order": 55,
+    "order": 60,
     "type": "route",
     "name": "Mt. Pyre",
     "placeId": "mt-pyre",
@@ -787,7 +834,7 @@
     ]
   },
   {
-    "order": 56,
+    "order": 61,
     "type": "gym",
     "name": "Mt. Pyre Summit",
     "group": "evil-team",
@@ -795,7 +842,7 @@
     "value": "ruby5"
   },
   {
-    "order": 57,
+    "order": 62,
     "type": "route",
     "name": "Route 123",
     "placeId": "hoenn-route-123",
@@ -817,7 +864,7 @@
     ]
   },
   {
-    "order": 58,
+    "order": 63,
     "type": "route",
     "name": "Safari Zone",
     "placeId": "hoenn-safari-zone",
@@ -843,7 +890,7 @@
     ]
   },
   {
-    "order": 59,
+    "order": 64,
     "type": "route",
     "name": "Lilycove City",
     "placeId": "lilycove-city",
@@ -863,7 +910,7 @@
     ]
   },
   {
-    "order": 60,
+    "order": 65,
     "type": "gym",
     "name": "Lilycove City",
     "group": "rival",
@@ -871,7 +918,7 @@
     "value": "r4"
   },
   {
-    "order": 61,
+    "order": 66,
     "type": "route",
     "name": "Team Magma Hideout",
     "placeId": "team-magma-hideout",
@@ -884,7 +931,7 @@
     ]
   },
   {
-    "order": 62,
+    "order": 67,
     "type": "gym",
     "name": "Magma Hideout B1F",
     "group": "evil-team",
@@ -892,7 +939,7 @@
     "value": "ruby6"
   },
   {
-    "order": 63,
+    "order": 68,
     "type": "route",
     "name": "Route 124",
     "placeId": "hoenn-route-124",
@@ -912,7 +959,7 @@
     ]
   },
   {
-    "order": 64,
+    "order": 69,
     "type": "route",
     "name": "Mossdeep City",
     "placeId": "mossdeep-city",
@@ -922,12 +969,21 @@
       "magikarp",
       "pelipper",
       "wailmer",
-      "kecleon",
-      "beldum"
+      "kecleon"
     ]
   },
   {
-    "order": 65,
+    "order": 70,
+    "type": "static",
+    "name": "Steven's House",
+    "placeId": "steven-house",
+    "encounters": [
+      "beldum"
+    ],
+    "method": "gift"
+  },
+  {
+    "order": 71,
     "type": "gym",
     "name": "Mossdeep Gym",
     "group": "gym-leader",
@@ -935,7 +991,7 @@
     "value": "7"
   },
   {
-    "order": 66,
+    "order": 72,
     "type": "route",
     "name": "Route 125",
     "placeId": "hoenn-route-125",
@@ -951,7 +1007,7 @@
     ]
   },
   {
-    "order": 67,
+    "order": 73,
     "type": "route",
     "name": "Shoal Cave",
     "placeId": "shoal-cave",
@@ -972,7 +1028,7 @@
     ]
   },
   {
-    "order": 68,
+    "order": 74,
     "type": "route",
     "name": "Route 127",
     "placeId": "hoenn-route-127",
@@ -988,7 +1044,7 @@
     ]
   },
   {
-    "order": 69,
+    "order": 75,
     "type": "route",
     "name": "Route 128",
     "placeId": "hoenn-route-128",
@@ -1010,7 +1066,7 @@
     ]
   },
   {
-    "order": 70,
+    "order": 76,
     "type": "route",
     "name": "Seafloor Cavern",
     "placeId": "seafloor-cavern",
@@ -1025,7 +1081,7 @@
     ]
   },
   {
-    "order": 71,
+    "order": 77,
     "type": "gym",
     "name": "Seafloor Cavern",
     "group": "evil-team",
@@ -1033,7 +1089,7 @@
     "value": "max2"
   },
   {
-    "order": 72,
+    "order": 78,
     "type": "route",
     "name": "Route 126",
     "placeId": "hoenn-route-126",
@@ -1053,7 +1109,7 @@
     ]
   },
   {
-    "order": 73,
+    "order": 79,
     "type": "route",
     "name": "Sootopolis City",
     "placeId": "sootopolis-city",
@@ -1063,7 +1119,7 @@
     ]
   },
   {
-    "order": 74,
+    "order": 80,
     "type": "gym",
     "name": "Sootopolis Gym",
     "group": "gym-leader",
@@ -1071,7 +1127,7 @@
     "value": "8"
   },
   {
-    "order": 75,
+    "order": 81,
     "type": "route",
     "name": "Cave of Origin",
     "placeId": "cave-of-origin",
@@ -1082,7 +1138,7 @@
     ]
   },
   {
-    "order": 76,
+    "order": 82,
     "type": "route",
     "name": "Soaring",
     "placeId": "soaring-in-the-sky",
@@ -1101,7 +1157,7 @@
     ]
   },
   {
-    "order": 77,
+    "order": 83,
     "type": "route",
     "name": "Route 129",
     "placeId": "hoenn-route-129",
@@ -1121,7 +1177,7 @@
     ]
   },
   {
-    "order": 78,
+    "order": 84,
     "type": "route",
     "name": "Route 130",
     "placeId": "hoenn-route-130",
@@ -1143,7 +1199,7 @@
     ]
   },
   {
-    "order": 79,
+    "order": 85,
     "type": "route",
     "name": "Route 131",
     "placeId": "hoenn-route-131",
@@ -1161,7 +1217,7 @@
     ]
   },
   {
-    "order": 80,
+    "order": 86,
     "type": "route",
     "name": "Sky Pillar",
     "placeId": "sky-pillar",
@@ -1170,13 +1226,22 @@
       "ariados",
       "mawile",
       "swablu",
-      "claydol",
-      "rayquaza",
-      "deoxys"
+      "claydol"
     ]
   },
   {
-    "order": 81,
+    "order": 87,
+    "type": "static",
+    "name": "Sky Pillar Summit",
+    "placeId": "sky-pillar-summit",
+    "encounters": [
+      "rayquaza",
+      "deoxys"
+    ],
+    "method": "static"
+  },
+  {
+    "order": 88,
     "type": "route",
     "name": "Edge of space",
     "placeId": null,
@@ -1193,7 +1258,7 @@
     ]
   },
   {
-    "order": 82,
+    "order": 89,
     "type": "route",
     "name": "Pacifidlog Town",
     "placeId": "pacifidlog-town",
@@ -1207,7 +1272,7 @@
     ]
   },
   {
-    "order": 83,
+    "order": 90,
     "type": "route",
     "name": "Mirage Island",
     "placeId": "mirage-island",
@@ -1216,7 +1281,7 @@
     ]
   },
   {
-    "order": 84,
+    "order": 91,
     "type": "route",
     "name": "Route 108",
     "placeId": "hoenn-route-108",
@@ -1232,7 +1297,7 @@
     ]
   },
   {
-    "order": 85,
+    "order": 92,
     "type": "route",
     "name": "Sea Mauville",
     "placeId": "sea-mauville",
@@ -1248,7 +1313,7 @@
     ]
   },
   {
-    "order": 86,
+    "order": 93,
     "type": "route",
     "name": "Route 109",
     "placeId": "hoenn-route-109",
@@ -1264,7 +1329,7 @@
     ]
   },
   {
-    "order": 87,
+    "order": 94,
     "type": "route",
     "name": "Route 132",
     "placeId": "hoenn-route-132",
@@ -1282,7 +1347,7 @@
     ]
   },
   {
-    "order": 88,
+    "order": 95,
     "type": "route",
     "name": "Route 133",
     "placeId": "hoenn-route-133",
@@ -1300,7 +1365,7 @@
     ]
   },
   {
-    "order": 89,
+    "order": 96,
     "type": "route",
     "name": "Route 134",
     "placeId": "hoenn-route-134",
@@ -1318,7 +1383,7 @@
     ]
   },
   {
-    "order": 90,
+    "order": 97,
     "type": "route",
     "name": "Ever Grande City",
     "placeId": "ever-grande-city",
@@ -1333,7 +1398,7 @@
     ]
   },
   {
-    "order": 91,
+    "order": 98,
     "type": "route",
     "name": "Victory Road",
     "placeId": "hoenn-victory-road",
@@ -1356,7 +1421,7 @@
     ]
   },
   {
-    "order": 92,
+    "order": 99,
     "type": "gym",
     "name": "Victory Road",
     "group": "rival",
@@ -1364,7 +1429,7 @@
     "value": "w2"
   },
   {
-    "order": 93,
+    "order": 100,
     "type": "gym",
     "name": "Pokémon League",
     "group": "elite-four",
@@ -1372,7 +1437,7 @@
     "value": "e1"
   },
   {
-    "order": 94,
+    "order": 101,
     "type": "gym",
     "name": "Pokémon League",
     "group": "elite-four",
@@ -1380,7 +1445,7 @@
     "value": "e2"
   },
   {
-    "order": 95,
+    "order": 102,
     "type": "gym",
     "name": "Pokémon League",
     "group": "elite-four",
@@ -1388,7 +1453,7 @@
     "value": "e3"
   },
   {
-    "order": 96,
+    "order": 103,
     "type": "gym",
     "name": "Pokémon League",
     "group": "elite-four",
@@ -1396,7 +1461,7 @@
     "value": "e4"
   },
   {
-    "order": 97,
+    "order": 104,
     "type": "gym",
     "name": "Pokémon Champion",
     "group": "elite-four",
@@ -1404,21 +1469,21 @@
     "value": "c"
   },
   {
-    "order": 98,
+    "order": 105,
     "type": "route",
     "name": "S.S. Tidal",
     "placeId": "ss-tidal",
     "encounters": []
   },
   {
-    "order": 99,
+    "order": 106,
     "type": "route",
     "name": "Pathless Plain",
     "placeId": "pathless-plain",
     "encounters": []
   },
   {
-    "order": 100,
+    "order": 107,
     "type": "route",
     "name": "Nameless Cavern",
     "placeId": "nameless-cavern",
@@ -1439,7 +1504,7 @@
     ]
   },
   {
-    "order": 101,
+    "order": 108,
     "type": "route",
     "name": "Fabled Cave",
     "placeId": "fabled-cave",
@@ -1460,14 +1525,14 @@
     ]
   },
   {
-    "order": 102,
+    "order": 109,
     "type": "route",
     "name": "Gnarled Den",
     "placeId": "gnarled-den",
     "encounters": []
   },
   {
-    "order": 103,
+    "order": 110,
     "type": "route",
     "name": "Trackless Forest",
     "placeId": "trackless-forest",
@@ -1483,7 +1548,7 @@
     ]
   },
   {
-    "order": 104,
+    "order": 111,
     "type": "route",
     "name": "Crescent Isle",
     "placeId": "crescent-isle",
@@ -1497,7 +1562,7 @@
     ]
   },
   {
-    "order": 105,
+    "order": 112,
     "type": "route",
     "name": "Battle Resort",
     "placeId": "battle-resort",
@@ -1513,14 +1578,14 @@
     ]
   },
   {
-    "order": 106,
+    "order": 113,
     "type": "route",
     "name": "Mirage Cave",
     "placeId": "mirage-spot-cave",
     "encounters": []
   },
   {
-    "order": 107,
+    "order": 114,
     "type": "route",
     "name": "Mirage Forest",
     "placeId": "mirage-spot-forest",
@@ -1572,7 +1637,7 @@
     ]
   },
   {
-    "order": 108,
+    "order": 115,
     "type": "route",
     "name": "Mirage Mountain",
     "placeId": "mirage-spot-mountain",
