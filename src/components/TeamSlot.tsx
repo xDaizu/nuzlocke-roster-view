@@ -1,7 +1,25 @@
 import React, { useRef, useCallback, useEffect } from "react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { MapPin } from "lucide-react";
+import { MapPin, Circle } from "lucide-react";
 import { getCustomSpriteUrl } from "@/data/customSprites";
+
+// lucide-react has no Mars/Venus glyphs; drawn to match its 24x24 stroke style so they
+// center reliably in a flex box (text glyphs like ♂/♀ don't align consistently across fonts).
+const MarsIcon = ({ className }: { className?: string }) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <circle cx="10" cy="14" r="6" />
+    <line x1="14.5" y1="9.5" x2="20" y2="4" />
+    <polyline points="15 4 20 4 20 9" />
+  </svg>
+);
+
+const VenusIcon = ({ className }: { className?: string }) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <circle cx="12" cy="9" r="6" />
+    <line x1="12" y1="15" x2="12" y2="21" />
+    <line x1="9" y1="18" x2="15" y2="18" />
+  </svg>
+);
 
 interface TeamSlotProps {
   slot: any;
@@ -17,6 +35,8 @@ interface TeamSlotProps {
   showLevel?: boolean;
   /** Show the pokeball icon on the slot (default true) */
   showPokeball?: boolean;
+  /** Show the togglable gender icon on the slot (default true) */
+  showGender?: boolean;
   /** When this value changes, the sprite/name/pokeball content slides into place while the slot's box stays put */
   contentKey?: string | number;
   /** Direction the content slides in/out when contentKey changes (default "up") */
@@ -36,6 +56,7 @@ const TeamSlot: React.FC<TeamSlotProps> = ({
   draggable = false,
   showLevel = true,
   showPokeball = true,
+  showGender = true,
   contentKey,
   slideDirection = 'up',
   grayscale = false,
@@ -229,17 +250,27 @@ const TeamSlot: React.FC<TeamSlotProps> = ({
           draggable={false}
         />
 
-        {/* Pokeball indicator */}
-        {showPokeball && (
-          <div className="absolute top-0 right-0 pointer-events-none z-10">
+        {/* Pokeball + gender indicators, top-right corner */}
+        <div className="absolute top-0 right-0 flex items-center gap-0.5 pointer-events-none z-10">
+          {showGender && (
+            <div
+              title={s.gender === 'male' ? 'Macho' : s.gender === 'female' ? 'Hembra' : 'Sin género'}
+              className={`w-6 h-6 flex items-center justify-center rounded-full bg-slate-900/80 drop-shadow-md leading-none${grayscale ? " grayscale contrast-125" : ""}`}
+            >
+              {s.gender === 'male' && <MarsIcon className="w-3.5 h-3.5 text-blue-400" />}
+              {s.gender === 'female' && <VenusIcon className="w-3.5 h-3.5 text-pink-400" />}
+              {(!s.gender || s.gender === 'genderless') && <Circle className="w-3.5 h-3.5 text-slate-400" strokeWidth={3} />}
+            </div>
+          )}
+          {showPokeball && (
             <img
               src={pokeballData[s.pokeball].image}
               alt={pokeballData[s.pokeball].name}
               className={`w-6 h-6 drop-shadow-md${grayscale ? " grayscale contrast-125" : ""}`}
               draggable={false}
             />
-          </div>
-        )}
+          )}
+        </div>
 
         {/* Pokemon name — always on top */}
         <div className="absolute bottom-0 left-0 right-0 z-10 text-center px-1 pb-1">

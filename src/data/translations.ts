@@ -89,6 +89,8 @@ export const translations = {
     showLevelDescription: "Muestra el nivel del Pokémon en la ficha",
     showPokeball: "Mostrar Pokéball",
     showPokeballDescription: "Muestra la Pokéball usada en la captura",
+    showGender: "Mostrar género",
+    showGenderDescription: "Muestra el icono de género del Pokémon en la ficha",
     pcSlotSeconds: "Ciclo del PC (segundos)",
     pcSlotSecondsDescription: "Muestra un Pokémon del PC en la cabecera, cambiando cada N segundos. 0 desactiva esta ranura.",
     graveyardSlotSeconds: "Ciclo del cielo (segundos)",
